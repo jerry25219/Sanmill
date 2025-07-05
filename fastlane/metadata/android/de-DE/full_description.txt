@@ -1,0 +1,16 @@
+Ein Mühle-Brettspielprogramm, das viele Regelvarianten unterstützt.
+
+Spielregeln:
+
+* Wenn ein Spieler drei Steine in einer geraden Linie setzt, dann hat er eine Mühle und darf einen gegnerischen Stein vom Spielbrett nehmen.
+* Ein Spieler mit nur zwei Steinen kann keine Mühlen mehr bekommen und verliert deshalb.
+* Ein Spieler kann auch mit mehr als drei Steinen verlieren, wenn sein Gegner ihn so blockiert hat, daß er seine Steine nicht mehr bewegen kann.
+
+Funktionen:
+
+* Unterstützt viele Regelvarianten wie "Nine Men's Morris" und "Twelve Men's Morris", mit und ohne Fliegen/Springen
+* Spiele gegen den Computer oder einen menschlichen Gegner
+* Einstellbare Spielstärke
+* Sehr konfigurierbar
+* Farbthemen
+* Barrierefreiheit

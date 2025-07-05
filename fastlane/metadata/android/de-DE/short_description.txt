@@ -1,0 +1,1 @@
+Flutter Mühle-Brettspiel-App, die viele Regelvarianten unterstützt

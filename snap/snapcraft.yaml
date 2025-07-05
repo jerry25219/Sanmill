@@ -1,0 +1,94 @@
+name: mill
+version: 6.4.0
+summary: A Mill Game which supports many rule variants.
+description: |
+  Nine men's morris is a strategy board game for two players
+  dating at least to the Roman Empire. The game is also
+  known as nine-man morris, mill, mills, the mill game,
+  merels, merrills, merelles, marelles, morelles, and
+  ninepenny marl in English.
+
+  **Rules:**
+
+  * A player who aligns three of his pieces on a board line
+    has a mill and may remove his opponent's piece(s).
+  * Any player reduces to two pieces and has no option to
+    form new mills and thus loses the game.
+  * A player can also lose with more than three pieces
+    if his opponent blocks them not to be moved.
+
+  _More build details: https://github.com/calcitem/Sanmill.git_
+
+grade: stable
+confinement: strict
+base: core22
+license: 'GPL-3.0'
+architectures:
+  - build-on: amd64
+  - build-on: arm64
+
+apps:
+  mill:
+    command: usr/local/bin/mill
+    extensions: [gnome]
+    plugs: [home, alsa, pulseaudio, desktop, desktop-legacy, audio-playback]
+
+layout:
+  /usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib:
+    bind: $SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/alsa-lib
+  /etc/asound.conf:
+    bind-file: $SNAP/etc/alsa.conf
+  /usr/share/alsa/alsa.conf:
+    bind-file: $SNAP/usr/share/alsa/alsa.conf
+
+parts:
+  mill:
+    plugin: flutter
+    flutter-target: src/ui/flutter_app/lib/main.dart
+    source: .
+    build-packages: [git, g++, libstdc++6, libasound2-dev, wget, clang, cmake, ninja-build, pkg-config, libgtk-3-dev, libgstreamer1.0-dev, libgstreamer-plugins-base1.0-dev]
+    stage-packages: [g++, libstdc++6, libasound2, gstreamer1.0-plugins-base, gstreamer1.0-plugins-good]
+    override-build: |
+      set -x
+      wget https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.29.3-stable.tar.xz
+      tar xf flutter_linux_3.29.3-stable.tar.xz
+      export PATH=$PATH:`pwd`/flutter/bin
+      git config --global --add safe.directory /root/parts/mill/build/flutter
+      flutter doctor -v
+      ./flutter-init.sh
+      flutter config --enable-linux-desktop
+      cd src/ui/flutter_app
+      flutter create --platforms=linux .
+      flutter clean
+      flutter build linux --release -v
+      mkdir -p ${SNAPCRAFT_PART_INSTALL}/usr/local/bin
+      cp -r build/linux/x64/release/bundle/* ${SNAPCRAFT_PART_INSTALL}/usr/local/bin/
+    after:
+      - alsa
+
+  alsa:
+    plugin: nil
+    source: https://github.com/diddledan/snapcraft-alsa.git
+    override-pull: |
+      cat > alsa.conf <<EOF
+      pcm.!default {
+        type pulse
+        fallback "sysdefault"
+        hint {
+          show on
+          description "Default ALSA Output (currently PulseAudio Sound Server)"
+        }
+      }
+      ctl.!default {
+        type pulse
+        fallback "sysdefault"
+      }
+      EOF
+    override-build: |
+      install -m644 -D -t $SNAPCRAFT_PART_INSTALL/etc alsa.conf
+    build-packages:
+      - libasound2-dev
+    stage-packages:
+      - libasound2
+      - libasound2-plugins
+

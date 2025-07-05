@@ -1,0 +1,17 @@
+A Nine Men's Morris (and its variants) program
+
+Rules:
+
+* A player who aligns three of his pieces on a board line has a mill and may remove his opponent's piece(s).
+* Any player reduces to two pieces and has no option to form new mills and thus loses the game.
+* If a player cannot move one of his pieces (is locked up), he has lost the game.
+
+Features:
+
+* Support many rule variants, such as Nine Men's Morris and Twelve Men's Morris, "Flying" rule or no "Flying" rule
+* Play against the AI, or play both sides
+* Adjustable playing strength
+* Highly configurable
+* Color themes
+* Accessibility
+

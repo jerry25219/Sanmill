@@ -1,0 +1,21 @@
+name: Clang Format
+
+on:
+  push:
+    branches: [release]
+    paths-ignore:
+      - 'src/ui/flutter_app/**'
+  pull_request:
+    types: [review_requested, ready_for_review]
+    paths-ignore:
+      - 'src/ui/flutter_app/**'
+
+jobs:
+  clang-format-checking:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: RafikFarhad/clang-format-github-action@v3
+        with:
+          sources: "src/**/*.h,src/**/*.cpp"
+          style: file

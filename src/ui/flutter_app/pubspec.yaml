@@ -1,0 +1,206 @@
+name: sanmill
+description: Sanmill is a open-source, powerful UCI-like Nine Men's Morris (and its variants) program.
+publish_to: none
+version: 1.0.0+2
+
+environment:
+  sdk: ">=3.4.0 <4.0.0"
+
+dependencies:
+  animated_text_kit: 4.2.3
+  audioplayers: 6.4.0
+  catcher_2: 2.1.3
+  collection: 1.19.1
+  confetti: 0.8.0
+  crop_your_image: 2.0.0
+  copy_with_extension: 6.0.1
+  cupertino_icons: 1.0.8
+  device_info_plus: 11.4.0
+  extended_sliver: 2.1.3
+  fast_immutable_collections: 11.0.4
+  feedback: 3.1.0
+  filesystem_picker: 4.1.0
+  fluentui_system_icons: 1.1.273
+  flutter:
+    sdk: flutter
+  flutter_colorpicker: 1.1.0
+  flutter_email_sender: 7.0.0
+  flutter_localizations:
+    sdk: flutter
+  flutter_platform_alert: 0.7.0
+  flutter_picker: 2.1.0
+  flutter_sharing_intent: 1.1.1
+  hive: 2.2.3
+  hive_flutter: 1.1.0
+  http: 1.4.0
+  langchain: 0.7.7+2
+  langchain_google: 0.6.4+2
+  langchain_ollama: 0.3.2+2
+  langchain_openai: 0.7.3
+  image: 4.5.4
+  image_gallery_saver_plus: 4.0.1
+  image_picker: 1.1.2
+#  intl: 0.19.0
+  json_annotation: 4.9.0
+  logger: 2.5.0
+  marquee: 2.3.0
+  meta: 1.16.0
+  native_screenshot_widget: 0.0.8
+  network_info_plus: 6.1.4
+  package_info_plus: 8.3.0
+  path: 1.9.1
+  path_provider: 2.1.5
+  permission_handler: 12.0.0+1
+  share_plus: 11.0.0
+  vibration: 3.1.3
+  url_launcher: 6.3.1
+  uuid: 4.5.1
+  intl: ^0.20.2
+  flutter_bloc:
+
+  font_awesome_flutter:
+  pdf:
+  # syncfusion_flutter_pdfviewer: ^20.1.57-beta
+  webview_flutter: ^4.7.0
+  shared_preferences:
+  rxdart:
+  equatable:
+  flutter_platform_widgets:
+  async:
+  photo_view:
+  grpc:
+  flutter_countdown_timer:
+  flutter_multi_formatter:
+  lottie:
+  get_it:
+  bloc:
+  freezed_annotation:
+  pointycastle:
+  encrypt:
+  app_links: ^6.4.0
+  circular_countdown_timer:
+  common_utils: ^2.1.0
+  connectivity_plus: ^6.1.4
+  webview_refresher: ^0.1.0+1
+
+dev_dependencies:
+  analyzer: 6.11.0
+  build_runner: 2.4.15
+  copy_with_extension_gen: 6.0.0
+  flutter_driver:
+    sdk: flutter
+  flutter_gen_runner: 5.10.0
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  hive_generator: 2.0.1
+  json_serializable: 6.9.0
+  flutter_lints: 5.0.0
+  mockito: 5.4.5
+  msix: 3.16.9
+  source_gen: 1.5.0
+  flutter_native_splash: ^2.4.6
+
+flutter_gen:
+  output: lib/generated/assets/
+
+flutter:
+  generate: true
+  uses-material-design: true
+  assets:
+    - assets/audios/ball/select.mp3
+    - assets/audios/ball/place.mp3
+    - assets/audios/ball/mill.mp3
+    - assets/audios/ball/remove.mp3
+    - assets/audios/ball/illegal.mp3
+    - assets/audios/liquid/select.mp3
+    - assets/audios/liquid/place.mp3
+    - assets/audios/liquid/mill.mp3
+    - assets/audios/liquid/remove.mp3
+    - assets/audios/liquid/illegal.mp3
+    - assets/audios/wood/select.mp3
+    - assets/audios/wood/place.mp3
+    - assets/audios/wood/mill.mp3
+    - assets/audios/wood/remove.mp3
+    - assets/audios/wood/illegal.mp3
+    - assets/audios/win.mp3
+    - assets/audios/draw.mp3
+    - assets/audios/lose.mp3
+    - assets/images/background_image_1.jpg
+    - assets/images/background_image_2.jpg
+    - assets/images/background_image_3.jpg
+    - assets/images/background_image_4.jpg
+    - assets/images/background_image_5.jpg
+    - assets/images/background_image_6.jpg
+    - assets/images/background_image_7.jpg
+    - assets/images/background_image_8.jpg
+    - assets/images/background_image_9.jpg
+    - assets/images/background_image_10.jpg
+    - assets/images/white_piece_image_1.png
+    - assets/images/black_piece_image_1.png
+    - assets/images/white_piece_image_2.png
+    - assets/images/black_piece_image_2.png
+    - assets/images/white_piece_image_3.png
+    - assets/images/black_piece_image_3.png
+    - assets/images/white_piece_image_4.png
+    - assets/images/black_piece_image_4.png
+    - assets/images/white_piece_image_5.png
+    - assets/images/black_piece_image_5.png
+    - assets/images/white_piece_image_6.png
+    - assets/images/black_piece_image_6.png
+    - assets/images/white_piece_image_7.png
+    - assets/images/black_piece_image_7.png
+    - assets/images/white_piece_image_8.png
+    - assets/images/black_piece_image_8.png
+    - assets/images/marked_piece_image.png
+    - assets/icons/background.png
+    - assets/databases/std.secval
+    - assets/databases/std_0_0_9_9.sec2
+    - assets/databases/std_0_1_9_8.sec2
+    - assets/databases/std_1_1_8_8.sec2
+    - assets/databases/std_1_2_8_7.sec2
+    - assets/databases/std_1_3_7_6.sec2
+    - assets/databases/std_2_2_7_7.sec2
+    - assets/databases/std_2_3_6_6.sec2
+    - assets/databases/std_2_3_7_6.sec2
+    - assets/databases/std_2_4_6_5.sec2
+    - assets/databases/std_3_3_5_5.sec2
+    - assets/databases/std_3_3_6_5.sec2
+    - assets/databases/std_3_3_6_6.sec2
+    - assets/databases/std_3_4_5_5.sec2
+    - assets/databases/std_3_4_6_5.sec2
+    - assets/databases/std_4_3_5_5.sec2
+    - assets/databases/std_4_4_5_5.sec2
+
+flutter_intl:
+  enabled: true
+
+msix_config:
+  display_name: Mill (N Men's Morris)
+  publisher_display_name: Calcitem Studio
+  identity_name: 25314CalcitemStudio.Sanmill
+  publisher: CN=3413C020-B420-4E0A-8687-A2C35E878F3A
+  logo_path: ..\..\..\fastlane\metadata\android\en-US\images\icon.png
+  capabilities: ""
+  languages: en-us, de-de, hu-hu, pt-br, tr-tr, zh-cn, ko-kr
+  execution_alias: mill
+  store: true
+
+# 启动图配置
+flutter_native_splash:
+  # 为 Android 设置启动图
+  # android: "launcher_icon" # 自定义 icon 名称
+  android: true
+  # 设置启动图的背景图片（二选一）
+  background_image: "assets/icons/background.png"
+  # 设置启动图的图片路径，使用背景颜色推荐加上这个
+  # image: "assets/images/a_splash.png"
+  # 配置 Android 12 及以上版本的启动图，只会显示中间一个圆圈
+  android_12:
+    # 设置启动图的图片路径，圆圈内的图片
+    image: "assets/icons/ic_launcher.png"
+    # 圆圈内图片的背景颜色
+    # icon_background_color: "#FFFFFF"
+    # 设置启动图的背景颜色，圆圈外的使用背景颜色
+    color: "#deb887"

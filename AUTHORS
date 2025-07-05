@@ -1,0 +1,39 @@
+# List of authors for Sanmill, as of Sep 3, 2023
+
+## Founders of the Sanmill project
+
+- Calcitem (calcitem)
+
+## All other authors of the code in alphabetical order
+
+- Christian Weiske (cweiske)
+- Diego (sguinetti)
+- Jintao Yang (Joker2770)
+- Nikolas Rimikis (Leptopoda)
+- Xu Shiwei (xshiwei)
+
+## Code adapted and modified from other projects
+
+Some of the code in this project has been adapted and modified based on the following projects:
+
+### Authors of Stockfish
+
+For the full list of Stockfish authors, see:
+[Stockfish AUTHORS file](https://github.com/official-stockfish/Stockfish/blob/master/AUTHORS)
+
+### Authors of NineChess
+
+- Liu Wei (liuweilhy)
+
+### Authors of ChessRoad
+
+- He Zhaoyun (hezhaoyun)
+
+### Authors of PerfectAI
+
+- Gabor E. Gevay (ggevay)
+- Gabor Danner (DannerG)
+
+### Authors of hash map
+
+- Kaushik Basu (kshk123)

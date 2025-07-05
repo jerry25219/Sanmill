@@ -1,0 +1,84 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
+if (flutterVersionCode == null) {
+    flutterVersionCode = '1'
+}
+
+def flutterVersionName = localProperties.getProperty('flutter.versionName')
+if (flutterVersionName == null) {
+    flutterVersionName = '1.0'
+}
+
+android {
+    ndkVersion "28.1.13356709"
+
+    compileSdkVersion 36
+    namespace "com.calcitem.sanmill"
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+
+    defaultConfig {
+        applicationId "com.calcitem.sanmill"
+        minSdkVersion 19
+        targetSdkVersion 36
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        ndk{
+            ldLibs "log"
+            debugSymbolLevel 'FULL'
+        }
+        externalNativeBuild {
+            cmake {
+                //arguments "-DANDROID_ARM_MODE=arm", "-DANDROID_STL=c++_shared"
+                //abiFilters "arm64-v8a"
+            }
+        }
+    }
+
+    signingConfigs {
+    }
+
+    flavorDimensions "deploy"
+
+    productFlavors {
+        fdroid {
+            dimension "deploy"
+        }
+    }
+
+    android.applicationVariants.all { variant ->
+        if (variant.flavorName == "fdroid") {
+            variant.outputs.all { output ->
+                output.outputFileName = "app-fdroid-release.apk"
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+}
