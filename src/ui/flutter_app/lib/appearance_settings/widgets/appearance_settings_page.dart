@@ -616,14 +616,14 @@ class AppearanceSettingsPage extends StatelessWidget {
         key: const Key('display_settings_card_title'),
       ),
       children: <Widget>[
-        SettingsListTile(
-          key: const Key('display_settings_card_language_settings_list_tile'),
-          titleString: S.of(context).language,
-          trailingString: DB().displaySettings.locale != null
-              ? localeToLanguageName[displaySettings.locale]
-              : null,
-          onTap: () => _selectLanguage(context, displaySettings),
-        ),
+        // SettingsListTile(
+        //   key: const Key('display_settings_card_language_settings_list_tile'),
+        //   titleString: S.of(context).language,
+        //   trailingString: DB().displaySettings.locale != null
+        //       ? localeToLanguageName[displaySettings.locale]
+        //       : null,
+        //   onTap: () => _selectLanguage(context, displaySettings),
+        // ),
         // if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
         //   SettingsListTile.switchTile(
         //     key: const Key('display_settings_card_full_screen_switch_tile'),
@@ -859,13 +859,13 @@ class AppearanceSettingsPage extends StatelessWidget {
               valueListenable: DB().listenDisplaySettings,
               builder: _buildDisplaySettings,
             ),
-            if (Constants.isSmallScreen(context) == false)
-              ValueListenableBuilder<Box<ColorSettings>>(
-                key: const Key(
-                    'appearance_settings_page_color_settings_value_listenable_builder'),
-                valueListenable: DB().listenColorSettings,
-                builder: _buildColorSettings,
-              ),
+            // if (Constants.isSmallScreen(context) == false)
+            //   ValueListenableBuilder<Box<ColorSettings>>(
+            //     key: const Key(
+            //         'appearance_settings_page_color_settings_value_listenable_builder'),
+            //     valueListenable: DB().listenColorSettings,
+            //     builder: _buildColorSettings,
+            //   ),
           ],
         ),
       ),
