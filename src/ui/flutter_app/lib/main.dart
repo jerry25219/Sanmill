@@ -400,8 +400,8 @@ class SanmillAppState extends State<SanmillApp> {
       },
       onError: (dynamic error) {
         logger.e("Error receiving intent data stream: $error");
-        rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-            "Error receiving intent data stream: $error"); // Consider localization
+        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
+        //     "Error receiving intent data stream: $error"); // Consider localization
       },
     );
 
@@ -412,8 +412,8 @@ class SanmillAppState extends State<SanmillApp> {
       },
       onError: (dynamic error) {
         logger.e("Error getting initial sharing: $error");
-        rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-            "Error getting initial sharing: $error"); // Consider localization
+        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
+        //     "Error getting initial sharing: $error"); // Consider localization
       },
     );
   }
@@ -429,8 +429,8 @@ class SanmillAppState extends State<SanmillApp> {
         logger.i("Game loaded successfully from shared file.");
       }).catchError((dynamic error) {
         logger.e("Error loading game from shared file: $error");
-        rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-            "Error loading game from shared file: $error"); // Consider localization
+        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
+        //     "Error loading game from shared file: $error"); // Consider localization
       });
     }
   }

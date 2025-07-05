@@ -158,10 +158,10 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       }
     } catch (e) {
       logger.e("$_logTag Error importing initial sharing move list: $e");
-      if (mounted) {
-        rootScaffoldMessengerKey.currentState!
-            .showSnackBarClear("Error importing initial sharing move list: $e");
-      }
+      // if (mounted) {
+      //   rootScaffoldMessengerKey.currentState!
+      //       .showSnackBarClear("Error importing initial sharing move list: $e");
+      // }
     }
 
     if (mounted && GameController().loadedGameFilenamePrefix != null) {
