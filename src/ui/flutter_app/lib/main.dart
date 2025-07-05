@@ -250,21 +250,21 @@ class SanmillAppState extends State<SanmillApp> {
       defaultValue: const DisplaySettings(),
     )!;
 
-    Locale? locale;
+    Locale locale = const Locale('en');
 
-    if (displaySettings.locale == null) {
-      if (PlatformDispatcher.instance.locale == const Locale('und') ||
-          !S.supportedLocales.contains(
-              Locale(PlatformDispatcher.instance.locale.languageCode))) {
-        DB().displaySettings =
-            displaySettings.copyWith(locale: const Locale('en'));
-        locale = const Locale('en');
-      } else {
-        locale = PlatformDispatcher.instance.locale;
-      }
-    } else {
-      locale = displaySettings.locale;
-    }
+    // if (displaySettings.locale == null) {
+    //   if (PlatformDispatcher.instance.locale == const Locale('und') ||
+    //       !S.supportedLocales.contains(
+    //           Locale(PlatformDispatcher.instance.locale.languageCode))) {
+    //     DB().displaySettings =
+    //         displaySettings.copyWith(locale: const Locale('en'));
+    //     locale = const Locale('en');
+    //   } else {
+    //     locale = PlatformDispatcher.instance.locale;
+    //   }
+    // } else {
+    //   locale = displaySettings.locale;
+    // }
 
     final MultiBlocProvider materialApp = MultiBlocProvider(
       providers: [
