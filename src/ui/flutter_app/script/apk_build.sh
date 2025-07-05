@@ -4,9 +4,6 @@
 # 跳转到项目根目录
 cd "$(dirname "$0")/../" || exit
 
-# 读取 config.env
-source ./config.env
-
 # 从 pubspec.yaml 读取版本号
 VERSION_LINE=$(grep '^version:' pubspec.yaml | head -1)
 VERSION_NAME=$(echo "$VERSION_LINE" | awk '{print $2}' | cut -d'+' -f1)

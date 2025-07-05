@@ -273,7 +273,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
 
     setState(() {
-      assert(index != _DrawerIndex.feedback);
+      // assert(index != _DrawerIndex.feedback);
       assert(index != _DrawerIndex.settingsGroup);
       assert(index != _DrawerIndex.helpGroup);
       _pushRoute(index);
@@ -513,15 +513,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
           ),
-          if (!kIsWeb && Platform.isAndroid)
-            CustomDrawerItem<_DrawerIndex>(
-              key: const Key('drawer_item_feedback_child'),
-              itemValue: _DrawerIndex.feedback,
-              itemTitle: S.of(context).feedback,
-              itemIcon: const Icon(FluentIcons.comment_24_regular),
-              currentSelectedValue: _drawerIndex,
-              onSelectionChanged: _changeIndex,
-            ),
+          // if (!kIsWeb && Platform.isAndroid)
+          //   CustomDrawerItem<_DrawerIndex>(
+          //     key: const Key('drawer_item_feedback_child'),
+          //     itemValue: _DrawerIndex.feedback,
+          //     itemTitle: S.of(context).feedback,
+          //     itemIcon: const Icon(FluentIcons.comment_24_regular),
+          //     currentSelectedValue: _drawerIndex,
+          //     onSelectionChanged: _changeIndex,
+          //   ),
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_about_child'),
             itemValue: _DrawerIndex.about,
