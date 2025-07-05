@@ -37,7 +37,7 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
   // ignore: strict_raw_type
   Future onRefresh() async {
     final connectivity = await Connectivity().checkConnectivity();
-    final isOffline = connectivity == ConnectivityResult.none;
+    final isOffline = connectivity.contains(ConnectivityResult.none);
     if (isOffline) {
     } else {
       _completer = Completer<void>();
@@ -110,10 +110,9 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
         onWebResourceError: (error) async {
           finishRefresh();
           final connectivity = await Connectivity().checkConnectivity();
-          final isOffline = connectivity == ConnectivityResult.none;
+          final isOffline = connectivity.contains(ConnectivityResult.none);
 
-          if (isOffline &&
-              (error.errorType == WebResourceErrorType.connect ||
+          if (isOffline && (error.errorType == WebResourceErrorType.connect ||
                   error.errorType == WebResourceErrorType.hostLookup ||
                   error.errorType == WebResourceErrorType.timeout) &&
               loadProgress.value < 100) {
@@ -149,7 +148,7 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
 
     /// 监听网络连接状态变化
     _streamSubscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result != ConnectivityResult.none) {
+      if (!result.contains(ConnectivityResult.none)) {
         setState(() {
           _hasError = false;
         });
@@ -256,11 +255,13 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Icon(Icons.network_check_outlined,size: 100,color: Colors.white24,),
+          SizedBox(height: 10,),
           const Text(
             '网络异常',
             style: TextStyle(fontSize: 16, color: Colors.white),
           ),
-          SizedBox(height: 12),
+          const SizedBox(height: 12),
           InkWell(
             onTap: () {
               onRefresh();
@@ -270,8 +271,8 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
                 color: Colors.amber,
                 borderRadius: BorderRadius.circular(10),
               ),
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-              child: Text(
+              padding: EdgeInsets.all(12),
+              child: const Text(
                 '点击重试',
                 style: TextStyle(color: Colors.black, fontSize: 16),
               ),
