@@ -88,23 +88,23 @@ Future<void> main() async {
     // Continue app startup even if deep link service fails
   }
 
-  if (EnvironmentConfig.catcher && !kIsWeb && !Platform.isIOS) {
-    catcher = Catcher2(
-      rootWidget: const SanmillApp(),
-      ensureInitialized: true,
-    );
-
-    await _initCatcher(catcher);
-
-    PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
-      if (EnvironmentConfig.catcher == true) {
-        Catcher2.reportCheckedError(error, stack);
-      }
-      return true;
-    };
-  } else {
+  // if (EnvironmentConfig.catcher && !kIsWeb && !Platform.isIOS) {
+  //   catcher = Catcher2(
+  //     rootWidget: const SanmillApp(),
+  //     ensureInitialized: true,
+  //   );
+  //
+  //   // await _initCatcher(catcher);
+  //
+  //   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
+  //     if (EnvironmentConfig.catcher == true) {
+  //       Catcher2.reportCheckedError(error, stack);
+  //     }
+  //     return true;
+  //   };
+  // } else {
     runApp(const SanmillApp());
-  }
+  // }
 }
 
 class SanmillApp extends StatefulWidget {

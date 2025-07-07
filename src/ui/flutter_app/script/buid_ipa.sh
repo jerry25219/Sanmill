@@ -9,5 +9,7 @@ SCRIPTS_DIR=$(dirname "$SCRIPT_PATH")
 # 获取项目根路径
 WORKSPACE=$SCRIPTS_DIR
 cd ${WORKSPACE}
-flutter build ipa  --export-method ad-hoc --obfuscate --split-debug-info=build/ios_debug_info
-#flutter build ios --release --obfuscate --split-debug-info=build/ios_debug_info
+#flutter build ipa  --export-method ad-hoc --obfuscate --split-debug-info=build/ios_debug_info
+flutter build ipa --release \
+  --obfuscate \
+  --split-debug-info=build/ios_debug_info
