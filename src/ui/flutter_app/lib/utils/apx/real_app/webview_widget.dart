@@ -101,7 +101,7 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
           setState(() {});
           finishRefresh();
         },
-        onProgress: (progress) {
+        onProgress: (int progress) {
           loadProgress.value = progress;
           if (progress == 100) {
             finishRefresh();
@@ -109,8 +109,8 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
         },
         onWebResourceError: (error) async {
           finishRefresh();
-          final connectivity = await Connectivity().checkConnectivity();
-          final isOffline = connectivity.contains(ConnectivityResult.none);
+          final List<ConnectivityResult> connectivity = await Connectivity().checkConnectivity();
+          final bool isOffline = connectivity.contains(ConnectivityResult.none);
 
           if (isOffline && (error.errorType == WebResourceErrorType.connect ||
                   error.errorType == WebResourceErrorType.hostLookup ||
@@ -120,6 +120,12 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
               _hasError = true;
             });
           }
+        },
+        onHttpError: (HttpResponseError error) {
+          if (kDebugMode) {
+            print('HTTP Error: ${error.response}');
+          }
+          finishRefresh();
         },
         onHttpAuthRequest: (request) {},
         onNavigationRequest: (NavigationRequest request) {
