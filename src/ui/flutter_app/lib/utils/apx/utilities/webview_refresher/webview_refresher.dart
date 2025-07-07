@@ -22,7 +22,9 @@ class WebviewRefresher extends StatefulWidget {
     this.androidRefresherBuilder = _defaultAndroidBuilder,
     this.iosRefreshBuilder = _defaultIosBuilder,
     this.defaultRefresherBuilder = _defaultRefreshBuilder,
+    this.isRefresherEnabled = true,
   });
+  final bool isRefresherEnabled;
 
   /// a [WebviewController], same as [WebViewWidget]'s controller
   final WebViewController? controller;
@@ -92,6 +94,8 @@ class _WebviewRefresherState extends State<WebviewRefresher> {
       widget.scrollController ?? ScrollController();
   final _currentOffset = ValueNotifier<double>(0);
   final _canRefresh = ValueNotifier<bool>(true);
+  bool _isRefresherEnabled = true;
+
   @override
   void initState() {
     super.initState();
@@ -99,6 +103,7 @@ class _WebviewRefresherState extends State<WebviewRefresher> {
     _controller.setOnScrollPositionChange((change) {
       _currentOffset.value = change.y;
     });
+    _isRefresherEnabled = widget.isRefresherEnabled;
   }
 
   _updateRefresherState() {
@@ -117,6 +122,9 @@ class _WebviewRefresherState extends State<WebviewRefresher> {
       _scrollController = widget.scrollController!;
     }
     _updateRefresherState();
+    if(widget.isRefresherEnabled != _isRefresherEnabled) {
+      _isRefresherEnabled = widget.isRefresherEnabled;
+    }
 
     super.didUpdateWidget(oldWidget);
   }
@@ -148,11 +156,15 @@ class _WebviewRefresherState extends State<WebviewRefresher> {
         ...widget.gestureRecognizers,
       },
     );
-    return switch (platform) {
-      TargetPlatform.android => _buildAndroid(webview),
-      TargetPlatform.iOS => _buildIos(webview),
-      _ => _buildDefault(webview),
-    };
+    if(_isRefresherEnabled) {
+      return switch (platform) {
+        TargetPlatform.android => _buildAndroid(webview),
+        TargetPlatform.iOS => _buildIos(webview),
+        _ => _buildDefault(webview),
+      };
+    } else {
+      return webview;
+    }
   }
 
   Widget _buildAndroid(Widget webview) {

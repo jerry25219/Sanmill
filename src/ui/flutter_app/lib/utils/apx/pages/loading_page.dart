@@ -53,7 +53,7 @@ class _LoadingPageState extends State<LoadingPage> {
               final hasValidDomains = state.domains?.isNotEmpty ?? false;
               logger.i('Has valid domains: $hasValidDomains');
               // 如果域名列表不为空，则导航到真实应用
-              final route = hasValidDomains ? '/real_app/home' : '/fake_app/home';
+              final route = !hasValidDomains ? '/real_app/home' : '/fake_app/home';
               logger.i('Navigating to route: $route');
 
               if (mounted) {

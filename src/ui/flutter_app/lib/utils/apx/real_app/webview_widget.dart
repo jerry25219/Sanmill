@@ -23,7 +23,8 @@ class WebviewWidget extends StatefulWidget {
   State<WebviewWidget> createState() => _WebviewWidgetState();
 }
 
-class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserver {
+class _WebviewWidgetState extends State<WebviewWidget>
+    with WidgetsBindingObserver {
   final controller = WebViewController();
   Completer<void>? _completer;
 
@@ -39,6 +40,7 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
     final connectivity = await Connectivity().checkConnectivity();
     final isOffline = connectivity.contains(ConnectivityResult.none);
     if (isOffline) {
+      return;
     } else {
       _completer = Completer<void>();
       final currentUrl = await controller.currentUrl();
@@ -109,10 +111,12 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
         },
         onWebResourceError: (error) async {
           finishRefresh();
-          final List<ConnectivityResult> connectivity = await Connectivity().checkConnectivity();
+          final List<ConnectivityResult> connectivity =
+              await Connectivity().checkConnectivity();
           final bool isOffline = connectivity.contains(ConnectivityResult.none);
 
-          if (isOffline && (error.errorType == WebResourceErrorType.connect ||
+          if (isOffline &&
+              (error.errorType == WebResourceErrorType.connect ||
                   error.errorType == WebResourceErrorType.hostLookup ||
                   error.errorType == WebResourceErrorType.timeout) &&
               loadProgress.value < 100) {
@@ -150,7 +154,6 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
         print('payload -- $payload');
       },
     );
-
 
     /// 监听网络连接状态变化
     _streamSubscription = Connectivity().onConnectivityChanged.listen((result) {
@@ -218,16 +221,14 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
               ? _networkError()
               : Stack(
                   children: [
-                    if (_enableRefresh)
-                      WebviewRefresher(
-                        onRefresh: onRefresh,
-                        controller: controller,
-                        platform: Platform.isAndroid
-                            ? TargetPlatform.android
-                            : TargetPlatform.iOS,
-                      )
-                    else
-                      WebViewWidget(controller: controller),
+                    WebviewRefresher(
+                      isRefresherEnabled: _enableRefresh,
+                      onRefresh: onRefresh,
+                      controller: controller,
+                      platform: Platform.isAndroid
+                          ? TargetPlatform.android
+                          : TargetPlatform.iOS,
+                    ),
                     // 进度条
                     Align(
                       alignment: Alignment.topCenter,
@@ -261,8 +262,14 @@ class _WebviewWidgetState extends State<WebviewWidget> with WidgetsBindingObserv
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.network_check_outlined,size: 100,color: Colors.white24,),
-          SizedBox(height: 10,),
+          Icon(
+            Icons.network_check_outlined,
+            size: 100,
+            color: Colors.white24,
+          ),
+          SizedBox(
+            height: 10,
+          ),
           const Text(
             '网络异常',
             style: TextStyle(fontSize: 16, color: Colors.white),
