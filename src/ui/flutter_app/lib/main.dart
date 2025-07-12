@@ -103,18 +103,18 @@ Future<void> main() async {
   //     return true;
   //   };
   // } else {
-    runApp(const SanmillApp());
+    runApp(const MyApp());
   // }
 }
 
-class SanmillApp extends StatefulWidget {
-  const SanmillApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
   @override
-  SanmillAppState createState() => SanmillAppState();
+  MyAppState createState() => MyAppState();
 }
 
-class SanmillAppState extends State<SanmillApp> {
+class MyAppState extends State<MyApp> {
   StreamSubscription<List<SharedFile>>? _intentDataStreamSubscription;
 
   @override

@@ -38,7 +38,7 @@ void main() {
 
       testWidgets(scenarioDescription, (WidgetTester tester) async {
         // Pump the app once per test
-        await tester.pumpWidget(const app.SanmillApp());
+        await tester.pumpWidget(const app.MyApp());
         await tester.pumpAndSettle();
 
         // Run the scenario steps

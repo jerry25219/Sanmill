@@ -374,7 +374,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) => _showPrivacyDialog());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _showPrivacyDialog());
     _routes.push(_drawerIndex);
   }
 
@@ -455,41 +455,46 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       // Settings group item
       CustomDrawerItem<_DrawerIndex>(
-        key: const Key('drawer_item_settings_group'), // Changed key
-        itemValue: _DrawerIndex.settingsGroup, // New itemValue for the group
+        key: const Key('drawer_item_settings_group'),
+        // Changed key
+        itemValue: _DrawerIndex.settingsGroup,
+        // New itemValue for the group
         itemTitle: S.of(context).settings,
         itemIcon: const Icon(FluentIcons.settings_24_regular),
         currentSelectedValue: _drawerIndex,
-        onSelectionChanged: (_) {}, // Parent item tap is handled for expansion
+        onSelectionChanged: (_) {},
+        // Parent item tap is handled for expansion
         // Children are now part of the CustomDrawerItem's children list
         children: <CustomDrawerItem<_DrawerIndex>>[
           CustomDrawerItem<_DrawerIndex>(
-            key: const Key(
-                'drawer_item_general_settings_child'), // Key for child
+            key: const Key('drawer_item_general_settings_child'),
+            // Key for child
             itemValue: _DrawerIndex.generalSettings,
             itemTitle: S.of(context).generalSettings,
-            itemIcon:
-                const Icon(FluentIcons.options_24_regular), // Original icon
+            itemIcon: const Icon(FluentIcons.options_24_regular),
+            // Original icon
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
             // No manual indentation needed
           ),
           CustomDrawerItem<_DrawerIndex>(
-            key: const Key('drawer_item_rule_settings_child'), // Key for child
+            key: const Key('drawer_item_rule_settings_child'),
+            // Key for child
             itemValue: _DrawerIndex.ruleSettings,
             itemTitle: S.of(context).ruleSettings,
-            itemIcon: const Icon(
-                FluentIcons.task_list_ltr_24_regular), // Original icon
+            itemIcon: const Icon(FluentIcons.task_list_ltr_24_regular),
+            // Original icon
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
             // No manual indentation needed
           ),
           CustomDrawerItem<_DrawerIndex>(
-            key: const Key('drawer_item_appearance_child'), // Key for child
+            key: const Key('drawer_item_appearance_child'),
+            // Key for child
             itemValue: _DrawerIndex.appearance,
             itemTitle: S.of(context).appearance,
-            itemIcon: const Icon(
-                FluentIcons.design_ideas_24_regular), // Original icon
+            itemIcon: const Icon(FluentIcons.design_ideas_24_regular),
+            // Original icon
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
             // No manual indentation needed
@@ -499,11 +504,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       // New "Help" group
       CustomDrawerItem<_DrawerIndex>(
         key: const Key('drawer_item_help_group'),
-        itemValue: _DrawerIndex.helpGroup, // Use specific group itemValue
+        itemValue: _DrawerIndex.helpGroup,
+        // Use specific group itemValue
         itemTitle: S.of(context).help,
         itemIcon: const Icon(FluentIcons.question_circle_24_regular),
         currentSelectedValue: _drawerIndex,
-        onSelectionChanged: (_) {}, // Parent item tap is handled for expansion
+        onSelectionChanged: (_) {},
+        // Parent item tap is handled for expansion
         children: <CustomDrawerItem<_DrawerIndex>>[
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_how_to_play_child'),
@@ -577,11 +584,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void _showPrivacyDialog() {
-    if (EnvironmentConfig.test == true) {
-      return;
-    }
-
-    if (!kDebugMode && // Add kDebugMode check here
+       if (
         !DB().generalSettings.isPrivacyPolicyAccepted &&
         Localizations.localeOf(context).languageCode.startsWith("zh") &&
         (!kIsWeb && Platform.isAndroid)) {
@@ -591,9 +594,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         builder: (BuildContext context) =>
             PrivacyPolicyDialog(onConfirm: _showTutorialDialog),
       );
-    } else {
-      _showTutorialDialog();
     }
+    // else {
+    //   _showTutorialDialog();
+    // }
   }
 
   Future<void> _showTutorialDialog() async {

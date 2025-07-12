@@ -253,7 +253,7 @@ Future<void> _processLocale(WidgetTester tester,
 
   // --- Step 1: Home Screen with pieces placed ---
   debugPrint('Pumping main app for Home Screen...');
-  await tester.pumpWidget(const app.SanmillApp());
+  await tester.pumpWidget(const app.MyApp());
   await tester.pumpAndSettle(const Duration(seconds: 8)); // This can be long
   debugPrint('App settled with $locale locale on Home Screen.');
 
@@ -289,7 +289,7 @@ Future<void> _processLocale(WidgetTester tester,
   // Explicitly reset the ready flag
   GameController().isControllerReady = false;
   await tester.pumpAndSettle(const Duration(milliseconds: 500));
-  await tester.pumpWidget(const app.SanmillApp());
+  await tester.pumpWidget(const app.MyApp());
   await tester.pumpAndSettle(const Duration(seconds: 5));
   screenshotCounter = await _captureSetupPositionViaNavigation(
       tester, binding, locale, screenshotCounter);

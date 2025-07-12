@@ -39,7 +39,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.dragonfly.morris"
+        applicationId "com.dragonfly.morricolors"
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
