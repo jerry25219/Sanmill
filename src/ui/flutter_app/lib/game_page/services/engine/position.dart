@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// position.dart
+
+
+
 
 part of '../mill.dart';
 
@@ -16,11 +16,11 @@ class SquareAttribute {
 }
 
 class StateInfo {
-  // Copied when making a move
+
   int rule50 = 0;
   int pliesFromNull = 0;
 
-  // Not copied when making a move (will be recomputed anyhow)
+
   int key = 0;
 }
 
@@ -81,9 +81,9 @@ class Position {
 
   int _gamePly = 0;
 
-  /// _roundNumber tracks which round we are in. Each cycle of White->Black
-  /// is one complete round. Whenever we switch from Black back to White,
-  /// we increment this counter.
+
+
+
   int _roundNumber = 1;
 
   PieceColor _sideToMove = PieceColor.white;
@@ -95,10 +95,10 @@ class Position {
 
   GameOverReason? gameOverReason;
 
-  /// Indicates whether the current position already has a game result.
+
   bool get hasGameResult => phase == Phase.gameOver;
 
-  /// The reason for game over, if any.
+
   GameOverReason? get reason => gameOverReason;
 
   Phase phase = Phase.placing;
@@ -176,43 +176,43 @@ class Position {
     }
   }
 
-  /// Returns a FEN representation of the position.
-  /// Example: "@*O@O*O*/O*@@O@@@/O@O*@*O* b m s 8 0 9 0 0 0 0 0 0 0 3 10"
-  /// Format: "[Inner ring]/[Middle Ring]/[Outer Ring]
-  /// [Side to Move] [Phase] [Action]
-  /// [White Piece On Board] [White Piece In Hand]
-  /// [Black Piece On Board] [Black Piece In Hand]
-  /// [White Piece to Remove] [Black Piece to Remove]
-  /// [White Piece Last Mill From Square] [White Piece Last Mill To Square]
-  /// [Black Piece Last Mill From Square] [Black Piece Last Mill To Square]
-  /// [MillsBitmask]
-  /// [Rule50] [Ply]"
-  ///
-  /// ([Rule50] and [Ply] are unused right now.)
-  /// Param:
-  ///
-  /// Ring
-  /// @ - Black piece
-  /// O - White piece
-  /// * - Empty point
-  /// X - Marked point
-  ///
-  /// Side to move
-  /// w - White to Move
-  /// b - Black to Move
-  ///
-  /// Phase
-  /// p - Placing Phase
-  /// m - Moving Phase
-  ///
-  /// Action
-  /// p - Place Action
-  /// s - Select Action
-  /// r - Remove Action
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   String? get fen {
     final StringBuffer buffer = StringBuffer();
 
-    // Piece placement data
+
     for (int file = 1; file <= fileNumber; file++) {
       for (int rank = 1; rank <= rankNumber; rank++) {
         final PieceColor piece =
@@ -227,13 +227,13 @@ class Position {
       }
     }
 
-    // Active color
+
     buffer.writeSpace(_sideToMove == PieceColor.white ? "w" : "b");
 
-    // Phrase
+
     buffer.writeSpace(phase.fen);
 
-    // Action
+
     if (action == Act.remove) {
       if (pieceToRemoveCount[_sideToMove] == 0) {
         logger.e("Invalid FEN: No piece to remove.");
@@ -289,7 +289,7 @@ class Position {
       "X": PieceColor.marked,
     };
 
-    // Piece placement data
+
     for (int file = 1; file <= fileNumber; file++) {
       for (int rank = 1; rank <= rankNumber; rank++) {
         final PieceColor p = pieceMap[ring[file - 1][rank - 1]]!;
@@ -373,7 +373,7 @@ class Position {
     final String gamePlyStr = l[16];
     _gamePly = int.parse(gamePlyStr);
 
-    // Misc
+
     winner = PieceColor.nobody;
     gameOverReason = null;
     _currentSquare[PieceColor.white] = _currentSquare[PieceColor.black] = 0;
@@ -382,7 +382,7 @@ class Position {
     return ret;
   }
 
-  // TODO: Implement with C++ in engine
+
   bool validateFen(String fen) {
     final List<String> parts = fen.split(' ');
     if (parts.length < 17) {
@@ -390,7 +390,7 @@ class Position {
       return false;
     }
 
-    // Part 0: Piece placement
+
     final String board = parts[0];
     if (board.length != 26 ||
         board[8] != '/' ||
@@ -400,28 +400,28 @@ class Position {
       return false;
     }
 
-    // Part 1: Active color
+
     final String activeColor = parts[1];
     if (activeColor != 'w' && activeColor != 'b') {
       logger.e('Invalid active color. Must be "w" or "b".');
       return false;
     }
 
-    // Part 2: Phrase
+
     final String phrase = parts[2];
     if (!RegExp(r'^[rpmo]$').hasMatch(phrase)) {
       logger.e('Invalid phrase. Must be one of "r", "p", "m", "o".');
       return false;
     }
 
-    // Part 3: Action
+
     final String action = parts[3];
     if (!RegExp(r'^[psr]$').hasMatch(action)) {
       logger.e('Invalid action. Must be one of "p", "s", "r".');
       return false;
     }
 
-    // Part 4: White piece on board
+
     final int whitePieceOnBoard = int.parse(parts[4]);
     if (phrase == 'm' &&
         whitePieceOnBoard < DB().ruleSettings.piecesAtLeastCount) {
@@ -435,7 +435,7 @@ class Position {
       return false;
     }
 
-    // Part 5: White piece in hand
+
     final int whitePieceInHand = int.parse(parts[5]);
     if (whitePieceInHand < 0 ||
         whitePieceInHand > DB().ruleSettings.piecesCount) {
@@ -447,7 +447,7 @@ class Position {
       return false;
     }
 
-    // Part 6: Black piece on board
+
     final int blackPieceOnBoard = int.parse(parts[6]);
     if (phrase == 'm' &&
         blackPieceOnBoard < DB().ruleSettings.piecesAtLeastCount) {
@@ -461,7 +461,7 @@ class Position {
       return false;
     }
 
-    // Part 7: Black piece in hand
+
     final int blackPieceInHand = int.parse(parts[7]);
     if (blackPieceInHand < 0 ||
         blackPieceInHand > DB().ruleSettings.piecesCount) {
@@ -469,7 +469,7 @@ class Position {
       return false;
     }
 
-    // Parts 4-7: Counts on and off board
+
     List<int> counts = parts.getRange(4, 8).map(int.parse).toList();
     if (counts.any((int count) =>
             count < 0 || count > DB().ruleSettings.piecesCount) ||
@@ -478,43 +478,43 @@ class Position {
       return false;
     }
 
-    // Parts 8-9: Need to remove
+
     counts = parts.getRange(8, 10).map(int.parse).toList();
     if (counts.any((int count) => count < -7 || count > 7)) {
       logger.e('Invalid need to remove count. Must be between -7 and 7.');
       return false;
     }
 
-    // Parts 10-13: Last mill square
+
     counts = parts.getRange(10, 14).map(int.parse).toList();
     if (counts.any((int count) => count != 0 && (count < 8 || count > 32))) {
       logger.e('Invalid last mill square. Must be 0 or between 8 and 32.');
       return false;
     }
 
-    // Part 14: Mills bitmask
+
     final int millsBitmask = int.parse(parts[14]);
-    // Check if the lowest 8 bits are not zero
+
     if ((millsBitmask & 0xFF) != 0) {
       logger.e('The lowest 8 bits are not zero.');
       return false;
     }
 
-    // Check if bits 32 to 39 are not zero
-    // 0xFF << 32 shifts 0xFF (which is 8 bits of 1s) left by 32 positions to reach the 32nd position
+
+
     if ((millsBitmask & (0xFF << 32)) != 0) {
       logger.e('Bits 32 to 39 are not zero.');
       return false;
     }
 
-    // Part 15: Half-move clock
+
     final int halfMoveClock = int.parse(parts[15]);
     if (halfMoveClock < 0) {
       logger.e('Invalid half-move clock. Cannot be negative.');
       return false;
     }
 
-    // Part 16: Full move number
+
     final int fullMoveNumber = int.parse(parts[16]);
     if (fullMoveNumber < 1) {
       logger.e('Invalid full move number. Must start at 1.');
@@ -526,10 +526,10 @@ class Position {
 
   @visibleForTesting
   bool doMove(String move) {
-    // TODO: Resign is not implemented
+
     if (move.length > "Player".length &&
         move.substring(0, "Player".length - 1) == "Player") {
-      // TODO: What?
+
       if (move["Player".length] == "1") {
         return _resign(PieceColor.white);
       } else {
@@ -537,24 +537,24 @@ class Position {
       }
     }
 
-    // TODO: Right?
+
     if (move == "Threefold Repetition. Draw!") {
       return true;
     }
 
-    // TODO: Duplicate with switch (m.type) and should throw exception.
+
     if (move == "none") {
       return false;
     }
 
-    // TODO: Duplicate with switch (m.type)
+
     if (move == "draw") {
       phase = Phase.gameOver;
       winner = PieceColor.draw;
 
       score[PieceColor.draw] = score[PieceColor.draw]! + 1;
 
-      // TODO: WAR to judge rule50, and endgameNMoveRule is not right.
+
       if (DB().ruleSettings.nMoveRule > 0 &&
           posKeyHistory.length >= DB().ruleSettings.nMoveRule - 1) {
         gameOverReason = GameOverReason.drawFiftyMove;
@@ -564,21 +564,21 @@ class Position {
           posKeyHistory.length >= DB().ruleSettings.endgameNMoveRule - 1) {
         gameOverReason = GameOverReason.drawEndgameFiftyMove;
       } else if (DB().ruleSettings.threefoldRepetitionRule) {
-        gameOverReason = GameOverReason.drawThreefoldRepetition; // TODO: Sure?
+        gameOverReason = GameOverReason.drawThreefoldRepetition;
       } else {
-        gameOverReason = GameOverReason.drawFullBoard; // TODO: Sure?
+        gameOverReason = GameOverReason.drawFullBoard;
       }
 
       return true;
     }
 
-    // TODO: Above is diff from position.cpp
+
 
     bool ret = false;
 
     final ExtMove m = ExtMove(move, side: _sideToMove);
 
-    // TODO: [Leptopoda] The below functions should all throw exceptions so the ret and conditional stuff can be removed
+
     switch (m.type) {
       case MoveType.remove:
         if (_removePiece(m.to) == const GameResponseOK()) {
@@ -606,18 +606,18 @@ class Position {
       case MoveType.place:
         ret = _putPiece(m.to);
         if (ret) {
-          // Reset rule 50 counter
+
           st.rule50 = 0;
           GameController().gameInstance.removeIndex = null;
-          //GameController().gameInstance.focusIndex = squareToIndex[m.to];
-          //GameController().gameInstance.blurIndex = squareToIndex[m.from];
+
+
           GameController().animationManager.animatePlace();
         }
         break;
       case MoveType.draw:
-        return false; // TODO
+        return false;
       case MoveType.none:
-        // ignore: only_throw_errors
+
         throw const EngineNoBestMove();
     }
 
@@ -625,12 +625,12 @@ class Position {
       return false;
     }
 
-    // Increment ply counters. In particular, rule50 will be reset to zero later on
-    // in case of a capture.
+
+
     ++_gamePly;
     ++st.pliesFromNull;
 
-    // Check move type instead of string length for position key history
+
     if (_record != null && _record!.type == MoveType.move) {
       if (st.key != posKeyHistory.lastF) {
         posKeyHistory.add(st.key);
@@ -656,7 +656,7 @@ class Position {
     return false;
   }
 
-///////////////////////////////////////////////////////////////////////////////
+
 
   bool _putPiece(int s) {
     final PieceColor us = _sideToMove;
@@ -678,7 +678,7 @@ class Position {
         s == _lastMillFromSquare[us]) {
       if (_potentialMillsCount(s, us, from: _currentSquare[us]!) > 0 &&
           _millsCount(_currentSquare[us]!) > 0) {
-        // TODO: Show text
+
         rootScaffoldMessengerKey.currentState!.showSnackBarClear("3->3 X");
         return false;
       }
@@ -696,7 +696,7 @@ class Position {
             GameController().gameInstance.blurIndex = null;
           }
         } else {
-          // Select piece
+
           if (_currentSquare[us] == s) {
             _currentSquare[us] = 0;
             selectedPieceNumber = 0;
@@ -715,7 +715,7 @@ class Position {
 
       if (pieceInHandCount[us] != null) {
         if (pieceInHandCount[us] == 0) {
-          // TODO: Maybe setup invalid position and tap the board.
+
           rootScaffoldMessengerKey.currentState!
               .showSnackBarClear("FEN: ${GameController().position.fen}");
           return false;
@@ -727,7 +727,7 @@ class Position {
         pieceOnBoardCount[us] = pieceOnBoardCount[us]! + 1;
       }
 
-      // Set square number
+
       placedPieceNumber++;
       sqAttrList[s].placedPieceNumber = placedPieceNumber;
 
@@ -737,7 +737,7 @@ class Position {
       _currentSquare[sideToMove] = 0;
       _lastMillFromSquare[sideToMove] = _lastMillToSquare[sideToMove] = 0;
 
-      // Record includes boardLayout
+
       _record = ExtMove(
         ExtMove.sqToNotation(s),
         side: us,
@@ -751,7 +751,7 @@ class Position {
       final int n = _millsCount(s);
 
       if (n == 0) {
-        // If no Mill
+
 
         if (pieceToRemoveCount[PieceColor.white]! != 0 ||
             pieceToRemoveCount[PieceColor.black]! != 0) {
@@ -773,7 +773,7 @@ class Position {
               changeSideToMove();
             }
 
-            // Check if Stalemate and change side to move if needed
+
             if (_checkIfGameIsOver()) {
               return true;
             }
@@ -781,14 +781,14 @@ class Position {
           }
         }
 
-        // Begin of set side to move
 
-        // Board is full at the end of Placing phase
+
+
         if (DB().ruleSettings.piecesCount == 12 &&
             (pieceOnBoardCount[PieceColor.white]! +
                     pieceOnBoardCount[PieceColor.black]! >=
                 rankNumber * fileNumber)) {
-          // TODO: BoardFullAction: Support other actions
+
           switch (DB().ruleSettings.boardFullAction) {
             case BoardFullAction.firstPlayerLose:
               setGameOver(PieceColor.black, GameOverReason.loseFullBoard);
@@ -818,19 +818,19 @@ class Position {
               break;
           }
         } else {
-          // Board is not full at the end of Placing phase
+
           if (!handlePlacingPhaseEnd()) {
             changeSideToMove();
           }
 
-          // Check if Stalemate and change side to move if needed
+
           if (_checkIfGameIsOver()) {
             return true;
           }
         }
-        // End of set side to move
+
       } else {
-        // If forming Mill
+
         int rm = 0;
 
         if (DB().ruleSettings.millFormationActionInPlacingPhase ==
@@ -903,7 +903,7 @@ class Position {
                 changeSideToMove();
               }
 
-              // Check if Stalemate and change side to move if needed
+
               if (_checkIfGameIsOver()) {
                 return true;
               }
@@ -935,7 +935,7 @@ class Position {
       return true;
     }
 
-    // If illegal
+
     if (pieceOnBoardCount[sideToMove]! > DB().ruleSettings.flyPieceCount ||
         !DB().ruleSettings.mayFly ||
         pieceInHandCount[sideToMove]! > 0) {
@@ -947,7 +947,7 @@ class Position {
         }
       }
 
-      // Not in moveTable
+
       if (md == moveDirectionNumber) {
         logger.i(
           "[position] putPiece: [$s] is not in [${_currentSquare[sideToMove]}]'s move table.",
@@ -956,7 +956,7 @@ class Position {
       }
     }
 
-    // Include boardLayout
+
     _record = ExtMove(
       "${ExtMove.sqToNotation(_currentSquare[sideToMove]!)}-${ExtMove.sqToNotation(s)}",
       side: sideToMove,
@@ -972,7 +972,7 @@ class Position {
     _revertKey(_currentSquare[sideToMove]!);
 
     if (_currentSquare[sideToMove] == 0) {
-      // TODO: Find the root cause and fix it
+
       logger.e(
         "[position] putPiece: _currentSquare[sideToMove] is 0.",
       );
@@ -981,7 +981,7 @@ class Position {
     _board[_currentSquare[sideToMove]!] =
         _grid[squareToIndex[_currentSquare[sideToMove]!]!] = PieceColor.none;
 
-    // Set square number
+
     sqAttrList[s].placedPieceNumber = placedPieceNumber;
 
     if (selectedPieceNumber != 0) {
@@ -994,7 +994,7 @@ class Position {
     final int n = _millsCount(s);
 
     if (n == 0) {
-      // If no mill during Moving phase
+
       _currentSquare[sideToMove] = 0;
       _lastMillFromSquare[sideToMove] = _lastMillToSquare[sideToMove] = 0;
       changeSideToMove();
@@ -1007,7 +1007,7 @@ class Position {
 
       SoundManager().playTone(Sound.place);
     } else {
-      // If forming mill during Moving phase
+
       if (DB().ruleSettings.restrictRepeatedMillsFormation) {
         final int m =
             _potentialMillsCount(_currentSquare[sideToMove]!, sideToMove);
@@ -1075,15 +1075,15 @@ class Position {
     if (DB().ruleSettings.millFormationActionInPlacingPhase ==
             MillFormationActionInPlacingPhase.markAndDelayRemovingPieces &&
         phase == Phase.placing) {
-      // Remove and mark
+
       _board[s] = _grid[squareToIndex[s]!] = PieceColor.marked;
       _updateKey(s);
     } else {
-      // Remove only
+
       _board[s] = _grid[squareToIndex[s]!] = PieceColor.none;
     }
 
-    // Record includes boardLayout
+
     _record = ExtMove(
       "x${ExtMove.sqToNotation(s)}",
       side: sideToMove,
@@ -1091,7 +1091,7 @@ class Position {
       moveIndex: _gamePly,
       roundIndex: _roundNumber,
     );
-    st.rule50 = 0; // TODO: Need to move out?
+    st.rule50 = 0;
 
     if (pieceOnBoardCount[_them] != null) {
       pieceOnBoardCount[_them] = pieceOnBoardCount[_them]! - 1;
@@ -1114,7 +1114,7 @@ class Position {
 
     _updateKeyMisc();
 
-    // Need to remove rest pieces.
+
     if (pieceToRemoveCount[sideToMove] != 0) {
       SoundManager().playTone(Sound.remove);
       return const GameResponseOK();
@@ -1130,7 +1130,7 @@ class Position {
     }
 
     if (pieceToRemoveCount[sideToMove] != 0) {
-      // Audios().playTone(Sound.remove);
+
       return const GameResponseOK();
     }
 
@@ -1146,7 +1146,7 @@ class Position {
   }
 
   GameResponse _selectPiece(int sq) {
-    // Allow selecting pieces during placing phase if allowed
+
     if (phase != Phase.moving &&
         !(phase == Phase.placing && canMoveDuringPlacingPhase())) {
       return const IllegalPhase();
@@ -1168,7 +1168,7 @@ class Position {
     action = Act.place;
     GameController().gameInstance.blurIndex = squareToIndex[sq];
 
-    // Set square number
+
     selectedPieceNumber = sqAttrList[sq].placedPieceNumber;
 
     return const GameResponseOK();
@@ -1204,7 +1204,7 @@ class Position {
         setSideToMove(PieceColor.black);
         return true;
       } else {
-        // Ignore
+
         return false;
       }
     }
@@ -1265,7 +1265,7 @@ class Position {
 
     if (pieceOnBoardCount[sideToMove]! + pieceInHandCount[sideToMove]! <
         DB().ruleSettings.piecesAtLeastCount) {
-      // Engine doesn't have this because of improving performance.
+
       setGameOver(sideToMove.opponent, GameOverReason.loseFewerThanThree);
       return true;
     }
@@ -1283,7 +1283,7 @@ class Position {
       return true;
     }
 
-    // Stalemate.
+
     if (phase == Phase.moving &&
         action == Act.select &&
         _isAllSurrounded(sideToMove)) {
@@ -1292,7 +1292,7 @@ class Position {
           setGameOver(sideToMove.opponent, GameOverReason.loseNoLegalMoves);
           return true;
         case StalemateAction.changeSideToMove:
-          changeSideToMove(); // TODO(calcitem): Need?
+          changeSideToMove();
           break;
         case StalemateAction.removeOpponentsPieceAndMakeNextMove:
           pieceToRemoveCount[sideToMove] = 1;
@@ -1372,7 +1372,7 @@ class Position {
     pieceToRemoveCount[PieceColor.white] = whiteRemove;
     pieceToRemoveCount[PieceColor.black] = blackRemove;
 
-    // TODO: Bits count is not enough
+
     _updateKeyMisc();
   }
 
@@ -1381,9 +1381,9 @@ class Position {
 
     if (sideToMove != c) {
       sideToMove = c;
-      // us = c;
 
-      // If we just switched from Black -> White, that means a new round:
+
+
       if (oldSide == PieceColor.black && c == PieceColor.white) {
         _roundNumber++;
       }
@@ -1420,33 +1420,33 @@ class Position {
     logger.t("[position] $_sideToMove to move.");
   }
 
-  /// Updates square if it hasn't been updated yet.
+
   int _updateKey(int s) {
     final PieceColor pieceType = _board[s];
 
     return st.key ^= _Zobrist.psq[pieceType.index][s];
   }
 
-  /// If the square has been updated,
-  /// then another update is equivalent to returning to
-  /// the state before the update
-  /// The significance of this function is to improve code readability.
+
+
+
+
   int _revertKey(int s) => _updateKey(s);
 
   void _updateKeyMisc() {
     st.key = st.key << _Zobrist.keyMiscBit >> _Zobrist.keyMiscBit;
 
-    // TODO: pieceToRemoveCount[sideToMove] or
-    // abs(pieceToRemoveCount[sideToMove] - pieceToRemoveCount[~sideToMove])?
-    // TODO: If pieceToRemoveCount[sideToMove]! <= 3,
-    //  the top 2 bits can store its value correctly;
-    //  if it is greater than 3, since only 2 bits are left,
-    //  the storage will be truncated or directly get 0,
-    //  and the original value cannot be completely retained.
+
+
+
+
+
+
+
     st.key |= pieceToRemoveCount[sideToMove]! << (32 - _Zobrist.keyMiscBit);
   }
 
-  ///////////////////////////////////////////////////////////////////////////////
+
 
   int _potentialMillsCount(int to, PieceColor c, {int from = 0}) {
     int n = 0;
@@ -1551,7 +1551,7 @@ class Position {
     return n;
   }
 
-  // Helper function to check if two lists are equal
+
   bool listEquals(List<int> list1, List<int> list2) {
     if (list1.length != list2.length) {
       return false;
@@ -1577,14 +1577,14 @@ class Position {
   }
 
   bool _isAllSurrounded(PieceColor c) {
-    // Full
+
     if (pieceOnBoardCount[PieceColor.white]! +
             pieceOnBoardCount[PieceColor.black]! >=
         rankNumber * fileNumber) {
       return true;
     }
 
-    // Can fly
+
     if (pieceOnBoardCount[c]! <= DB().ruleSettings.flyPieceCount &&
         DB().ruleSettings.mayFly) {
       return false;
@@ -1622,19 +1622,19 @@ class Position {
       return null;
     }
 
-    // 1) Start from the *end* of mainlineMoves
+
     int idx = moves.length - 1;
 
-    // 2) Go backwards until we see a remove move (starts with 'x') or run out
+
     while (idx >= 0 && !moves[idx].move.startsWith('x')) {
       idx--;
     }
 
-    // 3) Now move one step forward from that remove, so that we collect
-    //    everything *after* the remove
+
+
     idx++;
 
-    // 4) Gather the moves from that point to the end
+
     final StringBuffer buffer = StringBuffer();
     for (int i = idx; i < moves.length; i++) {
       buffer.writeSpace(moves[i].move);
@@ -1648,17 +1648,17 @@ class Position {
     return result;
   }
 
-  // ----------------------------------------------------------------------------------------
-  // Dynamic board layout string in ExtMove
-  // ----------------------------------------------------------------------------------------
 
-  /// generateBoardLayoutAfterThisMove returns a 3-rings layout string,
-  /// each ring has 8 positions, representing the outer/middle/inner ring.
-  /// For example: "OO***@**/@@**O@*@/O@O*@*O*"
-  /// 'O' means White, '@' means Black, '*' means None or empty.
+
+
+
+
+
+
+
   String generateBoardLayoutAfterThisMove() {
-    // <-- ADDED
-    // Helper to map PieceColor to a single char
+
+
     String pieceChar(PieceColor c) {
       if (c == PieceColor.white) {
         return 'O';
@@ -1669,7 +1669,7 @@ class Position {
       return '*';
     }
 
-    // We know squares 8..15 = outer ring, 16..23 = middle ring, 24..31 = inner ring
+
     String ringToString(int startIndex) {
       final StringBuffer sb = StringBuffer();
       for (int i = 0; i < 8; i++) {
@@ -1831,9 +1831,9 @@ extension SetupPosition on Position {
     final PieceColor piece = GameController().isPositionSetupMarkedPiece
         ? PieceColor.marked
         : sideToMove;
-    //final us = _sideToMove;
 
-    // TODO: Allow to overwrite.
+
+
     if (_board[s] != PieceColor.none) {
       SoundManager().playTone(Sound.illegal);
       return false;
@@ -1852,21 +1852,21 @@ extension SetupPosition on Position {
       }
     }
 
-    /*
-    // No need to update
-    if (pieceInHandCount[us] != null) {
-      pieceInHandCount[us] = pieceInHandCount[us]! - 1;
-    }
 
-    if (pieceOnBoardCount[us] != null) {
-      pieceOnBoardCount[us] = pieceOnBoardCount[us]! + 1;
-    }
-     */
+
+
+
+
+
+
+
+
+
 
     _grid[squareToIndex[s]!] = piece;
     _board[s] = piece;
 
-    //GameController().gameInstance.focusIndex = squareToIndex[s];
+
     SoundManager().playTone(GameController().isPositionSetupMarkedPiece
         ? Sound.remove
         : Sound.place);
@@ -1887,16 +1887,16 @@ extension SetupPosition on Position {
       return const IllegalAction();
     }
 
-    // Remove only
+
     _board[s] = _grid[squareToIndex[s]!] = PieceColor.none;
 
-    /*
-    // No need to update
-    // TODO: How to use it to verify?
-    if (pieceOnBoardCount[_them] != null) {
-      pieceOnBoardCount[_them] = pieceOnBoardCount[_them]! - 1;
-    }
-     */
+
+
+
+
+
+
+
 
     SoundManager().playTone(Sound.remove);
     GameController().setupPositionNotifier.updateIcons();
@@ -1934,7 +1934,7 @@ extension SetupPosition on Position {
         phase == Phase.placing &&
         pieceInHandCount[PieceColor.white] == 0 &&
         pieceInHandCount[PieceColor.black] == 0 &&
-        // TODO: Performance
+
         totalMillsCount(PieceColor.black) == 0) {
       return true;
     }
@@ -1969,7 +1969,7 @@ extension SetupPosition on Position {
       return true;
     }
 
-    // TODO: StalemateAction: Improve performance.
+
     if (_isAllSurrounded(c)) {
       return true;
     }

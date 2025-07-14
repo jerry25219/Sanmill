@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// rule_settings.dart
+
+
+
 
 import 'dart:ui';
 
@@ -56,7 +56,7 @@ enum StalemateAction {
   endWithStalemateDraw,
 }
 
-// Currently unused
+
 String enumName(Object enumEntry) {
   final Map<Object, String> nameMap = <Object, String>{
     BoardFullAction.firstPlayerLose: "0-1",
@@ -74,11 +74,11 @@ String enumName(Object enumEntry) {
   return nameMap[enumEntry] ?? '';
 }
 
-/// Rule Settings data model
-///
-/// Holds the default rule settings for the Mill game.
-/// Currently supported special rule settings include [TwelveMensMorrisRuleSettings].
-/// To get the rule settings corresponding to a given local use [RuleSettings.fromLocale].
+
+
+
+
+
 @HiveType(typeId: 3)
 @JsonSerializable()
 @CopyWith()
@@ -113,11 +113,11 @@ class RuleSettings {
     this.oneTimeUseMill = false,
   });
 
-  /// Encodes a Json style map into a [RuleSettings] object
+
   factory RuleSettings.fromJson(Map<String, dynamic> json) =>
       _$RuleSettingsFromJson(json);
 
-  /// Creates a Rules object based on the given locale
+
   factory RuleSettings.fromLocale(Locale? locale) {
     switch (locale?.languageCode) {
       case "af": // Afrikaans
@@ -184,7 +184,7 @@ class RuleSettings {
   @HiveField(20, defaultValue: false)
   final bool oneTimeUseMill;
 
-  /// decodes a Json from a [RuleSettings] object
+
   Map<String, dynamic> toJson() => _$RuleSettingsToJson(this);
 
   bool isLikelyNineMensMorris() {
@@ -221,7 +221,7 @@ class RuleSettings {
   }
 }
 
-// Defines an enumeration of all available rule sets for the Mill Game.
+
 enum RuleSet {
   current,
   nineMensMorris,
@@ -239,9 +239,9 @@ enum RuleSet {
   elfilja
 }
 
-/// Nine Men's Morris Rules
-///
-/// Those rules are the standard Nine Men's Morris rules.
+
+
+
 class NineMensMorrisRuleSettings extends RuleSettings {
   const NineMensMorrisRuleSettings()
       : super(
@@ -250,9 +250,9 @@ class NineMensMorrisRuleSettings extends RuleSettings {
         );
 }
 
-/// Twelve Men's Morris Rules
-///
-/// Those rules are the standard Twelve Men's Morris rules.
+
+
+
 class TwelveMensMorrisRuleSettings extends RuleSettings {
   const TwelveMensMorrisRuleSettings()
       : super(
@@ -261,10 +261,10 @@ class TwelveMensMorrisRuleSettings extends RuleSettings {
         );
 }
 
-/// Morabaraba Rules
-///
-/// https://en.wikipedia.org/wiki/Morabaraba
-/// https://mindsports.nl/index.php/the-pit/542-morabaraba
+
+
+
+
 class MorabarabaRuleSettings extends RuleSettings {
   const MorabarabaRuleSettings()
       : super(
@@ -276,12 +276,12 @@ class MorabarabaRuleSettings extends RuleSettings {
         );
 }
 
-/// Dooz Rules
-///
-/// https://web.archive.org/web/20150919203008/http://dezyan.blogfa.com/post-146.aspx
-/// https://www.aparat.com/v/y916l8o
-/// https://www.aparat.com/v/k974686
-/// https://www.aparat.com/v/o39z663 (mayFly & !mayRemoveFromMillsAlways)
+
+
+
+
+
+
 class DoozRuleSettings extends RuleSettings {
   const DoozRuleSettings()
       : super(
@@ -294,9 +294,9 @@ class DoozRuleSettings extends RuleSettings {
         );
 }
 
-/// Lasker Morris
-///
-/// Those rules are the Lasker Morris rules.
+
+
+
 class LaskerMorrisSettings extends RuleSettings {
   const LaskerMorrisSettings()
       : super(
@@ -305,9 +305,9 @@ class LaskerMorrisSettings extends RuleSettings {
         );
 }
 
-/// Russian One-Time Mill Rules
-///
-/// Those rules are the One-Time Mill Rules rules.
+
+
+
 class OneTimeMillRuleSettings extends RuleSettings {
   const OneTimeMillRuleSettings()
       : super(
@@ -316,9 +316,9 @@ class OneTimeMillRuleSettings extends RuleSettings {
         );
 }
 
-/// Korean Cham Gonu Rules
-///
-/// Those rules are the Cham Gonu rules.
+
+
+
 class ChamGonuRuleSettings extends RuleSettings {
   const ChamGonuRuleSettings()
       : super(
@@ -331,9 +331,9 @@ class ChamGonuRuleSettings extends RuleSettings {
         );
 }
 
-/// Chinese Zhi Qi Rules
-///
-/// https://zh.wikipedia.org/wiki/%E5%8D%81%E4%BA%8C%E5%AD%90%E7%9B%B4%E6%A3%8B
+
+
+
 class ZhiQiRuleSettings extends RuleSettings {
   const ZhiQiRuleSettings()
       : super(
@@ -347,10 +347,10 @@ class ZhiQiRuleSettings extends RuleSettings {
         );
 }
 
-/// Chinese Cheng San Qi Rules
-///
-/// https://baike.baidu.com/item/%E6%88%90%E4%B8%89%E6%A3%8B/241145
-/// https://blog.csdn.net/liuweilhy/article/details/83832180
+
+
+
+
 class ChengSanQiRuleSettings extends RuleSettings {
   const ChengSanQiRuleSettings()
       : super(
@@ -360,10 +360,10 @@ class ChengSanQiRuleSettings extends RuleSettings {
         );
 }
 
-/// Chinese Da San Qi Rules
-///
-/// https://baike.baidu.com/item/%E6%89%93%E4%B8%89%E6%A3%8B/1766527?fr=ge_ala
-/// https://blog.csdn.net/liuweilhy/article/details/83832180
+
+
+
+
 class DaSanQiRuleSettings extends RuleSettings {
   const DaSanQiRuleSettings()
       : super(
@@ -379,12 +379,12 @@ class DaSanQiRuleSettings extends RuleSettings {
         );
 }
 
-/// Indonesian Javanese Mul-Mulan Rules
-///
-/// https://id.wikibooks.org/wiki/Permainan_Tradisional_%22Catur%22_di_Indonesia/Mul-mulan_(Pulau_Jawa)
-/// https://id.wikibooks.org/wiki/Permainan_Tradisional_%22Catur%22_di_Indonesia/Derek_Dua_Olas_(Lombok)
-/// https://www.researchgate.net/publication/331483882_Adaptasi_Permainan_Tradisional_Mul-Mulan_ke_dalam_Perancangan_Game_Design_Document
-/// TODO: Implement the gotong rule.
+
+
+
+
+
+
 class MulMulanRuleSettings extends RuleSettings {
   const MulMulanRuleSettings()
       : super(
@@ -394,15 +394,15 @@ class MulMulanRuleSettings extends RuleSettings {
         );
 }
 
-/// Sri Lankan Nerenchi Rules
-///
-/// https://zh.wikipedia.org/wiki/%E5%8D%81%E4%BA%8C%E5%AD%90%E7%9B%B4%E6%A3%8B
-/// https://web.archive.org/web/20150924020646/http://www.gamesmuseum.uwaterloo.ca/VirtualExhibits/rowgames/nerenchi.html
-/// https://www.youtube.com/watch?v=9cfaO4GcFSM&ab_channel=HattonNationalBankPLC
-/// https://www.youtube.com/watch?v=9nK7gPKtbKc&t=24s&ab_channel=ShalikaWickramasinghe
-/// https://www.youtube.com/watch?v=iXYCtguLfUA&t=33s&ab_channel=PantherLk (Not Standard?)
-/// TOOD: Each with 12 counters of one color, take turns placing one counter at a time on an empty point, until 22 counters are placed and two points are left empty.
-/// TODO: A player making a Nerenchi during the placement phase, takes an extra turn.
+
+
+
+
+
+
+
+
+
 class NerenchiRuleSettings extends RuleSettings {
   const NerenchiRuleSettings()
       : super(
@@ -413,9 +413,9 @@ class NerenchiRuleSettings extends RuleSettings {
         );
 }
 
-/// El Filja rules in Algeria and parts of Morocco
-///
-/// Those rules are the El Filja rules.
+
+
+
 class ELFiljaRuleSettings extends RuleSettings {
   const ELFiljaRuleSettings()
       : super(
@@ -428,7 +428,7 @@ class ELFiljaRuleSettings extends RuleSettings {
         );
 }
 
-/// Rule Set Descriptions and Settings
+
 const Map<RuleSet, String> ruleSetDescriptions = <RuleSet, String>{
   RuleSet.current: 'Use the current game settings.',
   RuleSet.nineMensMorris: "Classic Nine Men's Morris game.",
@@ -447,7 +447,7 @@ const Map<RuleSet, String> ruleSetDescriptions = <RuleSet, String>{
       'El Filja, a variant played in Algeria and parts of Morocco.',
 };
 
-/// Rule Set Properties (e.g., Number of Pieces and Rule Settings)
+
 const Map<RuleSet, RuleSettings> ruleSetProperties = <RuleSet, RuleSettings>{
   RuleSet.current: RuleSettings(),
   RuleSet.nineMensMorris: NineMensMorrisRuleSettings(),

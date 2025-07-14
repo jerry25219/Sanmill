@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
 
-///@nodoc
+
 class WebviewGestureRecognizer extends VerticalDragGestureRecognizer {
   WebviewGestureRecognizer({
     required this.offset,

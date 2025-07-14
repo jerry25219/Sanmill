@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// constants.dart
+
+
+
 
 import 'dart:io';
 
@@ -102,7 +102,7 @@ class Constants {
   static bool isAndroid10Plus = false;
 }
 
-// TODO: Move to navigation folder
+
 final GlobalKey<NavigatorState> navigatorStateKey = GlobalKey();
 
 GlobalKey<NavigatorState> get currentNavigatorKey {

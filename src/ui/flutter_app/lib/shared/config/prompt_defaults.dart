@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// prompt_defaults.dart
 
-/// Default prompt templates for LLM interactions
+
+
+
+
 class PromptDefaults {
-  /// Default LLM prompt header text
+
   static const String llmPromptHeader = '''
 Nine Men's Morris:
 
@@ -160,7 +160,7 @@ They allow varied connections and are often central to strategic maneuvers.
 A typical `boardLayout` is shown by three 8-character segments (one segment per ring), for example:
 
 ```
-********/********/********
+****************
 ```
 - **First 8 characters**: Inner Ring in order (d5, e5, e4, e3, d3, c3, c4, c5)
 - **Second 8 characters**: Middle Ring in order (d6, f6, f4, f2, d2, b2, b4, b6)
@@ -175,7 +175,7 @@ Here, `'*'` indicates an empty point, `'O'` a white piece, `'@'` a black piece, 
 Please comment on the Nine Men's Morris Move List below. Add comments after each move using {} to express your own opinions. Please note that you should first clear the original {} and then fill in your own. The comments are all to indicate your intentions:    
 ''';
 
-  /// Default LLM prompt footer text
+
   static const String llmPromptFooter = '''
 Please directly output the modified Move List
 

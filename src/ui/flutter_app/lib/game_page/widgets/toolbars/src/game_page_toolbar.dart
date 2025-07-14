@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_page_toolbar.dart
+
+
+
 
 part of '../game_toolbar.dart';
 
@@ -20,8 +20,8 @@ class GamePageToolbar extends StatelessWidget {
   static const EdgeInsets _padding = EdgeInsets.symmetric(vertical: 2);
   static const EdgeInsets _margin = EdgeInsets.symmetric(vertical: 0.5);
 
-  /// Gets the calculated height this widget adds to it's children.
-  /// To get the absolute height add the surrounding [ButtonThemeData.height].
+
+
   static double get height => (_padding.vertical + _margin.vertical) * 2;
 
   @override

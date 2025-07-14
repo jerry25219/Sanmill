@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// setup_position_toolbar.dart
+
+
+
 
 part of '../game_toolbar.dart';
 
@@ -22,7 +22,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     PieceColor.white: 0,
     PieceColor.black: 0,
   };
-  int newPlaced = 0; // For White
+  int newPlaced = 0;
 
   late GameMode gameModeBackup;
   final Position position = GameController().position;
@@ -33,7 +33,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     GameController().gameInstance.gameMode = GameMode.setupPosition;
 
     positionBackup = GameController().position.clone();
-    //GameController().position.reset();
+
 
     newPieceColor = GameController().position.sideToMove;
 
@@ -60,15 +60,15 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     if (newPhase == Phase.moving) {
       newPlaced = DB().ruleSettings.piecesCount;
     } else if (newPhase == Phase.placing) {
-      /*
-      int c = GameController().recorder.placeCount;
 
-      if (GameController().position.sideToMove == PieceColor.white) {
-        newPlaced = (c + 1) ~/ 2;
-      } else if (GameController().position.sideToMove == PieceColor.black) {
-        newPlaced = c ~/ 2;
-      }
-      */
+
+
+
+
+
+
+
+
 
       setSetupPositionPlacedUpdateBegin();
     }
@@ -81,10 +81,10 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     GameController().position.phase = newPhase;
     GameController().position.winner = PieceColor.nobody;
 
-    // Zero rule50, and do not zero gamePly.
+
     GameController().position.st.rule50 = 0;
 
-    //TODO: newWhitePieceRemovedInPlacingPhase & newBlackPieceRemovedInPlacingPhase;
+
   }
 
   void restoreContext() {
@@ -106,12 +106,12 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
   static const EdgeInsets _padding = EdgeInsets.symmetric(vertical: 2);
   static const EdgeInsets _margin = EdgeInsets.symmetric(vertical: 0.2);
 
-  /// Gets the calculated height this widget adds to it's children.
-  /// To get the absolute height add the surrounding [ButtonThemeData.height].
+
+
   static double get height => (_padding.vertical + _margin.vertical) * 2;
 
   void setSetupPositionPiece(BuildContext context, PieceColor pieceColor) {
-    GameController().isPositionSetupMarkedPiece = false; // WAR
+    GameController().isPositionSetupMarkedPiece = false;
 
     if (pieceColor == PieceColor.white) {
       newPieceColor = PieceColor.black;
@@ -140,7 +140,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
     if (newPieceColor == PieceColor.white ||
         newPieceColor == PieceColor.black) {
-      // TODO: Duplicate: position/gameInstance.sideToMove
+
       GameController().position.sideToSetup = newPieceColor;
       GameController().position.sideToMove = newPieceColor;
     }
@@ -161,7 +161,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       newPhase = Phase.moving;
 
       if (newPieceColor == PieceColor.marked) {
-        setSetupPositionPiece(context, newPieceColor); // Jump to next
+        setSetupPositionPiece(context, newPieceColor);
       }
 
       newPlaced = DB().ruleSettings.piecesCount;
@@ -226,7 +226,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       newPieceCountNeedRemove[newPieceColor] = 0;
     }
 
-    // TODO: BoardFullAction: Not adapted
+
     newPieceCountNeedRemove[newPieceColor.opponent] = 0;
     GameController().position.pieceToRemoveCount[newPieceColor.opponent] = 0;
 
@@ -235,9 +235,9 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
     if (DB().ruleSettings.millFormationActionInPlacingPhase ==
         MillFormationActionInPlacingPhase.removalBasedOnMillCounts) {
-      // TODO: Adapt removalBasedOnMillCounts
-      // final int whiteMills = GameController().position.totalMillsCount(PieceColor.white);
-      // final int blackMills = GameController().position.totalMillsCount(PieceColor.black);
+
+
+
     }
 
     if (next == true) {
@@ -357,13 +357,13 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
         GameController().position.countPieceOnBoard(PieceColor.black);
     late int begin;
 
-    // TODO: Not accurate enough.
-    //  If the difference between the number of pieces on the two sides is large,
-    //  then it means that more values should be subtracted.
+
+
+
     if (DB().ruleSettings.millFormationActionInPlacingPhase ==
         MillFormationActionInPlacingPhase.markAndDelayRemovingPieces) {
-      //int marked = GameController().position.countPieceOnBoard(PieceColor.marked);
-      begin = max(white, black); // TODO: How to use marked?
+
+      begin = max(white, black);
     } else {
       begin = max(white, black);
     }
@@ -380,19 +380,19 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     final int val = setSetupPositionPlacedGetBegin();
 
     newPlaced = val;
-    /*
-    if (newPlaced > val) { // TODO: > or < ? How to Update?
-      newPlaced =
-          val; // TODO: So does it still make sense to read the length of the move list in initContext?
-    }
-    */
+
+
+
+
+
+
 
     if (mounted) {
       setState(() {});
     }
   }
 
-  // TODO: Duplicate with InfoDialog._infoText
+
   String _infoText(BuildContext context) {
     final GameController controller = GameController();
     final StringBuffer buffer = StringBuffer();
@@ -425,10 +425,10 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
     }
 
     final String? n1 = controller.gameRecorder.activeNode?.data?.notation;
-    // Last Move information
+
     if (n1 != null) {
-      // $them is only shown with the screen reader. It is convenient for
-      // the disabled to recognize whether the opponent has finished the moving.
+
+
       buffer.write(
         S.of(context).lastMove(
               DB().generalSettings.screenReaderSupport ? "$them, " : "",
@@ -450,7 +450,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
     final String msg = GameController().headerTipNotifier.message;
 
-    // the tip
+
     if (DB().generalSettings.screenReaderSupport &&
         msg.endsWith(".") &&
         msg.endsWith("!")) {
@@ -494,7 +494,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       setState(() {});
       GameController().headerTipNotifier.showTip(
           S.of(context).hasPlacedPieceCount(newPlaced),
-          snackBar: false); // TODO: How to show side to move?
+          snackBar: false);
 
       rootScaffoldMessengerKey.currentState!.showSnackBar(CustomSnackBar(
           _infoText(context),
@@ -539,7 +539,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
     final int piecesCount = DB().ruleSettings.piecesCount;
 
-    // TODO: Update dynamically and adapt BoardFullAction = 1
+
     if (newPhase == Phase.placing) {
       GameController().position.pieceInHandCount[PieceColor.black] =
           piecesCount - newPlaced;
@@ -571,7 +571,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
           DB().ruleSettings.millFormationActionInPlacingPhase ==
               MillFormationActionInPlacingPhase
                   .removeOpponentsPieceFromHandThenOpponentsTurn) {
-        // TODO: Right?
+
         GameController().position.pieceInHandCount[newPieceColor] = 0;
       } else {
         GameController().position.pieceInHandCount[PieceColor.white] =
@@ -581,14 +581,14 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       logger.e("Error: Invalid phase");
     }
 
-    // TODO: Verify count in placing phase.
+
   }
 
   bool setSetupPositionDone() {
-    // TODO: set position fen, such as piece etc.
-    //GameController().gameInstance.gameMode = gameModeBackup;
 
-    // When the number of pieces is less than 3, it is impossible to be in the Moving Phase.
+
+
+
     if (GameController().position.countPieceOnBoard(PieceColor.white) <
             DB().ruleSettings.piecesAtLeastCount ||
         GameController().position.countPieceOnBoard(PieceColor.black) <
@@ -598,7 +598,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
     GameController().position.phase = newPhase;
 
-    // Setup the Action.
+
     if (newPhase == Phase.placing) {
       GameController().position.action = Act.place;
     } else if (newPhase == Phase.moving) {
@@ -613,19 +613,19 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       GameController().position.action = Act.remove;
     }
 
-    // Correct newPieceColor and set sideToMove
+
     if (newPieceColor != PieceColor.white &&
         newPieceColor != PieceColor.black) {
-      newPieceColor = PieceColor.white; // TODO: Right?
+      newPieceColor = PieceColor.white;
     }
 
     GameController().position.sideToMove = newPieceColor;
 
     updateSetupPositionPiecesCount();
 
-    // TODO: WAR patch. Specifically for the initial position.
-    //  The position is illegal after switching to the Setup Position
-    //  and then switching back.
+
+
+
     if (GameController().position.pieceOnBoardCount[PieceColor.white]! <= 0 &&
         GameController().position.pieceOnBoardCount[PieceColor.black]! <= 0 &&
         GameController().position.pieceInHandCount[PieceColor.white]! <= 0 &&
@@ -640,14 +640,14 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       GameController().position.pieceInHandCount[PieceColor.white] =
           GameController().position.pieceInHandCount[PieceColor.black] =
               DB().ruleSettings.piecesCount;
-      // Note: _updateSetupPositionIcons -> setSetupPositionNeedRemove use newPieceCountNeedRemove to update pieceCountNeedRemove before, so maybe it it not need to do this.
+
       GameController().position.pieceToRemoveCount[PieceColor.white] =
           GameController().position.pieceToRemoveCount[PieceColor.black] = 0;
 
       GameController().reset(force: true);
     }
 
-    //GameController().recorder.clear(); // TODO: Set and parse fen.
+
     final String? fen = position.fen;
     if (fen == null) {
       logger.e("FEN is null.");
@@ -670,7 +670,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
 
   @override
   Widget build(BuildContext context) {
-    // Piece
+
     final ToolbarItem whitePieceButton = ToolbarItem.icon(
       key: const Key('white_piece_button'),
       onPressed: () => setSetupPositionPiece(context, PieceColor.white),
@@ -720,7 +720,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Rotate
+
     final ToolbarItem rotateButton = ToolbarItem.icon(
       key: const Key('rotate_button'),
       onPressed: () => setSetupPositionTransform(
@@ -733,7 +733,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Horizontal Flip
+
     final ToolbarItem horizontalFlipButton = ToolbarItem.icon(
       key: const Key('horizontal_flip_button'),
       onPressed: () =>
@@ -746,7 +746,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Vertical Flip
+
     final ToolbarItem verticalFlipButton = ToolbarItem.icon(
       key: const Key('vertical_flip_button'),
       onPressed: () =>
@@ -759,7 +759,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Inner Outer Flip
+
     final ToolbarItem innerOuterFlipButton = ToolbarItem.icon(
       key: const Key('inner_outer_flip_button'),
       onPressed: () =>
@@ -772,7 +772,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Clear
+
     final ToolbarItem clearButton = ToolbarItem.icon(
       key: const Key('clear_button'),
       onPressed: () {
@@ -788,7 +788,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Phase
+
     final ToolbarItem placingButton = ToolbarItem.icon(
       key: const Key('placing_button'),
       onPressed: () => <void>{setSetupPositionPhase(context, Phase.placing)},
@@ -811,7 +811,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Remove
+
     final ToolbarItem removeZeroButton = ToolbarItem.icon(
       key: const Key('remove_zero_button'),
       onPressed: () => <void>{setSetupPositionNeedRemove(0, true)},
@@ -889,7 +889,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       ),
     );
 
-    // Cancel
+
     final ToolbarItem cancelButton = ToolbarItem.icon(
       key: const Key('cancel_button'),
       onPressed: () => <void>{restoreContext()}, // TODO: setState();
@@ -934,7 +934,7 @@ class SetupPositionToolbarState extends State<SetupPositionToolbar> {
       Expanded(child: placedButton),
     ];
 
-    // TODO: Other buttons
+
     final List<Widget> row2 = <Widget>[
       Expanded(child: rotateButton),
       Expanded(child: horizontalFlipButton),

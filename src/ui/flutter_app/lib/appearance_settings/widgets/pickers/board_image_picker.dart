@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_image_picker.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 
-// List of built-in (internal) board image asset paths
+
 final List<String> _boardPaths = <String>[
   Assets.images.backgroundImage1.path,
   Assets.images.backgroundImage2.path,
@@ -19,8 +19,8 @@ final List<String> _boardPaths = <String>[
   Assets.images.backgroundImage10.path,
 ];
 
-/// A stateful widget that allows users to pick a board image.
-/// Users can choose from built-in images or select a custom image from their device.
+
+
 class _BoardImagePicker extends StatefulWidget {
   const _BoardImagePicker();
 
@@ -29,8 +29,8 @@ class _BoardImagePicker extends StatefulWidget {
 }
 
 class _BoardImagePickerState extends State<_BoardImagePicker> {
-  /// This flag prevents concurrent image picking operations. It is set to `true`
-  /// when an image pick starts and reset to `false` when the operation completes.
+
+
   bool _isPicking = false;
 
   @override
@@ -56,12 +56,12 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
             ),
-            // Total items: built-in images + 1 for the default solid color + 1 for custom image
+
             itemCount: _boardPaths.length + 2,
             itemBuilder: (BuildContext context, int index) {
               if (index < _boardPaths.length + 1) {
-                // Index 0: Default solid color
-                // Index 1 to _boardPaths.length: Built-in images
+
+
                 final String asset = index == 0 ? '' : _boardPaths[index - 1];
                 final bool isSelected = displaySettings.boardImagePath == asset;
 
@@ -73,7 +73,7 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
                       _handleSelectImage(asset, displaySettings.boardImagePath),
                 );
               } else {
-                // Last item: Custom Image Picker
+
                 return _CustomBoardImageItem(
                   key: const Key('custom_board_image_item'),
                   isSelected: displaySettings.boardImagePath ==
@@ -96,15 +96,15 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
     );
   }
 
-  /// Handles the image picking and cropping process using the crop_your_image plugin.
+
   Future<void> _pickImage(
     BuildContext context, {
     required String boardImageText,
     required DisplaySettings displaySettings,
   }) async {
-    // If an image pick is already in progress, exit immediately
+
     if (_isPicking) {
-      // Optionally, show a message or toast here to indicate a pick is already in progress.
+
       return;
     }
 
@@ -124,7 +124,7 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
           return;
         }
 
-        // Navigate to the cropping page
+
         final Uint8List? croppedData = await navigator.push<Uint8List?>(
           MaterialPageRoute<Uint8List?>(
             builder: (BuildContext context) => ImageCropPage(
@@ -137,8 +137,8 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
         );
 
         if (croppedData != null) {
-          // Determine the appropriate directory based on the platform
-          //final Directory appDir = await getApplicationDocumentsDirectory();
+
+
           final Directory? appDir = (!kIsWeb && Platform.isAndroid)
               ? await getExternalStorageDirectory()
               : await getApplicationDocumentsDirectory();
@@ -151,33 +151,33 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
               imagesDir.createSync(recursive: true);
             }
 
-            // Generate a unique filename using the current timestamp
+
             final String timestamp =
                 DateTime.now().millisecondsSinceEpoch.toString();
             final String filePath = '$imagesDirPath/$timestamp.png';
 
-            // Save the cropped image to the designated directory
+
             final File imageFile = File(filePath);
             await imageFile.writeAsBytes(croppedData);
 
-            // Capture the previous boardImagePath before updating
+
             final String previousPath = displaySettings.boardImagePath;
 
-            // Update displaySettings with the new custom image path
+
             DB().displaySettings = displaySettings.copyWith(
               customBoardImagePath: filePath,
               boardImagePath: filePath,
             );
 
-            // Handle the selection and prompt
+
             await _handleSelectImage(filePath, previousPath);
           }
         }
       }
     } on PlatformException catch (e) {
-      // In case the error is 'already_active', handle it gracefully
+
       if (e.code == 'already_active') {
-        // You could show a message to the user that the picker is busy
+
         logger.e('Another image picking operation is already in progress.');
       } else {
         rethrow;
@@ -187,11 +187,11 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
     }
   }
 
-  /// Handles the image selection logic, including prompting the user to set toolbars as transparent
+
   Future<void> _handleSelectImage(String? asset, String previousPath) async {
     final bool isSettingNewImage = asset != null && asset.isNotEmpty;
 
-    // Check if no image was previously set, and a new image is now being selected
+
     if (previousPath.isEmpty && isSettingNewImage) {
       final bool shouldMakeTransparent =
           await _promptMakeToolbarsTransparent(context, DB().displaySettings);
@@ -200,13 +200,13 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
       }
     }
 
-    // Update boardImagePath
+
     DB().displaySettings = DB().displaySettings.copyWith(
           boardImagePath: asset ?? '',
         );
   }
 
-  /// Displays a dialog prompting the user to set toolbars as transparent
+
   Future<bool> _promptMakeToolbarsTransparent(
       BuildContext context, DisplaySettings displaySettings) async {
     final bool isNavigationToolbarOpaque =
@@ -253,7 +253,7 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
       );
 
       if (result ?? false) {
-        // Make toolbars transparent
+
         _makeToolbarsTransparent();
         return true;
       }
@@ -262,7 +262,7 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
     return false;
   }
 
-  /// Sets all toolbars to be transparent
+
   void _makeToolbarsTransparent() {
     final ColorSettings colorSettings = DB().colorSettings;
     DB().colorSettings = colorSettings.copyWith(
@@ -276,7 +276,7 @@ class _BoardImagePickerState extends State<_BoardImagePicker> {
   }
 }
 
-/// A widget representing a single built-in board image or the default solid color.
+
 class _BoardImageItem extends StatelessWidget {
   const _BoardImageItem({
     required this.asset,
@@ -329,9 +329,9 @@ class _BoardImageItem extends StatelessWidget {
   }
 }
 
-/// A widget representing the custom board image picker.
-/// - When no custom image is selected, it shows a large add icon in the center.
-/// - If a custom image is selected, it displays the image with an edit icon at the center and a check icon at the top-right if selected.
+
+
+
 class _CustomBoardImageItem extends StatelessWidget {
   const _CustomBoardImageItem({
     required this.isSelected,
@@ -350,7 +350,7 @@ class _CustomBoardImageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: const Key('custom_board_image_gesture'),
-      // Tap to select the image if customImagePath is available, otherwise prompt to pick an image
+
       onTap: () {
         if (customImagePath != null) {
           onSelect();
@@ -360,7 +360,7 @@ class _CustomBoardImageItem extends StatelessWidget {
       },
       child: Stack(
         children: <Widget>[
-          // Background container displaying either an image or a placeholder color
+
           Container(
             key: const Key('custom_board_image_container'),
             decoration: BoxDecoration(
@@ -375,7 +375,7 @@ class _CustomBoardImageItem extends StatelessWidget {
                   : null,
               borderRadius: BorderRadius.circular(8),
             ),
-            // Shows an add icon when no custom image is selected
+
             child: customImagePath == null
                 ? const Center(
                     child: Icon(
@@ -387,7 +387,7 @@ class _CustomBoardImageItem extends StatelessWidget {
                   )
                 : null,
           ),
-          // Shows an edit icon if a custom image is selected
+
           if (customImagePath != null)
             Center(
               child: IconButton(
@@ -401,7 +401,7 @@ class _CustomBoardImageItem extends StatelessWidget {
                 tooltip: S.of(context).chooseYourPicture,
               ),
             ),
-          // Displays a checkmark icon in the top-right corner if selected
+
           Positioned(
             key: const Key('custom_board_image_check_positioned'),
             right: 8,
@@ -418,20 +418,20 @@ class _CustomBoardImageItem extends StatelessWidget {
   }
 }
 
-/// Returns an ImageProvider based on the current boardImagePath.
-/// - If the path is empty, returns null to indicate a solid color should be used.
-/// - If the path points to an existing file, returns a FileImage.
-/// - Otherwise, treats the path as an asset and returns an AssetImage.
+
+
+
+
 ImageProvider? getBoardImageProvider(DisplaySettings displaySettings) {
   final String path = displaySettings.boardImagePath;
   if (path.isEmpty) {
-    // Default to solid color if no image is selected
+
     return null;
   } else if (File(path).existsSync()) {
-    // If the path points to a file, use FileImage
+
     return FileImage(File(path));
   } else {
-    // Otherwise, assume it's an asset path and use AssetImage
+
     return AssetImage(path);
   }
 }

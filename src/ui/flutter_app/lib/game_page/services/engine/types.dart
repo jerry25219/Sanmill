@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// types.dart
+
+
+
 
 part of '../mill.dart';
 
@@ -175,7 +175,7 @@ extension PieceColorExtension on PieceColor {
         return getTranslucentColor(
             getAverageColor(
                 colorSettings.whitePieceColor, colorSettings.blackPieceColor),
-            0); // Fully transparent
+            0);
       case PieceColor.draw:
       case PieceColor.none:
       case PieceColor.nobody:
@@ -193,7 +193,7 @@ extension PieceColorExtension on PieceColor {
         return getTranslucentColor(
             getAverageColor(
                 AppTheme.whitePieceBorderColor, AppTheme.blackPieceBorderColor),
-            0); // Fully transparent
+            0);
       case PieceColor.draw:
       case PieceColor.none:
       case PieceColor.nobody:
@@ -275,7 +275,7 @@ extension ActExtension on Act {
   }
 }
 
-// TODO: [Leptopoda] Throw this stuff to faster detect a game over
+
 enum GameOverReason {
   loseFewerThanThree,
   loseNoLegalMoves,
@@ -311,7 +311,7 @@ extension GameOverReasonExtension on GameOverReason {
       case GameOverReason.drawFullBoard:
         return S.of(context).drawReasonBoardIsFull;
       case GameOverReason.drawStalemateCondition:
-        return S.of(context).endWithStalemateDraw; // TODO: Not drawReasonXXX
+        return S.of(context).endWithStalemateDraw;
       case GameOverReason.drawThreefoldRepetition:
         return S.of(context).drawReasonThreefoldRepetition;
     }
@@ -364,7 +364,7 @@ const int fileExNumber = fileNumber + 2;
 const int rankNumber = 8;
 
 int makeSquare(int file, int rank) {
-  // TODO: -2
+
   assert(file != -2 && rank != -2);
 
   if (file == 0 && rank == 0) {
@@ -384,7 +384,7 @@ bool isOk(int sq) {
     logger.w("[types] $sq is not OK");
   }
 
-  return ret; // TODO: SQ_NONE?
+  return ret;
 }
 
 int fileOf(int sq) {
@@ -436,7 +436,7 @@ Map<int, int> squareToIndex = <int, int>{
 
 int notationToSquare(String notation) {
   const Map<String, int> notationToSquare = <String, int>{
-    // inner ring (8-15)
+
     'd5': 8,
     'e5': 9,
     'e4': 10,
@@ -445,7 +445,7 @@ int notationToSquare(String notation) {
     'c3': 13,
     'c4': 14,
     'c5': 15,
-    // middle ring (16-23)
+
     'd6': 16,
     'f6': 17,
     'f4': 18,
@@ -454,7 +454,7 @@ int notationToSquare(String notation) {
     'b2': 21,
     'b4': 22,
     'b6': 23,
-    // outer ring (24-31)
+
     'd7': 24,
     'g7': 25,
     'g4': 26,
@@ -472,39 +472,39 @@ int notationToSquare(String notation) {
 Map<int, int> indexToSquare =
     squareToIndex.map((int k, int v) => MapEntry<int, int>(v, k));
 
-/*
-          a b c d e f g
-        7 X --- X --- X 7
-          |\    |    /|
-        6 | X - X - X | 6
-          | |\  |  /| |
-        5 | | X-X-X | | 5
-        4 X-X-X   X-X-X 4
-        3 | | X-X-X | | 3
-          | |/  |  \| |
-        2 | X - X - X | 2
-          |/    |    \|
-        1 X --- X --- X 1
-          a b c d e f g
 
-PlayOK numbering (left to right, top to bottom):
 
-   a7(1)  ---- d7(2)  ---- g7(3)
-   |            |             |
-   | b6(4)  - d6(5)  - f6(6)  |
-   | |          |           | |
-   | | c5(7) -d5(8) -e5(9)  | |
-a4(10)-b4(11)-c4(12) e4(13)-f4(14)-g4(15)
-   | | c3(16)-d3(17)-e3(18) | |
-   | |          |           | |
-   | b2(19) - d2(20) - f2(21) |
-   |            |             |
-   a1(22) ---- d1(23) ---- g1(24)
- */
 
-// PlayOK notation to standard notation mapping
-// PlayOK uses numbers 1-24 to represent board positions
-// Numbering is from left to right, top to bottom
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 const Map<String, String> playOkNotationToStandardNotation = <String, String>{
   "1": "a7", // outer ring, top left
   "2": "d7", // outer ring, top center

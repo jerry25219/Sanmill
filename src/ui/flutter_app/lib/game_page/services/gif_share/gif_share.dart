@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// gif_share.dart
+
+
+
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -51,14 +51,14 @@ class GifShare {
     images.clear();
   }
 
-  /// Call when "Share GIF" is tapped.
+
   Future<bool> shareGif() async {
     if (DB().generalSettings.gameScreenRecorderSupport == false) {
       return false;
     }
 
     if (pngs.isNotEmpty) {
-      pngs.removeRange(0, 1); // TODO: WAR
+      pngs.removeRange(0, 1);
     }
 
     final img.GifEncoder encoder = img.GifEncoder(

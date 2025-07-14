@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// llm_service.dart
+
+
+
 
 import 'dart:async';
 import 'dart:convert';
@@ -14,40 +14,40 @@ import '../../generated/intl/l10n.dart';
 import '../database/database.dart';
 import 'logger.dart';
 
-/// A service to interact with LLM providers like OpenAI API
+
 class LlmService {
-  /// Factory constructor
+
   factory LlmService() {
     return _instance;
   }
 
-  /// Private constructor
+
   LlmService._internal();
 
-  /// Singleton instance of LlmService
+
   static final LlmService _instance = LlmService._internal();
 
-  /// HTTP client for API requests
+
   final http.Client _httpClient = http.Client();
 
-  /// Returns a stream of string chunks as they are received
+
   Stream<String> generateResponse(String prompt, BuildContext context) async* {
     final GeneralSettings settings = DB().generalSettings;
 
-    // Check if LLM is configured
+
     if (!isLlmConfigured()) {
       yield S.of(context).llmNotConfiguredPleaseCheckYourSettings;
       return;
     }
 
     try {
-      // System prompt to guide the LLM's role
+
       final String systemPrompt = "You are a Nine Men's Morris game expert. "
           '${S.of(context).analyzeTheMovesAndProvideInsights}';
 
       switch (settings.llmProvider) {
         case LlmProvider.openai:
-          // Use OpenAI API
+
           final String response = await _callOpenAI(
             apiKey: settings.llmApiKey,
             baseUrl: settings.llmBaseUrl.isNotEmpty
@@ -63,7 +63,7 @@ class LlmService {
           break;
 
         case LlmProvider.google:
-          // Use Google Generative AI API
+
           final String response = await _callGoogleAI(
             apiKey: settings.llmApiKey,
             model: settings.llmModel,
@@ -76,7 +76,7 @@ class LlmService {
           break;
 
         case LlmProvider.ollama:
-          // Use Ollama API
+
           final String response = await _callOllama(
             baseUrl: settings.llmBaseUrl,
             model: settings.llmModel,
@@ -94,7 +94,7 @@ class LlmService {
     }
   }
 
-  /// Call OpenAI API
+
   Future<String> _callOpenAI({
     required String apiKey,
     required String baseUrl,
@@ -103,12 +103,12 @@ class LlmService {
     required String userPrompt,
     required double temperature,
   }) async {
-    // Compose the final endpoint. Users might pass either
-    // 1) "https://api.openai.com/v1"  (recommended)
-    // 2) "https://api.openai.com/v1/" (trailing slash)
-    // 3) "https://api.openai.com/v1/chat/completions" (full endpoint)
-    // To avoid duplicating the path, only append "/chat/completions" when
-    // it is NOT already present.
+
+
+
+
+
+
 
     String endpoint;
     final String trimmed = baseUrl.trim();
@@ -122,7 +122,7 @@ class LlmService {
 
     final Uri uri = Uri.parse(endpoint);
 
-    // Ensure the API key does not mistakenly carry the "Bearer " prefix or extra whitespace
+
     String sanitizedKey = apiKey.trim();
     if (sanitizedKey.toLowerCase().startsWith('bearer ')) {
       sanitizedKey = sanitizedKey.substring(7).trim();
@@ -140,16 +140,16 @@ class LlmService {
     final http.Response response = await _httpClient.post(
       uri,
       headers: <String, String>{
-        // Explicitly declare UTF-8 to avoid encoding issues with non‑ASCII text.
+
         'Content-Type': 'application/json; charset=utf-8',
-        // Attach the sanitized key in the required format
+
         'Authorization': 'Bearer $sanitizedKey',
       },
       body: jsonEncode(body),
     );
 
     if (response.statusCode == 200) {
-      // Decode using UTF-8 to ensure Chinese characters are handled correctly.
+
       final Map<String, dynamic> data =
           jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
       final List<dynamic> choices = data['choices'] as List<dynamic>;
@@ -167,7 +167,7 @@ class LlmService {
     }
   }
 
-  /// Call Google AI API
+
   Future<String> _callGoogleAI({
     required String apiKey,
     required String model,
@@ -216,7 +216,7 @@ class LlmService {
     }
   }
 
-  /// Call Ollama API
+
   Future<String> _callOllama({
     required String baseUrl,
     required String model,
@@ -257,9 +257,9 @@ class LlmService {
     }
   }
 
-  /// Extracts moves from LLM response for importing
+
   String extractMoves(String llmResponse) {
-    // Look for content between triple backticks
+
     final RegExp codeBlockRegex = RegExp(r'```(.+?)```', dotAll: true);
     final RegExpMatch? match = codeBlockRegex.firstMatch(llmResponse);
 
@@ -267,7 +267,7 @@ class LlmService {
       return match.group(1)!.trim();
     }
 
-    // If no code block found, look for numbered lines that might be moves
+
     final RegExp moveLines = RegExp(r'\d+\.\s+\w+.*');
     final Iterable<RegExpMatch> allMatches = moveLines.allMatches(llmResponse);
 
@@ -278,15 +278,15 @@ class LlmService {
           .join('\n');
     }
 
-    // If no structured content found, return the original response
+
     return llmResponse;
   }
 
-  /// Check if the LLM is properly configured
+
   bool isLlmConfigured() {
     final GeneralSettings settings = DB().generalSettings;
 
-    // Basic model check for all providers
+
     if (settings.llmModel.isEmpty) {
       return false;
     }
@@ -301,7 +301,7 @@ class LlmService {
     }
   }
 
-  /// Close the HTTP client
+
   void dispose() {
     _httpClient.close();
   }

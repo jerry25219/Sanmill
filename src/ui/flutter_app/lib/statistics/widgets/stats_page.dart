@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// statistics_page.dart
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -14,9 +14,9 @@ import '../../shared/widgets/settings/settings.dart';
 import '../../statistics/model/stats_settings.dart';
 import '../services/stats_service.dart';
 
-/// A widget to display game statistics and ratings
+
 class StatisticsPage extends StatelessWidget {
-  /// Creates a statistics page
+
   const StatisticsPage({super.key});
 
   @override
@@ -34,7 +34,7 @@ class StatisticsPage extends StatelessWidget {
             style: AppTheme.appBarTheme.titleTextStyle,
           ),
         ),
-        // backgroundColor: AppTheme.lightBackgroundColor,
+
         body: ValueListenableBuilder<dynamic>(
           key: const Key('statistics_page_value_listenable_builder'),
           valueListenable: DB().listenStatsSettings,
@@ -75,7 +75,7 @@ class StatisticsPage extends StatelessWidget {
             titleString: S.of(context).enableStatistics,
             subtitleString: S.of(context).enableStatistics_Detail),
 
-        // Reset statistics button
+
         ListTile(
           key: const Key('statistics_page_reset_statistics'),
           title: Text(
@@ -92,7 +92,7 @@ class StatisticsPage extends StatelessWidget {
     );
   }
 
-  // Show confirmation dialog before resetting statistics
+
   void _showResetStatsConfirmationDialog(BuildContext context) {
     final S l10n = S.of(context);
 
@@ -123,24 +123,24 @@ class StatisticsPage extends StatelessWidget {
     );
   }
 
-  // Reset all game statistics while preserving ratings
+
   void _resetStats() {
     final StatsSettings statsSettings = DB().statsSettings;
 
-    // Reset human player statistics
+
     final PlayerStats resetHumanStats = PlayerStats(
       lastUpdated: DateTime.now(),
-      // All statistics are reset to 0
+
     );
 
-    // Create new settings with reset human rating
+
     final StatsSettings newStatsSettings = statsSettings.copyWith(
       humanStats: resetHumanStats,
-      // Create a new empty map for AI ratings
+
       aiDifficultyStatsMap: <int, PlayerStats>{},
     );
 
-    // Update the database
+
     DB().statsSettings = newStatsSettings;
   }
 
@@ -156,7 +156,7 @@ class StatisticsPage extends StatelessWidget {
         key: const Key('statistics_page_human_rating_card_title'),
       ),
       children: <Widget>[
-        // Central large rating display
+
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Center(
@@ -169,7 +169,7 @@ class StatisticsPage extends StatelessWidget {
           ),
         ),
 
-        // Wins/Draws/Losses in table format with large text
+
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           decoration: BoxDecoration(
@@ -180,7 +180,7 @@ class StatisticsPage extends StatelessWidget {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              // Header row
+
               TableRow(
                 decoration: BoxDecoration(
                   border: Border(
@@ -234,7 +234,7 @@ class StatisticsPage extends StatelessWidget {
                   ),
                 ],
               ),
-              // Values row with large text
+
               TableRow(
                 children: <Widget>[
                   TableCell(
@@ -285,7 +285,7 @@ class StatisticsPage extends StatelessWidget {
           ),
         ),
 
-        // Percentage table showing win/draw/loss rates
+
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
           decoration: BoxDecoration(
@@ -296,7 +296,7 @@ class StatisticsPage extends StatelessWidget {
           child: Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: <TableRow>[
-              // Header row
+
               TableRow(
                 decoration: BoxDecoration(
                   border: Border(
@@ -350,7 +350,7 @@ class StatisticsPage extends StatelessWidget {
                   ),
                 ],
               ),
-              // Values row with percentage
+
               TableRow(
                 children: <Widget>[
                   TableCell(
@@ -407,7 +407,7 @@ class StatisticsPage extends StatelessWidget {
           ),
         ),
 
-        // Games Played and Last Updated as separate items
+
         Column(
           children: <Widget>[
             ListTile(
@@ -441,7 +441,7 @@ class StatisticsPage extends StatelessWidget {
     final S l10n = S.of(context);
     final ThemeData theme = Theme.of(context);
 
-    // Define monospace text style for statistics
+
     const TextStyle monoStyle = TextStyle(
       fontFamily: 'monospace',
       fontFeatures: <FontFeature>[FontFeature.tabularFigures()],
@@ -454,7 +454,7 @@ class StatisticsPage extends StatelessWidget {
         key: const Key('statistics_page_ai_statistics_card_title'),
       ),
       children: <Widget>[
-        // DataTable for AI statistics
+
         SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: DataTable(
@@ -477,37 +477,37 @@ class StatisticsPage extends StatelessWidget {
             rows: List<DataRow>.generate(
               30, // Display levels 1-30
               (int index) {
-                final int level = index + 1; // Levels start from 1
-                // Get the Statistics object for statistics (games played, wins, losses, draws, etc.)
+                final int level = index + 1;
+
                 final PlayerStats aiLvlStats =
                     settings.getAiDifficultyStats(level);
 
-                // Get the actual fixed ELO rating for this AI level for display
+
                 final int fixedAiEloRating =
                     EloRatingService.getFixedAiEloRating(level);
 
-                // Format: L/D/W (Losses/Draws/Wins) - Human perspective
+
                 final String totalStats =
                     '${aiLvlStats.losses}/${aiLvlStats.draws}/${aiLvlStats.wins}';
 
-                // Black stats from AI perspective becomes White stats from Human perspective (L/D/W format)
+
                 final String whiteStats = aiLvlStats.blackGamesPlayed > 0
                     ? '${aiLvlStats.blackLosses}/${aiLvlStats.blackDraws}/${aiLvlStats.blackWins}'
                     : '0/0/0';
 
-                // White stats from AI perspective becomes Black stats from Human perspective (L/D/W format)
+
                 final String blackStats = aiLvlStats.whiteGamesPlayed > 0
                     ? '${aiLvlStats.whiteLosses}/${aiLvlStats.whiteDraws}/${aiLvlStats.whiteWins}'
                     : '0/0/0';
 
                 return DataRow(
                   cells: <DataCell>[
-                    // Level
+
                     DataCell(Text(
                       '$level',
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     )),
-                    // ELO rating - Use the fixed ELO for display
+
                     DataCell(Text(
                       '$fixedAiEloRating', // Display the fixed ELO rating
                       style: TextStyle(
@@ -516,17 +516,17 @@ class StatisticsPage extends StatelessWidget {
                             fixedAiEloRating), // Color based on fixed ELO
                       ),
                     )),
-                    // Total stats with monospace font - from human perspective
+
                     DataCell(Text(
                       totalStats,
                       style: monoStyle,
                     )),
-                    // White stats with monospace font - from human perspective
+
                     DataCell(Text(
                       whiteStats,
                       style: monoStyle,
                     )),
-                    // Black stats with monospace font - from human perspective
+
                     DataCell(Text(
                       blackStats,
                       style: monoStyle,
@@ -551,17 +551,17 @@ class StatisticsPage extends StatelessWidget {
 
   Color _getRatingColor(BuildContext context, int rating) {
     if (rating >= 2000) {
-      return Colors.purple; // Master
+      return Colors.purple;
     } else if (rating >= 1800) {
-      return Colors.blue; // Expert
+      return Colors.blue;
     } else if (rating >= 1600) {
-      return Colors.green; // Advanced
+      return Colors.green;
     } else if (rating >= 1400) {
-      return Colors.amber; // Intermediate
+      return Colors.amber;
     } else if (rating >= 1200) {
-      return Colors.orange; // Average
+      return Colors.orange;
     } else {
-      return Colors.red; // Beginner
+      return Colors.red;
     }
   }
 }

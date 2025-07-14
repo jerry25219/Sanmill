@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// custom_drawer_header.dart
+
+
+
 
 part of '../../custom_drawer/custom_drawer.dart';
 
-/// Custom Drawer Header
-///
-/// Displays the animated header title in the drawer.
+
+
+
 class CustomDrawerHeader extends StatelessWidget {
   const CustomDrawerHeader({
     super.key,

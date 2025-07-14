@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// privacy_policy_dialog.dart
+
+
+
 
 import 'dart:io';
 
@@ -116,47 +116,47 @@ class PrivacyPolicyDialog extends StatelessWidget {
   }
 }
 
-// Future<void> showPrivacyDialog(BuildContext context) async {
-//   assert(Localizations.localeOf(context).languageCode.startsWith("zh_"));
-//
-//   final ThemeData themeData = Theme.of(context);
-//   final TextStyle aboutTextStyle = themeData.textTheme.bodyLarge!;
-//   final TextStyle linkStyle =
-//       aboutTextStyle.copyWith(color: themeData.colorScheme.secondary);
-//
-//   showDialog(
-//     context: context,
-//     barrierDismissible: false,
-//     builder: (BuildContext context) => AlertDialog(
-//       title: Text(
-//         S.of(context).privacyPolicy,
-//         key: const Key('show_privacy_dialog_title'),
-//       ),
-//       contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-//       content: ConstrainedBox(
-//         constraints: const BoxConstraints(minHeight: 48),
-//         child: PrivacyPolicyDialog._buildPrivacyPolicyText(
-//             context, aboutTextStyle, linkStyle),
-//       ),
-//       actions: <Widget>[
-//         TextButton(
-//           key: const Key('show_privacy_accept_button'),
-//           child: Text(S.of(context).accept),
-//           onPressed: () {
-//             PrivacyPolicyDialog._setPrivacyPolicyAcceptance(value: true);
-//             Navigator.pop(context);
-//           },
-//         ),
-//         if (!kIsWeb && Platform.isAndroid)
-//           TextButton(
-//             key: const Key('show_privacy_exit_button'),
-//             child: Text(S.of(context).exit),
-//             onPressed: () {
-//               PrivacyPolicyDialog._setPrivacyPolicyAcceptance(value: false);
-//               SystemChannels.platform.invokeMethod("SystemNavigator.pop");
-//             },
-//           ),
-//       ],
-//     ),
-//   );
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

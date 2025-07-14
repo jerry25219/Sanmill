@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// theme_selection_page.dart
+
+
+
 
 import 'dart:convert';
 import 'dart:math' as math;
@@ -17,8 +17,8 @@ import '../../shared/services/logger.dart';
 import '../../shared/themes/app_theme.dart';
 import '../models/color_settings.dart';
 
-/// A page that displays all available themes as mini boards,
-/// allowing users to visually preview and select a theme.
+
+
 class ThemeSelectionPage extends StatefulWidget {
   const ThemeSelectionPage({
     super.key,
@@ -32,28 +32,28 @@ class ThemeSelectionPage extends StatefulWidget {
 }
 
 class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
-  // List to store custom themes
+
   late List<ColorSettings> _customThemes;
 
   @override
   void initState() {
     super.initState();
-    // Load custom themes from database
+
     _customThemes = DB().customThemes;
   }
 
-  // Add this function to share theme JSON
+
   void _shareThemeJson(ColorSettings colorSettings) {
-    // Convert the color settings to JSON string
+
     final String json = jsonEncode(colorSettings.toJson());
 
     if (EnvironmentConfig.test) {
-      // Print the JSON string in test mode
+
       logger.i(json);
       return;
     }
 
-    // Share the JSON string
+
     SharePlus.instance.share(
       ShareParams(
         text: json,
@@ -64,7 +64,7 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Get all theme keys except the "custom" theme
+
     final List<ColorTheme> builtInThemes = AppTheme.colorThemes.keys
         .where((ColorTheme theme) => theme != ColorTheme.custom)
         .toList();
@@ -84,14 +84,14 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
           crossAxisSpacing: 16.0,
           mainAxisSpacing: 16.0,
         ),
-        // Update the item count to use builtInThemes instead of all themes
+
         itemCount: builtInThemes.length +
             1 +
             _customThemes.length, // Add 1 for Current theme + custom themes
         itemBuilder: (BuildContext context, int index) {
-          // Add Current theme as the first item
+
           if (index == 0) {
-            // Get current theme settings directly from the database
+
             final ColorSettings currentColors = DB().colorSettings;
 
             return ThemePreviewItem(
@@ -99,21 +99,21 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
               colors: currentColors,
               isSelected: widget.currentTheme == ColorTheme.current,
               onTap: () {
-                // Just exit without returning a value
+
                 Navigator.pop(context);
               },
               hasActionButton: true,
               actionIcon: FluentIcons.save_20_regular,
               actionTooltip: 'Save as custom theme',
               onActionPressed: () {
-                // Save current theme as custom
+
                 setState(() {
                   _customThemes.add(currentColors);
-                  // Save to database for persistence
+
                   DB().customThemes = _customThemes;
                 });
               },
-              // Add share button to current theme
+
               hasShareButton: true,
               shareIcon: FluentIcons.share_20_regular,
               shareTooltip: 'Share current theme',
@@ -121,7 +121,7 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
             );
           }
 
-          // Check if this is a custom theme
+
           if (index > 0 && index <= _customThemes.length) {
             final int customIndex = index - 1;
             final ColorSettings customColors = _customThemes[customIndex];
@@ -131,25 +131,25 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
               colors: customColors,
               isSelected:
                   widget.currentTheme == ColorTheme.custom && customIndex == 0,
-              // Only first custom can be selected
+
               onTap: () {
-                // Update the custom theme in AppTheme.colorThemes so the system can access it
+
                 AppTheme.updateCustomTheme(customColors);
 
-                // Save to database
+
                 DB().colorSettings = customColors;
 
-                // Return the custom theme enum to caller
+
                 Navigator.pop(context, ColorTheme.custom);
               },
               hasActionButton: true,
               actionIcon: FluentIcons.delete_20_regular,
               actionTooltip: 'Delete custom theme',
               onActionPressed: () {
-                // Delete this custom theme
+
                 setState(() {
                   _customThemes.removeAt(customIndex);
-                  // Update database
+
                   DB().customThemes = _customThemes;
                 });
               },
@@ -160,7 +160,7 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
             );
           }
 
-          // Adjust index for the built-in themes and use builtInThemes list
+
           final int themeIndex = index - 1 - _customThemes.length;
           final ColorTheme theme = builtInThemes[themeIndex];
           final ColorSettings colors = AppTheme.colorThemes[theme]!;
@@ -179,8 +179,8 @@ class _ThemeSelectionPageState extends State<ThemeSelectionPage> {
   }
 }
 
-/// A widget that displays a preview of a theme with a mini board
-/// and the theme name.
+
+
 class ThemePreviewItem extends StatelessWidget {
   const ThemePreviewItem({
     super.key,
@@ -247,7 +247,7 @@ class ThemePreviewItem extends StatelessWidget {
                 ),
               ],
             ),
-            // Action button (Save or Delete)
+
             if (hasActionButton && actionIcon != null)
               Positioned(
                 right: 4.0,
@@ -262,7 +262,7 @@ class ThemePreviewItem extends StatelessWidget {
                   onPressed: onActionPressed,
                 ),
               ),
-            // Share button in bottom-left
+
             if (hasShareButton && shareIcon != null)
               Positioned(
                 left: 4.0,
@@ -283,7 +283,7 @@ class ThemePreviewItem extends StatelessWidget {
     );
   }
 
-  // Convert theme enum to readable name
+
   String _getThemeName(BuildContext context, ColorTheme theme) {
     switch (theme) {
       case ColorTheme.light:
@@ -364,7 +364,7 @@ class ThemePreviewItem extends StatelessWidget {
   }
 }
 
-/// A widget that displays a preview of the board with the theme colors.
+
 class ThemePreviewBoard extends StatelessWidget {
   const ThemePreviewBoard({
     super.key,
@@ -388,7 +388,7 @@ class ThemePreviewBoard extends StatelessWidget {
   }
 }
 
-/// A custom painter that draws a simplified Mill board with theme colors.
+
 class ThemePreviewPainter extends CustomPainter {
   ThemePreviewPainter({required this.colors});
 
@@ -400,11 +400,11 @@ class ThemePreviewPainter extends CustomPainter {
     final double h = size.height;
     final double minSide = math.min(w, h);
 
-    // Center the board
+
     final double offsetX = (w - minSide) / 2;
     final double offsetY = (h - minSide) / 2;
 
-    // Parameters for the board layout
+
     const double outerMarginFactor = 0.1;
     const double ringSpacingFactor = 0.2;
     const double pieceRadiusFactor = 0.08;
@@ -413,28 +413,28 @@ class ThemePreviewPainter extends CustomPainter {
     final double ringSpacing = minSide * ringSpacingFactor;
     final double pieceRadius = minSide * pieceRadiusFactor;
 
-    // Calculate dimensions for the rings
+
     final double outerSize = minSide - 2 * outerMargin;
     final double middleSize = outerSize - 2 * ringSpacing;
     final double innerSize = middleSize - 2 * ringSpacing;
 
-    // Board lines paint
+
     final Paint boardPaint = Paint()
       ..color = colors.boardLineColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = math.max(1.0, minSide * 0.01);
 
-    // Draw outer square
+
     final Rect outerRect = Rect.fromLTWH(
         offsetX + outerMargin, offsetY + outerMargin, outerSize, outerSize);
     canvas.drawRect(outerRect, boardPaint);
 
-    // Draw middle square
+
     final Rect middleRect = Rect.fromLTWH(offsetX + outerMargin + ringSpacing,
         offsetY + outerMargin + ringSpacing, middleSize, middleSize);
     canvas.drawRect(middleRect, boardPaint);
 
-    // Draw inner square
+
     final Rect innerRect = Rect.fromLTWH(
         offsetX + outerMargin + 2 * ringSpacing,
         offsetY + outerMargin + 2 * ringSpacing,
@@ -442,35 +442,35 @@ class ThemePreviewPainter extends CustomPainter {
         innerSize);
     canvas.drawRect(innerRect, boardPaint);
 
-    // Draw connecting lines
-    // Top middle
+
+
     canvas.drawLine(
         Offset(offsetX + minSide / 2, offsetY + outerMargin),
         Offset(offsetX + minSide / 2, offsetY + outerMargin + 2 * ringSpacing),
         boardPaint);
 
-    // Bottom middle
+
     canvas.drawLine(
         Offset(offsetX + minSide / 2, offsetY + minSide - outerMargin),
         Offset(offsetX + minSide / 2,
             offsetY + minSide - outerMargin - 2 * ringSpacing),
         boardPaint);
 
-    // Left middle
+
     canvas.drawLine(
         Offset(offsetX + outerMargin, offsetY + minSide / 2),
         Offset(offsetX + outerMargin + 2 * ringSpacing, offsetY + minSide / 2),
         boardPaint);
 
-    // Right middle
+
     canvas.drawLine(
         Offset(offsetX + minSide - outerMargin, offsetY + minSide / 2),
         Offset(offsetX + minSide - outerMargin - 2 * ringSpacing,
             offsetY + minSide / 2),
         boardPaint);
 
-    // Draw piece samples
-    // White piece in top-left
+
+
     final Paint whitePaint = Paint()
       ..color = colors.whitePieceColor
       ..style = PaintingStyle.fill;
@@ -478,7 +478,7 @@ class ThemePreviewPainter extends CustomPainter {
     canvas.drawCircle(Offset(offsetX + outerMargin, offsetY + outerMargin),
         pieceRadius, whitePaint);
 
-    // Black piece in bottom-right
+
     final Paint blackPaint = Paint()
       ..color = colors.blackPieceColor
       ..style = PaintingStyle.fill;
@@ -489,7 +489,7 @@ class ThemePreviewPainter extends CustomPainter {
         pieceRadius,
         blackPaint);
 
-    // Highlighted piece in top-right
+
     final Paint highlightPaint = Paint()
       ..color = colors.pieceHighlightColor
       ..style = PaintingStyle.stroke

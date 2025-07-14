@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// mill_formation_action_in_placing_phase_modal.dart
+
+
+
 
 part of 'package:sanmill/rule_settings/widgets/rule_settings_page.dart';
 
@@ -49,14 +49,14 @@ class _MillFormationActionInPlacingPhaseModal extends StatelessWidget {
         MillFormationActionInPlacingPhase
             .removeOpponentsPieceFromHandThenYourTurn,
       ),
-      /*
-      // TODO: Implement
-      _buildRadioListTile(
-        context,
-        S.of(context).opponentRemovesOwnPiece,
-        MillFormationActionInPlacingPhase.opponentRemovesOwnPiece,
-      ),
-      */
+
+
+
+
+
+
+
+
       _buildRadioListTile(
         context,
         S.of(context).markAndDelayRemovingPieces,

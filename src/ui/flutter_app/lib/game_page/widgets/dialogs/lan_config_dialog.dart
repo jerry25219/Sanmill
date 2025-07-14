@@ -1,5 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
+
+
 
 import 'dart:async';
 
@@ -20,66 +20,66 @@ class LanConfigDialog extends StatefulWidget {
 
 class LanConfigDialogState extends State<LanConfigDialog>
     with SingleTickerProviderStateMixin {
-  /// Whether acting as host or joining a host.
+
   bool isHost = true;
 
-  /// Tracks if the server is running (Host mode).
+
   bool _serverRunning = false;
 
-  /// Tracks if discovery is in progress (Join mode).
+
   bool _isDiscovering = false;
 
-  /// Tracks if a connection attempt is in progress (Join mode).
+
   bool _isConnecting = false;
 
-  /// Whether a host was discovered successfully (Join mode).
+
   bool _discoverySuccess = false;
 
-  /// Current connection attempt count (Join mode).
+
   int _currentAttempt = 0;
 
-  /// Maximum connection attempts allowed (Join mode).
+
   final int _maxAttempt = 3;
 
-  /// Message to display when a protocol mismatch occurs.
+
   String? _protocolMismatchMessage;
 
-  /// Controls the rotating icon in Host mode.
+
   late AnimationController _iconController;
 
-  /// Controller for server IP input (Join mode).
+
   late TextEditingController _ipController;
 
-  /// Controller for server port input (Join mode).
+
   late TextEditingController _portController;
 
-  /// Error message for invalid IP input.
+
   String? _ipError;
 
-  /// Error message for invalid port input.
+
   String? _portError;
 
-  /// Timer used for discovery countdown (Join mode).
+
   Timer? _discoveryTimer;
 
-  /// Elapsed seconds during discovery (Join mode).
+
   int _discoverySeconds = 0;
 
-  /// Local instance of the network service.
+
   late NetworkService _networkService;
 
-  /// String to hold the host IP and port info for display.
+
   String _hostInfo = "";
 
-  /// Whether the Host wants to play White or Black.
-  /// `true` means the Host will be White (moving first).
-  /// `false` means the Host will be Black (moving second).
+
+
+
   bool _hostPlaysWhite = true;
 
-  /// The single selected IP address (if multiple are available).
+
   String? _selectedIP;
 
-  /// Collect and allow user to pick one IP if multiple are found.
+
   Future<void> _setupNetworkInterfaces() async {
     try {
       final List<String> ips = await NetworkService.getLocalIpAddresses();
@@ -93,7 +93,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
         return;
       }
 
-      // If only one IP, automatically select it
+
       if (ips.length == 1) {
         setState(() {
           _selectedIP = ips.first;
@@ -101,7 +101,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
         return;
       }
 
-      // Otherwise, show a selection dialog to pick exactly one IP
+
       setState(() {
         _selectedIP = ips.first;
       });
@@ -123,7 +123,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     }
   }
 
-  /// Dialog allowing the user to pick one IP from the list.
+
   void _showNetworkInterfaceDialog(List<String> ips) {
     if (!mounted) {
       return;
@@ -165,7 +165,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
   void initState() {
     super.initState();
 
-    // If an existing global network service is already hosting, reuse it
+
     if (GameController().networkService != null &&
         GameController().networkService!.isHost) {
       _networkService = GameController().networkService!;
@@ -174,10 +174,10 @@ class LanConfigDialogState extends State<LanConfigDialog>
       _networkService = NetworkService();
     }
 
-    // Use the previously chosen color if set
+
     _hostPlaysWhite = GameController().lanHostPlaysWhite ?? true;
 
-    // Prepare controllers
+
     _iconController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -186,7 +186,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     _ipController = TextEditingController(text: "192.168.1.100");
     _portController = TextEditingController(text: "33333");
 
-    // Setup callbacks
+
     _networkService.onDisconnected = () {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -235,7 +235,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
       }
     };
 
-    // After the widget is built, fetch interfaces
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setupNetworkInterfaces();
     });
@@ -248,23 +248,23 @@ class LanConfigDialogState extends State<LanConfigDialog>
     _portController.dispose();
     _discoveryTimer?.cancel();
 
-    // Clear host info
+
     _hostInfo = "";
 
-    // If not assigned globally, dispose our local instance
+
     if (GameController().networkService == null) {
       _networkService.dispose();
     }
     super.dispose();
   }
 
-  /// Start hosting (server).
+
   Future<void> _startHosting() async {
     if (!mounted) {
       return;
     }
 
-    // If global service is already hosting, just update UI
+
     final NetworkService? existingService = GameController().networkService;
     if (existingService != null &&
         existingService.isHost &&
@@ -275,7 +275,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
       return;
     }
 
-    // Assign this instance to global
+
     GameController().networkService = _networkService;
     GameController().lanHostPlaysWhite = _hostPlaysWhite;
 
@@ -307,7 +307,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
         },
       );
 
-      // Show only the single selected IP in _hostInfo
+
       setState(() {
         _hostInfo =
             _selectedIP != null ? "${_selectedIP!}:$port" : "Unknown:$port";
@@ -330,7 +330,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     }
   }
 
-  /// Stop hosting (server).
+
   Future<void> _stopHosting() async {
     if (!mounted) {
       return;
@@ -343,15 +343,15 @@ class LanConfigDialogState extends State<LanConfigDialog>
     _networkService.dispose();
     GameController().networkService = null;
 
-    // Inform user
+
     GameController().headerTipNotifier.showTip(S.of(context).serverIsStopped);
     GameController().headerIconsNotifier.showIcons();
 
-    // Create a new instance for potential next usage
+
     _networkService = NetworkService();
   }
 
-  /// Start discovery to find host.
+
   Future<void> _startDiscovery() async {
     final S translations = S.of(context);
 
@@ -372,10 +372,10 @@ class LanConfigDialogState extends State<LanConfigDialog>
       }
     });
 
-    // Use the single selected IP to broadcast discovery
+
     final String? discoveryIp = _selectedIP;
 
-    // Attempt to discover a host on that subnet
+
     final String? discovered = await NetworkService.discoverHost(
       localIpAddress: discoveryIp,
     );
@@ -415,7 +415,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     }
   }
 
-  /// Cancel discovery process.
+
   void _cancelDiscovery() {
     _discoveryTimer?.cancel();
     _discoveryTimer = null;
@@ -426,7 +426,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     }
   }
 
-  /// Attempt to connect to a discovered or manually entered host.
+
   Future<void> _onConnect() async {
     if (!mounted) {
       return;
@@ -516,13 +516,13 @@ class LanConfigDialogState extends State<LanConfigDialog>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Top + center content (scrollable if tall)
+
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Title and role selection
+
                     Text(
                       S.of(context).localNetworkSettings,
                       style: Theme.of(context).textTheme.titleLarge,
@@ -586,7 +586,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
                     ),
                     const SizedBox(height: 4),
 
-                    // Network status based on mode
+
                     if (isHost)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -669,7 +669,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
                         ],
                       ),
 
-                    // Show protocol mismatch if any
+
                     if (_protocolMismatchMessage != null) ...<Widget>[
                       const SizedBox(height: 8),
                       Text(
@@ -683,7 +683,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
 
                     const SizedBox(height: 8),
 
-                    // Host info if hosting
+
                     if (isHost && _serverRunning && _hostInfo.isNotEmpty)
                       Center(
                         child: Padding(
@@ -705,7 +705,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
               ),
             ),
 
-            // Bottom area for host or join UI
+
             if (isHost)
               Container(
                 height: 160.0,
@@ -723,12 +723,12 @@ class LanConfigDialogState extends State<LanConfigDialog>
     );
   }
 
-  /// Builds the UI for Host mode
+
   Widget _buildHostUI() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        // Host color selection (white or black), disabled when server is running
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -776,7 +776,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
         ),
         const SizedBox(height: 16),
 
-        // Start/stop hosting button
+
         Center(
           child: ElevatedButton.icon(
             style: ElevatedButton.styleFrom(
@@ -809,7 +809,7 @@ class LanConfigDialogState extends State<LanConfigDialog>
     );
   }
 
-  /// Builds the UI for Join mode.
+
   Widget _buildJoinUI() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

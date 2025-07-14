@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// color_settings.dart
+
+
+
 
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart' show Colors, Color, immutable;
@@ -14,9 +14,9 @@ import '../../shared/themes/ui_colors.dart';
 
 part 'color_settings.g.dart';
 
-/// Color data model
-///
-/// Holds the data needed for the Color Settings
+
+
+
 @HiveType(typeId: 0)
 @JsonSerializable()
 @CopyWith()
@@ -45,7 +45,7 @@ class ColorSettings {
     this.annotationToolbarIconColor = UIColors.cocoaBean60,
   });
 
-  /// Encodes a Json style map Color a [ColorSettings] object
+
   factory ColorSettings.fromJson(Map<String, dynamic> json) =>
       _$ColorSettingsFromJson(json);
 
@@ -183,6 +183,6 @@ class ColorSettings {
   @HiveField(18, defaultValue: UIColors.cocoaBean60)
   final Color annotationToolbarIconColor;
 
-  /// Decodes a Json from a [ColorSettings] object
+
   Map<String, dynamic> toJson() => _$ColorSettingsToJson(this);
 }

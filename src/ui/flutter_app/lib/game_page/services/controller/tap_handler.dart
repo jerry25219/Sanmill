@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// tap_handler.dart
+
+
+
 
 part of '../mill.dart';
 
@@ -10,7 +10,7 @@ class TapHandler {
     required this.context,
   });
 
-  //final position = GameController().position;
+
 
   static const String _logTag = "[Tap Handler]";
 
@@ -18,7 +18,7 @@ class TapHandler {
 
   final GameController controller = GameController();
 
-  //final gameMode = GameController().gameInstance.gameMode;
+
   final void Function(String tip, {bool snackBar}) showTip =
       GameController().headerTipNotifier.showTip;
 
@@ -44,19 +44,19 @@ class TapHandler {
     GameController().setupPositionNotifier.updateIcons();
     GameController().boardSemanticsNotifier.updateSemantics();
     GameController().headerTipNotifier.showTip(ExtMove.sqToNotation(sq),
-        snackBar: false); // TODO: snackBar is false?
+        snackBar: false);
 
-    return const EngineResponseHumanOK(); // TODO: Right?
+    return const EngineResponseHumanOK();
   }
 
   Future<EngineResponse> onBoardTap(int sq) async {
-    // Prevent interaction when analysis is in progress
+
     if (AnalysisMode.isAnalyzing) {
       logger.i("$_logTag Analysis in progress, ignoring tap.");
       return const EngineResponseSkip();
     }
 
-    // Clear any existing analysis markers when player makes a move
+
     AnalysisMode.disable();
 
     if (!GameController().isControllerReady) {
@@ -96,7 +96,7 @@ class TapHandler {
       return const EngineResponseSkip();
     }
 
-    // Handle LAN-specific logic
+
     if (GameController().gameInstance.gameMode == GameMode.humanVsLAN) {
       if (GameController().isLanOpponentTurn) {
         rootScaffoldMessengerKey.currentState!
@@ -111,19 +111,19 @@ class TapHandler {
       }
     }
 
-    // TODO: WAR
+
     if ((GameController().position.sideToMove == PieceColor.white ||
             GameController().position.sideToMove == PieceColor.black) ==
         false) {
-      // If modify sideToMove, not take effect, I don't know why.
+
       return const EngineResponseSkip();
     }
 
-    // WAR: Fix first tap response slow when piece count changed
+
     if (GameController().gameInstance.gameMode != GameMode.humanVsHuman &&
         GameController().position.phase == Phase.placing &&
         _isBoardEmpty) {
-      //controller.reset();
+
 
       if (isAiSideToMove) {
         logger.i("$_logTag AI is not thinking. AI is to move.");
@@ -138,12 +138,12 @@ class TapHandler {
       return const EngineResponseSkip();
     }
 
-    // Human to go
+
     bool ret = false;
     switch (GameController().position.action) {
       case Act.place:
         if (GameController().position._putPiece(sq)) {
-          // Stop timer when player makes a valid move
+
           PlayerTimer().stop();
 
           if (GameController().position.action == Act.remove) {
@@ -174,7 +174,7 @@ class TapHandler {
                           .position
                           .pieceOnBoardCount[PieceColor.black]! >
                       10) {
-                // TODO: Change conditions
+
                 if (GameController().gameInstance.gameMode ==
                     GameMode.humanVsHuman) {
                   final String side =
@@ -266,7 +266,7 @@ class TapHandler {
           }
           ret = true;
           logger.i("$_logTag putPiece: [$sq]");
-          // Timer start logic moved to the end of the successful move block (if ret == true)
+
           break;
         } else {
           logger.i("$_logTag putPiece: skip [$sq]");
@@ -285,8 +285,8 @@ class TapHandler {
           }
         }
 
-        // If cannot move, retry select, do not break
-        //[[fallthrough]];
+
+
         continue select;
       select:
       case Act.select:
@@ -370,7 +370,7 @@ class TapHandler {
             break;
           case NoPieceSelected():
             break;
-          // TODO: no CanOnlyMoveToAdjacentEmptyPoints events
+
           case CanOnlyMoveToAdjacentEmptyPoints():
             if (GameController().gameInstance.gameMode ==
                 GameMode.humanVsHuman) {
@@ -418,13 +418,13 @@ class TapHandler {
 
         switch (removeRet) {
           case GameResponseOK():
-            // Stop timer when player successfully removes a piece
+
             PlayerTimer().stop();
 
             ret = true;
             logger.i("$_logTag removePiece: [$sq]");
 
-            //SoundManager().playTone(Sound.remove);
+
 
             if (GameController().position.pieceToRemoveCount[
                     GameController().position.sideToMove]! >=
@@ -543,16 +543,16 @@ class TapHandler {
     }
 
     if (ret) {
-      // TODO: Need Others?
-      // Increment ply counters. In particular,
-      // rule50 will be reset to zero later on
-      // in case of a remove.
+
+
+
+
       ++GameController().position._gamePly;
       ++GameController().position.st.rule50;
       ++GameController().position.st.pliesFromNull;
 
-      // Update position history
-      // Check move type instead of string length for position key history
+
+
       if (GameController().position._record != null &&
           GameController().position._record!.type == MoveType.move) {
         if (posKeyHistory.isEmpty ||
@@ -578,13 +578,13 @@ class TapHandler {
               GameController().position.fen;
         }
 
-        // Send move to LAN opponent if applicable
+
         if (GameController().gameInstance.gameMode == GameMode.humanVsLAN) {
           final String moveNotation = GameController().position._record!.move;
           GameController().sendLanMove(moveNotation);
         }
 
-        // TODO: moveHistoryText is not lightweight.
+
         if (EnvironmentConfig.catcher && !kIsWeb && !Platform.isIOS) {
           final Catcher2Options options = catcher.getCurrentConfig()!;
           options.customParameters["MoveList"] =
@@ -592,15 +592,15 @@ class TapHandler {
         }
       }
 
-      // Start timer for the next player if the game is running and it's a human's turn.
-      // The `sideToMove` has already been updated by the move functions (_putPiece, _removePiece, _movePiece).
+
+
       if (_isGameRunning && !GameController().gameInstance.isAiSideToMove) {
         logger.d(
             "$_logTag Starting timer for human opponent after successful move.");
         PlayerTimer().start();
       }
 
-      // Check if the next player is AI and needs to start thinking
+
       if (_isGameRunning && GameController().gameInstance.isAiSideToMove) {
         return GameController().engineToGo(context, isMoveNow: false);
       } else {

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_result_alert_dialog.dart
+
+
+
 
 part of '../game_page.dart';
 
@@ -45,12 +45,12 @@ class GameResultAlertDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final Position position = GameController().position;
 
-    // Special handling for AI vs AI mode
+
     if (gameMode == GameMode.aiVsAi) {
       return _buildAiVsAiDialog(context, position);
     }
 
-    // TODO: Why sometimes _gameResult is null?
+
     position.result = _gameResult;
 
     switch (position.result) {
@@ -114,7 +114,7 @@ class GameResultAlertDialog extends StatelessWidget {
               "[config] skillLevel: ${DB().generalSettings.skillLevel}",
             );
 
-            // If game mode is LAN, call reset with lanRestart:true to preserve LAN settings
+
             if (GameController().gameInstance.gameMode == GameMode.humanVsLAN) {
               GameController().reset(lanRestart: true);
             } else {
@@ -136,7 +136,7 @@ class GameResultAlertDialog extends StatelessWidget {
                 fontSize: AppTheme.textScaler.scale(AppTheme.defaultFontSize)),
           ),
           onPressed: () {
-            // If game mode is LAN, call reset with lanRestart:true to preserve LAN settings
+
             if (GameController().gameInstance.gameMode == GameMode.humanVsLAN) {
               GameController().reset(lanRestart: true);
             } else {
@@ -169,7 +169,7 @@ class GameResultAlertDialog extends StatelessWidget {
                 fontSize: AppTheme.textScaler.scale(AppTheme.defaultFontSize)),
           ),
           onPressed: () {
-            // If game mode is LAN, call reset with lanRestart:true to preserve LAN settings
+
             if (GameController().gameInstance.gameMode == GameMode.humanVsLAN) {
               GameController().reset(lanRestart: true);
             } else {
@@ -218,7 +218,7 @@ class GameResultAlertDialog extends StatelessWidget {
                 const SizedBox(
                   height: 200,
                   width: double.infinity,
-                  // Reserve space for confetti animation
+
                 ),
             ],
           ),
@@ -228,7 +228,7 @@ class GameResultAlertDialog extends StatelessWidget {
               right: -50,
               top: 30,
               bottom: 0,
-              // Use updated ChallengeFireworks widget with confetti
+
               child: ChallengeConfetti(),
             ),
         ],
@@ -238,16 +238,16 @@ class GameResultAlertDialog extends StatelessWidget {
   }
 
   Widget _buildAiVsAiDialog(BuildContext context, Position position) {
-    // Get game duration in seconds
+
     final int gameDurationSeconds =
         GameController().calculateGameDurationSeconds();
 
-    // Format duration as minutes and seconds
+
     final int minutes = gameDurationSeconds ~/ 60;
     final int seconds = gameDurationSeconds % 60;
     final String durationText = "${minutes}m ${seconds}s";
 
-    // Determine winner text
+
     final String winnerText;
     if (position.winner == PieceColor.white) {
       winnerText = "White AI wins";
@@ -257,12 +257,12 @@ class GameResultAlertDialog extends StatelessWidget {
       winnerText = "Draw";
     }
 
-    // Get game over reason
+
     final String reason =
         position.gameOverReason?.getName(context, position.winner) ??
             S.of(context).gameOverUnknownReason;
 
-    // Build content with game duration
+
     final StringBuffer content = StringBuffer();
     content.writeln(reason);
     content.writeln();

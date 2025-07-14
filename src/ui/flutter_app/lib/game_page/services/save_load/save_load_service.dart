@@ -1,24 +1,24 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// save_load_service.dart
+
+
+
 
 part of '../mill.dart';
 
-//@visibleForTesting
+
 class LoadService {
   LoadService._();
 
   static const String _logTag = "[Loader]";
 
-  /// Retrieves the file path.
+
   static Future<String?> getFilePath(BuildContext context) async {
     Directory? dir = (!kIsWeb && Platform.isAndroid)
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
     final String path = '${dir?.path ?? ""}/records';
 
-    // Ensure the folder exists
+
     dir = Directory(path);
     if (!dir.existsSync()) {
       await dir.create(recursive: true);
@@ -46,7 +46,7 @@ class LoadService {
     return filePath;
   }
 
-  /// Picks file.
+
   static Future<String?> pickFile(BuildContext context) async {
     late Directory? dir;
 
@@ -55,15 +55,15 @@ class LoadService {
         : await getApplicationDocumentsDirectory();
     final String path = '${dir?.path ?? ""}/records';
 
-    // Ensure the folder exists
+
     dir = Directory(path);
     if (!dir.existsSync()) {
       await dir.create(recursive: true);
     }
 
-    // Copy PGN files recursively from ApplicationDocumentsDirectory to
-    // ExternalStorageDirectory without overwriting existing files.
-    // This is done for compatibility with version 3.x.
+
+
+
     if (!kIsWeb && Platform.isAndroid) {
       final Directory appDocDir = await getApplicationDocumentsDirectory();
       final String appDocPath = appDocDir.path;
@@ -97,7 +97,7 @@ class LoadService {
       showGoUp: !kIsWeb && !Platform.isLinux,
       allowedExtensions: <String>[".pgn"],
       fileTileSelectMode: FileTileSelectMode.checkButton,
-      // TODO: whole tile is better.
+
       theme: const FilesystemPickerTheme(
         backgroundColor: Colors.greenAccent,
       ),
@@ -110,7 +110,7 @@ class LoadService {
     return result;
   }
 
-  /// Saves the game to the file.
+
   static Future<String?> saveGame(BuildContext context,
       {bool shouldPop = true}) async {
     if (EnvironmentConfig.test == true) {
@@ -145,7 +145,7 @@ class LoadService {
       safePop();
     }
 
-    // Wait for the dialog to disappear before taking a screenshot
+
     Future<void>.delayed(const Duration(milliseconds: 500), () {
       ScreenshotService.takeScreenshot("records", "$filename.jpg");
 
@@ -159,7 +159,7 @@ class LoadService {
     return filename;
   }
 
-  /// Main function to load game from a file.
+
   static Future<void> loadGame(BuildContext context, String? filePath,
       {required bool isRunning, bool shouldPop = true}) async {
     filePath ??= await pickFileIfNeeded(context);
@@ -170,7 +170,7 @@ class LoadService {
     }
 
     try {
-      // Check for 'content' and 'file' prefix in the filePath
+
       if (filePath.startsWith('content') || filePath.startsWith('file://')) {
         final String? fileContent =
             await readFileContentFromUri(Uri.parse(filePath));
@@ -182,14 +182,14 @@ class LoadService {
         }
         GameController().initialSharingMoveList = fileContent;
         if (isRunning == true) {
-          // Delay 1s and refresh Game Board
+
           Future<void>.delayed(const Duration(seconds: 1), () {
             GameController().headerIconsNotifier.showIcons();
             GameController().boardSemanticsNotifier.updateSemantics();
           });
         }
       } else {
-        // Assume original file reading logic if not 'content'
+
         final String fileContent = await readFileContent(filePath);
         logger.t('$_logTag File Content: $fileContent');
         if (!context.mounted) {
@@ -206,7 +206,7 @@ class LoadService {
           return;
         }
         if (shouldPop) {
-          Navigator.pop(context); // Only pop if used in a dialog context.
+          Navigator.pop(context);
         }
       }
     } catch (exception) {
@@ -218,14 +218,14 @@ class LoadService {
         return;
       }
       if (shouldPop) {
-        Navigator.pop(context); // Only pop if used in a dialog context.
+        Navigator.pop(context);
       }
       return;
     }
     GameController().loadedGameFilenamePrefix =
         extractPgnFilenamePrefix(filePath);
 
-    // Delay to show the tip after the navigation tip is shown
+
     if (GameController().loadedGameFilenamePrefix != null) {
       final String loadedGameFilenamePrefix =
           GameController().loadedGameFilenamePrefix!;
@@ -236,10 +236,10 @@ class LoadService {
   }
 
   static String? extractPgnFilenamePrefix(String path) {
-    // Check if the string ends with '.pgn'
+
     if (path.endsWith('.pgn')) {
       try {
-        // Decode the entire URI before extraction
+
         final String decodedPath;
         if (path.startsWith("/")) {
           decodedPath = path;
@@ -247,25 +247,25 @@ class LoadService {
           decodedPath = Uri.decodeComponent(path);
         }
 
-        // Find the last index of '/'
+
         final int lastIndex = decodedPath.lastIndexOf('/');
         if (lastIndex == -1) {
           return null;
         }
-        // Extract the substring from the character after '/' to the start of '.pgn'
+
         return decodedPath.substring(lastIndex + 1, decodedPath.length - 4);
       } catch (e) {
-        // In case of any error, return null
+
         return null;
       }
     } else {
-      // Return null if the path does not start with 'content:' or does not end with '.pgn'
-      // Sometimes legal URI is not contain file name, so return null.
+
+
       return null;
     }
   }
 
-  /// Handles user interaction to pick a file.
+
   static Future<String?> pickFileIfNeeded(BuildContext context) async {
     if (EnvironmentConfig.test == true) {
       return null;
@@ -275,13 +275,13 @@ class LoadService {
     return pickFile(context);
   }
 
-  /// Reads content from a file at the provided path.
+
   static Future<String> readFileContent(String filePath) async {
     final File file = File(filePath);
     return file.readAsString();
   }
 
-  /// Import game data from file content.
+
   static Future<bool> importGameData(
       BuildContext context, String fileContent) async {
     try {
@@ -296,7 +296,7 @@ class LoadService {
 
       return true;
     } catch (exception) {
-      // Extract the specific error message instead of showing entire file content
+
       final String errorMessage = exception.toString();
       final String tip = S.of(context).cannotImport(errorMessage);
       rootScaffoldMessengerKey.currentState?.showSnackBarClear(tip);
@@ -306,7 +306,7 @@ class LoadService {
     }
   }
 
-  /// Handle game history navigation.
+
   static Future<void> handleHistoryNavigation(BuildContext context) async {
     await HistoryNavigator.takeBackAll(context, pop: false);
 
@@ -324,19 +324,19 @@ class LoadService {
           ?.showSnackBarClear(S.of(context).done);
       GameController()
           .headerTipNotifier
-          .showTip(S.of(context).done); // "Game loaded."
+          .showTip(S.of(context).done);
     } else {
       if (!context.mounted) {
         return;
       }
 
-      // Format error message to be more specific if importFailedStr is available
+
       String errorMessage;
       if (HistoryNavigator.importFailedStr.isNotEmpty) {
-        // Show specific segment that failed to import
+
         errorMessage = HistoryNavigator.importFailedStr;
       } else {
-        // Fallback to general error if no specific info is available
+
         errorMessage = "❌";
       }
 
@@ -348,7 +348,7 @@ class LoadService {
     }
   }
 
-  /// Reads content from a file at the provided content URI.
+
   static Future<String?> readFileContentFromUri(Uri uri) async {
     String? str;
     try {

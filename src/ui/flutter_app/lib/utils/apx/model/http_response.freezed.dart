@@ -1,24 +1,24 @@
-// dart format width=80
-// coverage:ignore-file
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+
+
+
+
 
 part of 'http_response.dart';
 
-// **************************************************************************
-// FreezedGenerator
-// **************************************************************************
 
-// dart format off
+
+
+
+
 T _$identity<T>(T value) => value;
 
-/// @nodoc
+
 mixin _$HttpResponse {
 
  int get code; String? get msg; String? get detail; String? get rq; dynamic get data;
-/// Create a copy of HttpResponse
-/// with the given fields replaced by the non-null parameter values.
+
+
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $HttpResponseCopyWith<HttpResponse> get copyWith => _$HttpResponseCopyWithImpl<HttpResponse>(this as HttpResponse, _$identity);
@@ -42,7 +42,7 @@ String toString() {
 
 }
 
-/// @nodoc
+
 abstract mixin class $HttpResponseCopyWith<$Res>  {
   factory $HttpResponseCopyWith(HttpResponse value, $Res Function(HttpResponse) _then) = _$HttpResponseCopyWithImpl;
 @useResult
@@ -54,7 +54,7 @@ $Res call({
 
 
 }
-/// @nodoc
+
 class _$HttpResponseCopyWithImpl<$Res>
     implements $HttpResponseCopyWith<$Res> {
   _$HttpResponseCopyWithImpl(this._self, this._then);
@@ -62,8 +62,8 @@ class _$HttpResponseCopyWithImpl<$Res>
   final HttpResponse _self;
   final $Res Function(HttpResponse) _then;
 
-/// Create a copy of HttpResponse
-/// with the given fields replaced by the non-null parameter values.
+
+
 @pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? msg = freezed,Object? detail = freezed,Object? rq = freezed,Object? data = freezed,}) {
   return _then(HttpResponse(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -78,4 +78,4 @@ as dynamic,
 }
 
 
-// dart format on
+

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// general_settings_page.dart
+
+
+
 
 import 'dart:async';
 import 'dart:io';
@@ -41,7 +41,7 @@ class GeneralSettingsPage extends StatelessWidget {
 
   static const String _logTag = "[general_settings_page]";
 
-  // Restore
+
   void _restoreFactoryDefaultSettings(BuildContext context) => showDialog(
         context: context,
         builder: (_) => const _ResetSettingsAlertDialog(),
@@ -63,13 +63,13 @@ class GeneralSettingsPage extends StatelessWidget {
         builder: (_) => const _HumanMoveTimeSlider(),
       );
 
-  // Show LLM prompt configuration dialog
+
   void _configureLlmPrompt(BuildContext context) => showDialog(
         context: context,
         builder: (_) => const LlmPromptDialog(),
       );
 
-  // Show LLM provider configuration dialog
+
   void _configureLlmProvider(BuildContext context) => showDialog(
         context: context,
         builder: (_) => const LlmConfigDialog(),
@@ -116,7 +116,7 @@ class GeneralSettingsPage extends StatelessWidget {
           rootScaffoldMessengerKey.currentState!
               .showSnackBarClear(S.of(context).whatIsMcts);
           break;
-        // TODO: Add whatIsRandom
+
         case SearchAlgorithm.random:
           rootScaffoldMessengerKey.currentState!
               .showSnackBarClear(S.of(context).whatIsRandom);
@@ -214,7 +214,7 @@ class GeneralSettingsPage extends StatelessWidget {
 
       logger.t("$_logTag soundTheme = $soundTheme");
 
-      // TODO: Take effect on iOS
+
       if (Platform.isIOS) {
         rootScaffoldMessengerKey.currentState!
             .showSnackBarClear(S.of(context).reopenToTakeEffect);
@@ -281,7 +281,7 @@ class GeneralSettingsPage extends StatelessWidget {
     GeneralSettings generalSettings,
   ) {
     void callback(int? ratio) {
-      // TODO: Take effect when start new game
+
       rootScaffoldMessengerKey.currentState!
           .showSnackBarClear(S.of(context).reopenToTakeEffect);
 
@@ -546,7 +546,7 @@ class GeneralSettingsPage extends StatelessWidget {
               ),
             ],
           ),
-        // TODO: Fix iOS bug
+
         if (!kIsWeb && (Platform.isAndroid))
           SettingsCard(
             key: const Key(
@@ -658,7 +658,7 @@ class GeneralSettingsPage extends StatelessWidget {
       child: Scaffold(
         key: const Key('general_settings_page_scaffold'),
         resizeToAvoidBottomInset: false,
-        // backgroundColor: AppTheme.lightBackgroundColor,
+
         appBar: AppBar(
           key: const Key('general_settings_page_app_bar'),
           leading: CustomDrawerIcon.of(context)?.drawerIcon,

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_recognition_debug_view.dart
+
+
+
 
 import 'dart:math' as math;
 import 'dart:typed_data';
@@ -16,7 +16,7 @@ import '../services/board_image_recognition.dart';
 import '../services/mill.dart';
 import 'piece_overlay_painter.dart';
 
-/// Debug stage types, more granular processing steps
+
 enum DebugStage {
   originalImage, // Original image
   resizedImage, // Resized image
@@ -30,7 +30,7 @@ enum DebugStage {
   finalResult, // Final recognition result
 }
 
-/// Board recognition debug view to show original image with recognition overlay
+
 class BoardRecognitionDebugView extends StatefulWidget {
   const BoardRecognitionDebugView({
     super.key,
@@ -51,56 +51,56 @@ class BoardRecognitionDebugView extends StatefulWidget {
   final bool showTitle;
   final BoardRecognitionDebugInfo? debugInfo;
 
-  /// Generate a temporary FEN string based on recognition results
-  /// This is used only for display purposes in the FinalResult stage
-  /// Made public static to be callable from BoardRecognitionDebugPage
+
+
+
   static String? generateTempFenString(Map<int, PieceColor> resultMap) {
     if (resultMap.isEmpty) {
       return null;
     }
 
     try {
-      // Create a custom FEN string directly from the recognition result map
-      // FEN format: "inner_ring/middle_ring/outer_ring side_to_move phase action ..."
-      // where each ring starts from 12 o'clock position and goes clockwise
 
-      // The mapping between recognition indices (0-23) and rings:
-      // Inner ring (16-23): Indices in image recognition are 16, 17, 18, 19, 20, 21, 22, 23
-      // Middle ring (8-15): Indices in image recognition are 8, 9, 10, 11, 12, 13, 14, 15
-      // Outer ring (0-7):   Indices in image recognition are 0, 1, 2, 3, 4, 5, 6, 7
 
-      // Build FEN string for each ring
+
+
+
+
+
+
+
+
       final StringBuffer fenBuffer = StringBuffer();
 
-      // First segment: Inner ring (indices 16-23, starting from top, shift left by 1)
+
       String innerRing = "";
-      // Start with index 17 (instead of 16) and loop around to get index 16 at the end
+
       for (int i = 0; i < 8; i++) {
-        final int idx = 16 + ((i + 1) % 8); // Shift left by 1
+        final int idx = 16 + ((i + 1) % 8);
         final PieceColor pieceColor = resultMap[idx] ?? PieceColor.none;
         innerRing += _pieceColorToFenChar(pieceColor);
       }
 
-      // Second segment: Middle ring (indices 8-15, starting from top, shift left by 1)
+
       String middleRing = "";
       for (int i = 0; i < 8; i++) {
-        final int idx = 8 + ((i + 1) % 8); // Shift left by 1
+        final int idx = 8 + ((i + 1) % 8);
         final PieceColor pieceColor = resultMap[idx] ?? PieceColor.none;
         middleRing += _pieceColorToFenChar(pieceColor);
       }
 
-      // Third segment: Outer ring (indices 0-7, starting from top, shift left by 1)
+
       String outerRing = "";
       for (int i = 0; i < 8; i++) {
-        final int idx = (i + 1) % 8; // Shift left by 1
+        final int idx = (i + 1) % 8;
         final PieceColor pieceColor = resultMap[idx] ?? PieceColor.none;
         outerRing += _pieceColorToFenChar(pieceColor);
       }
 
-      // Combine rings with separators
+
       fenBuffer.write('$innerRing/$middleRing/$outerRing');
 
-      // Count pieces
+
       int whiteCount = 0;
       int blackCount = 0;
 
@@ -113,25 +113,25 @@ class BoardRecognitionDebugView extends StatefulWidget {
         }
       }
 
-      // Determine phase and side to move based on piece counts
+
       final int piecesCount = DB().ruleSettings.piecesCount;
       final String phase =
           (whiteCount < piecesCount || blackCount < piecesCount) ? "p" : "m";
 
-      // If white has more pieces, it's black's turn; otherwise white's turn
+
       final String sideToMove = (whiteCount > blackCount) ? "b" : "w";
 
-      // Add action - use "p" for placing or "s" for select
+
       final String action = (phase == "p") ? "p" : "s";
 
-      // Append remaining FEN fields
+
       fenBuffer.write(' $sideToMove $phase $action');
 
-      // Add piece counts
+
       fenBuffer.write(
           ' $whiteCount ${piecesCount - whiteCount} $blackCount ${piecesCount - blackCount}');
 
-      // Add remaining standard values for a valid FEN
+
       fenBuffer.write(' 0 0 0 0 0 0 0 0 0 0 0');
 
       return fenBuffer.toString();
@@ -141,7 +141,7 @@ class BoardRecognitionDebugView extends StatefulWidget {
     }
   }
 
-  /// Helper method to convert piece color to FEN character
+
   static String _pieceColorToFenChar(PieceColor color) {
     return color.string;
   }
@@ -154,12 +154,12 @@ class BoardRecognitionDebugView extends StatefulWidget {
 class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
   DebugStage _currentStage = DebugStage.finalResult;
 
-  // Cache converted image data to avoid redundant conversions
+
   Uint8List? _cachedOriginalImage;
   Uint8List? _cachedResizedImage;
   Uint8List? _cachedEnhancedImage;
 
-  // Processed mask (after dilation/erosion)
+
   List<List<bool>>? _processedMask;
 
   @override
@@ -176,17 +176,17 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     }
   }
 
-  // Prepare images for processing each stage
+
   void _prepareImages() {
-    // Prepare original image
+
     if (widget.debugInfo?.originalImage != null) {
       _cachedOriginalImage =
           _convertImageToBytes(widget.debugInfo!.originalImage!);
     }
 
-    // Prepare resized image (can be obtained from processed image, this is just an example)
+
     if (widget.debugInfo?.processedImage != null) {
-      // Use copyResize to create resized image
+
       final img.Image? resizedImage = widget.debugInfo?.originalImage != null
           ? img.copyResize(
               widget.debugInfo!.originalImage!,
@@ -200,36 +200,36 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
       }
     }
 
-    // Prepare contrast-enhanced image
+
     if (widget.debugInfo?.processedImage != null) {
       _cachedEnhancedImage =
           _convertImageToBytes(widget.debugInfo!.processedImage!);
     }
 
-    // Process mask
+
     if (widget.debugInfo?.boardMask != null) {
-      // Create a copy as "processed mask"
-      // In actual application, this should be the mask after dilation/erosion processing
+
+
       _processedMask = List<List<bool>>.generate(
         widget.debugInfo!.boardMask!.length,
         (int i) => List<bool>.from(widget.debugInfo!.boardMask![i]),
       );
 
-      // Simulate processed mask (in fact, this processing should be done by BoardImageRecognitionService)
+
       if (_processedMask != null) {
-        // This is just for demonstration, in fact, it should be provided by BoardImageRecognitionService
+
       }
     }
   }
 
-  // Convert Image to Uint8List
+
   Uint8List _convertImageToBytes(img.Image image) {
     return Uint8List.fromList(img.encodeJpg(image));
   }
 
   @override
   Widget build(BuildContext context) {
-    // Main visualization component
+
     final Widget visualizationWidget = AspectRatio(
       aspectRatio: widget.processedImageWidth / widget.processedImageHeight,
       child: ClipRRect(
@@ -237,21 +237,21 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            // Base layer: Display different content based on selected debug stage
+
             _buildBaseLayer(),
 
-            // Top layer: Visual overlay, display different overlay content based on different stages
+
             _buildOverlayLayer(),
           ],
         ),
       ),
     );
 
-    // Wrapped in a column with stage selection
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        // If request title, add
+
         if (widget.showTitle)
           Padding(
             padding: const EdgeInsets.all(12.0),
@@ -262,20 +262,20 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
             ),
           ),
 
-        // Debug stage selector
+
         if (widget.debugInfo != null)
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: _buildStageSelector(),
           ),
 
-        // Visualization
+
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: visualizationWidget,
         ),
 
-        // Stage information text
+
         if (widget.debugInfo != null)
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -285,7 +285,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     );
   }
 
-  /// Build stage selector
+
   Widget _buildStageSelector() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -311,7 +311,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     );
   }
 
-  /// Build stage button
+
   Widget _stageButton(String label, DebugStage stage) {
     final bool isSelected = _currentStage == stage;
 
@@ -339,13 +339,13 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     );
   }
 
-  /// Build overlay (display different overlay content based on different stages)
+
   Widget _buildOverlayLayer() {
     if (widget.debugInfo == null) {
       return const SizedBox.shrink();
     }
 
-    // Do not display overlay if image and board are not fully loaded
+
     if (widget.imageBytes.isEmpty) {
       return const Center(
         child: CircularProgressIndicator(),
@@ -357,7 +357,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
             !(widget.debugInfo!.boardRect!.width <= 0 ||
                 widget.debugInfo!.boardRect!.height <= 0));
 
-    // Select appropriate overlay based on current debug stage
+
     switch (_currentStage) {
       case DebugStage.boardDetection:
         if (!boardDetected) {
@@ -398,7 +398,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
         } else if (widget.debugInfo!.boardRect != null &&
             !(widget.debugInfo!.boardRect!.width <= 0 ||
                 widget.debugInfo!.boardRect!.height <= 0)) {
-          // Display detected board area (using rectangle)
+
           return BoardRectOverlay(
             boardRect: widget.debugInfo!.boardRect!,
             imageSize: Size(
@@ -407,7 +407,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
             ),
           );
         } else {
-          // Display detected board points (using point grid)
+
           return CustomPaint(
             size: Size.infinite,
             painter: PieceOverlayPainter(
@@ -423,7 +423,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
         }
 
       case DebugStage.boardPointsDetection:
-        // If no board is detected, point detection will also fail
+
         if (widget.boardPoints.isEmpty) {
           return Center(
             child: Container(
@@ -559,7 +559,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
           }
         }
 
-        // Generate a temporary FEN string for display using the public static method
+
         final String? fenString =
             BoardRecognitionDebugView.generateTempFenString(widget.resultMap);
 
@@ -576,7 +576,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
               const Text(
                   'Red Circle Indicates Black Pieces, Green Circle Indicates White Pieces'),
               const SizedBox(height: 10),
-              // Add FEN string display
+
               if (fenString != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -625,36 +625,36 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
       case DebugStage.enhancedImage:
       case DebugStage.boardMaskRaw:
       case DebugStage.boardMaskProcessed:
-        return const SizedBox.shrink(); // Other stages do not display overlay
+        return const SizedBox.shrink();
     }
   }
 
-  /// Build base layer (display different content based on different stages)
+
   Widget _buildBaseLayer() {
     switch (_currentStage) {
       case DebugStage.originalImage:
-        // Use cached original image, if available
+
         if (_cachedOriginalImage != null) {
           return Image.memory(_cachedOriginalImage!, fit: BoxFit.contain);
         }
         return _buildImageNotAvailable('Original Image');
 
       case DebugStage.resizedImage:
-        // Resized image
+
         if (_cachedResizedImage != null) {
           return Image.memory(_cachedResizedImage!, fit: BoxFit.contain);
         }
         return _buildImageNotAvailable('Resized Image');
 
       case DebugStage.enhancedImage:
-        // Use cached contrast-enhanced image
+
         if (_cachedEnhancedImage != null) {
           return Image.memory(_cachedEnhancedImage!, fit: BoxFit.contain);
         }
         return _buildImageNotAvailable('Enhanced Contrast Image');
 
       case DebugStage.boardMaskRaw:
-        // Display initial board mask
+
         if (widget.debugInfo?.boardMask != null) {
           return CustomPaint(
             painter: MaskPainter(
@@ -671,7 +671,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
         return _buildImageNotAvailable('Initial Board Mask');
 
       case DebugStage.boardMaskProcessed:
-        // Display processed board mask (after dilation/erosion)
+
         if (_processedMask != null) {
           return CustomPaint(
             painter: MaskPainter(
@@ -688,7 +688,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
         return _buildImageNotAvailable('Processed Mask');
 
       case DebugStage.boardDetection:
-        // Use original image as background in board detection step for easier detection result visibility
+
         return Image.memory(widget.imageBytes, fit: BoxFit.cover);
 
       case DebugStage.boardPointsDetection:
@@ -699,7 +699,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     }
   }
 
-  /// Build image not available display
+
   Widget _buildImageNotAvailable(String label) {
     return Center(
       child: Column(
@@ -712,7 +712,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
     );
   }
 
-  /// Build stage information text
+
   Widget _buildStageInfo() {
     switch (_currentStage) {
       case DebugStage.originalImage:
@@ -760,7 +760,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
           return const Text('Board Mask Information Not Available');
         }
 
-        // Calculate the number of set points in the mask
+
         int setPoints = 0;
         for (final List<bool> row in mask) {
           for (final bool value in row) {
@@ -999,7 +999,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
           }
         }
 
-        // Generate a temporary FEN string for display using the public static method
+
         final String? fenString =
             BoardRecognitionDebugView.generateTempFenString(widget.resultMap);
 
@@ -1016,7 +1016,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
               const Text(
                   'Red Circle Indicates Black Pieces, Green Circle Indicates White Pieces'),
               const SizedBox(height: 10),
-              // Add FEN string display
+
               if (fenString != null)
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1063,7 +1063,7 @@ class _BoardRecognitionDebugViewState extends State<BoardRecognitionDebugView> {
   }
 }
 
-/// Custom canvas for drawing mask
+
 class MaskPainter extends CustomPainter {
   MaskPainter({
     required this.mask,
@@ -1079,20 +1079,20 @@ class MaskPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw black background
+
     canvas.drawRect(
       Rect.fromLTWH(0, 0, size.width, size.height),
       Paint()..color = Colors.black,
     );
 
-    // Calculate scaling ratio
+
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
 
-    // Draw mask (specified color part)
+
     final Paint maskPaint = Paint()..color = maskColor.withValues(alpha: 0.7);
 
-    // To optimize performance, we draw small rectangles instead of single pixels
+
     for (int y = 0; y < mask.length; y += 2) {
       for (int x = 0; x < mask[y].length; x += 2) {
         if (y < mask.length && x < mask[y].length && mask[y][x]) {
@@ -1109,7 +1109,7 @@ class MaskPainter extends CustomPainter {
       }
     }
 
-    // If there is a label, draw label text
+
     if (label != null) {
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
@@ -1137,7 +1137,7 @@ class MaskPainter extends CustomPainter {
   }
 }
 
-/// Custom canvas for drawing board points
+
 class BoardPointsDebugPainter extends CustomPainter {
   BoardPointsDebugPainter({
     required this.boardPoints,
@@ -1149,15 +1149,15 @@ class BoardPointsDebugPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Calculate scaling ratio
+
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
 
-    // Draw each point
+
     for (int i = 0; i < boardPoints.length; i++) {
       final BoardPoint point = boardPoints[i];
 
-      // Draw point circle
+
       final Paint pointPaint = Paint()
         ..color = Colors.blue
         ..style = PaintingStyle.stroke
@@ -1169,7 +1169,7 @@ class BoardPointsDebugPainter extends CustomPainter {
         pointPaint,
       );
 
-      // Draw point index
+
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
           text: '$i',
@@ -1191,7 +1191,7 @@ class BoardPointsDebugPainter extends CustomPainter {
         ),
       );
 
-      // Draw different color small points based on point location in different rings
+
       final Paint innerPointPaint = Paint()
         ..color = i < 8 ? Colors.red : (i < 16 ? Colors.yellow : Colors.green)
         ..style = PaintingStyle.fill;
@@ -1203,7 +1203,7 @@ class BoardPointsDebugPainter extends CustomPainter {
       );
     }
 
-    // Draw legend
+
     final TextPainter legendPainter = TextPainter(
       text: const TextSpan(
         text: 'Red=Outer Ring, Yellow=Middle Ring, Green=Inner Ring',
@@ -1228,7 +1228,7 @@ class BoardPointsDebugPainter extends CustomPainter {
   }
 }
 
-/// Custom canvas for displaying color analysis
+
 class ColorAnalysisPainter extends CustomPainter {
   ColorAnalysisPainter({
     required this.boardPoints,
@@ -1246,15 +1246,15 @@ class ColorAnalysisPainter extends CustomPainter {
       return;
     }
 
-    // Calculate scaling ratio
+
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
 
-    // Draw color analysis result of each point
+
     for (int i = 0; i < boardPoints.length; i++) {
       final BoardPoint point = boardPoints[i];
 
-      // Determine color category based on point average brightness
+
       final double brightness = (i % 3 == 0)
           ? colorProfile!
               .whiteMean // Example: Take every 3rd point as white sample
@@ -1262,16 +1262,16 @@ class ColorAnalysisPainter extends CustomPainter {
               ? colorProfile!
                   .blackMean // Example: Take every 3rd point as black sample
               : colorProfile!
-                  .emptyMean; // Example: Other points as empty sample
+                  .emptyMean;
 
-      // Determine point color based on brightness
+
       final Color pointColor = (i % 3 == 0)
           ? Colors.orange // White sample
           : (i % 3 == 1)
               ? Colors.blue // Black sample
-              : Colors.green; // Empty sample
+              : Colors.green;
 
-      // Draw point circle
+
       final Paint pointPaint = Paint()
         ..color = pointColor
         ..style = PaintingStyle.stroke
@@ -1283,7 +1283,7 @@ class ColorAnalysisPainter extends CustomPainter {
         pointPaint,
       );
 
-      // Draw brightness value
+
       final TextPainter textPainter = TextPainter(
         text: TextSpan(
           text: brightness.toStringAsFixed(0),
@@ -1305,7 +1305,7 @@ class ColorAnalysisPainter extends CustomPainter {
       );
     }
 
-    // Draw statistics information
+
     final TextPainter statsPainter = TextPainter(
       text: TextSpan(
         children: <TextSpan>[
@@ -1361,7 +1361,7 @@ class ColorAnalysisPainter extends CustomPainter {
   }
 }
 
-/// Custom canvas for displaying piece detection process
+
 class PieceDetectionPainter extends CustomPainter {
   PieceDetectionPainter({
     required this.boardPoints,
@@ -1377,16 +1377,16 @@ class PieceDetectionPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Calculate scaling ratio
+
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
 
-    // Draw recognition result of each point
+
     for (int i = 0; i < boardPoints.length; i++) {
       final BoardPoint point = boardPoints[i];
       final PieceColor? pieceColor = resultMap[i];
 
-      // Draw sampling area (yellow dashed circle)
+
       final Paint samplingAreaPaint = Paint()
         ..color = Colors.yellow.withValues(alpha: 0.7)
         ..style = PaintingStyle.stroke
@@ -1400,7 +1400,7 @@ class PieceDetectionPainter extends CustomPainter {
         samplingAreaPaint,
       );
 
-      // If there is a piece, draw piece recognition result
+
       if (pieceColor != null && pieceColor != PieceColor.none) {
         final Paint piecePaint = Paint()
           ..color = pieceColor == PieceColor.white ? Colors.green : Colors.red
@@ -1413,7 +1413,7 @@ class PieceDetectionPainter extends CustomPainter {
           piecePaint,
         );
 
-        // If display detailed information, draw recognition type
+
         if (showDetails) {
           final TextPainter textPainter = TextPainter(
             text: TextSpan(
@@ -1438,7 +1438,7 @@ class PieceDetectionPainter extends CustomPainter {
           );
         }
       } else {
-        // Empty point, draw X mark
+
         if (showDetails) {
           final Paint emptyPaint = Paint()
             ..color = Colors.grey
@@ -1461,7 +1461,7 @@ class PieceDetectionPainter extends CustomPainter {
         }
       }
 
-      // Draw point index
+
       final TextPainter indexPainter = TextPainter(
         text: TextSpan(
           text: '$i',
@@ -1490,7 +1490,7 @@ class PieceDetectionPainter extends CustomPainter {
   }
 }
 
-/// Custom canvas for displaying board area overlay
+
 class BoardRectOverlay extends StatelessWidget {
   const BoardRectOverlay({
     super.key,
@@ -1513,7 +1513,7 @@ class BoardRectOverlay extends StatelessWidget {
   }
 }
 
-/// Custom canvas for drawing board area rectangle
+
 class BoardRectPainter extends CustomPainter {
   BoardRectPainter({
     required this.boardRect,
@@ -1525,7 +1525,7 @@ class BoardRectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Calculate scaling ratio
+
     final double scaleX = size.width / imageSize.width;
     final double scaleY = size.height / imageSize.height;
 
@@ -1536,19 +1536,19 @@ class BoardRectPainter extends CustomPainter {
       boardRect.height * scaleY,
     );
 
-    // Draw yellow dashed rectangle
+
     final Paint rectPaint = Paint()
       ..color = Colors.yellow
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0;
 
-    // Draw dashed line
+
     final Path path = Path();
     const double dashWidth = 10.0;
     const double dashSpace = 5.0;
     double distance = 0.0;
 
-    // Draw top side
+
     path.moveTo(scaledRect.left, scaledRect.top);
     bool draw = true;
     while (distance < scaledRect.width) {
@@ -1567,7 +1567,7 @@ class BoardRectPainter extends CustomPainter {
       draw = !draw;
     }
 
-    // Draw right side
+
     distance = 0.0;
     draw = true;
     while (distance < scaledRect.height) {
@@ -1586,7 +1586,7 @@ class BoardRectPainter extends CustomPainter {
       draw = !draw;
     }
 
-    // Draw bottom side
+
     distance = 0.0;
     draw = true;
     while (distance < scaledRect.width) {
@@ -1605,7 +1605,7 @@ class BoardRectPainter extends CustomPainter {
       draw = !draw;
     }
 
-    // Draw left side
+
     distance = 0.0;
     draw = true;
     while (distance < scaledRect.height) {
@@ -1626,14 +1626,14 @@ class BoardRectPainter extends CustomPainter {
 
     canvas.drawPath(path, rectPaint);
 
-    // Draw four corners for enhanced display
+
     const double cornerSize = 15.0;
     final Paint cornerPaint = Paint()
       ..color = Colors.yellow
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
 
-    // Top-left corner
+
     canvas.drawLine(
       Offset(scaledRect.left, scaledRect.top + cornerSize),
       Offset(scaledRect.left, scaledRect.top),
@@ -1645,7 +1645,7 @@ class BoardRectPainter extends CustomPainter {
       cornerPaint,
     );
 
-    // Top-right corner
+
     canvas.drawLine(
       Offset(scaledRect.right - cornerSize, scaledRect.top),
       Offset(scaledRect.right, scaledRect.top),
@@ -1657,7 +1657,7 @@ class BoardRectPainter extends CustomPainter {
       cornerPaint,
     );
 
-    // Bottom-right corner
+
     canvas.drawLine(
       Offset(scaledRect.right, scaledRect.bottom - cornerSize),
       Offset(scaledRect.right, scaledRect.bottom),
@@ -1669,7 +1669,7 @@ class BoardRectPainter extends CustomPainter {
       cornerPaint,
     );
 
-    // Bottom-left corner
+
     canvas.drawLine(
       Offset(scaledRect.left + cornerSize, scaledRect.bottom),
       Offset(scaledRect.left, scaledRect.bottom),
@@ -1681,7 +1681,7 @@ class BoardRectPainter extends CustomPainter {
       cornerPaint,
     );
 
-    // Draw text label
+
     const TextSpan textSpan = TextSpan(
       text: 'Detected Board Area',
       style: TextStyle(
@@ -1706,7 +1706,7 @@ class BoardRectPainter extends CustomPainter {
       ),
     );
 
-    // Draw rectangle size information
+
     final TextSpan sizeSpan = TextSpan(
       text: '${boardRect.width} x ${boardRect.height}',
       style: const TextStyle(

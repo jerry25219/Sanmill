@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// piece_effect_selection_page.dart
+
+
+
 
 import 'dart:math';
 
@@ -14,7 +14,7 @@ import '../../generated/intl/l10n.dart';
 import '../../shared/database/database.dart';
 import '../../shared/themes/app_theme.dart';
 
-/// Effect item model to hold the name and animation instance.
+
 class EffectItem {
   EffectItem({required this.name, required this.animation});
 
@@ -22,7 +22,7 @@ class EffectItem {
   final PieceEffectAnimation animation;
 }
 
-/// The main page that displays the animations in a grid.
+
 class PieceEffectSelectionPage extends StatefulWidget {
   const PieceEffectSelectionPage({super.key, required this.moveType});
 
@@ -80,7 +80,7 @@ class PieceEffectSelectionPageState extends State<PieceEffectSelectionPage> {
       EffectItem(name: 'FireTrail', animation: FireTrailPieceEffectAnimation()),
     ];
 
-    // Initialize the list of effect items.
+
     final List<EffectItem> removeEffectAnimation = <EffectItem>[
       EffectItem(name: 'Vanish', animation: VanishPieceEffectAnimation()),
       EffectItem(name: 'Fade', animation: FadePieceEffectAnimation()),
@@ -122,13 +122,13 @@ class PieceEffectSelectionPageState extends State<PieceEffectSelectionPage> {
             key: Key('effect_grid_item_$index'),
             effectItem: effectItem,
             onTap: () {
-              // Handle the selection logic here.
+
               if (kDebugMode) {
                 print('Selected effect: ${effectItem.name}');
               }
 
               Navigator.pop(context,
-                  effectItem); // Return the selected effect to the previous page.
+                  effectItem);
             },
           );
         },
@@ -137,7 +137,7 @@ class PieceEffectSelectionPageState extends State<PieceEffectSelectionPage> {
   }
 }
 
-/// Widget representing each grid item in the selection page.
+
 class EffectGridItem extends StatefulWidget {
   const EffectGridItem({
     super.key,
@@ -161,7 +161,7 @@ class EffectGridItemState extends State<EffectGridItem>
   void initState() {
     super.initState();
 
-    // Initialize the animation controller.
+
     _controller = AnimationController(
       duration: const Duration(seconds: 2), // Duration of each animation cycle.
       vsync: this,
@@ -169,13 +169,13 @@ class EffectGridItemState extends State<EffectGridItem>
 
     _animation = CurvedAnimation(parent: _controller, curve: Curves.linear);
 
-    // Repeat the animation indefinitely.
+
     _controller.repeat();
   }
 
   @override
   void dispose() {
-    // Dispose the animation controller to free resources.
+
     _controller.dispose();
     super.dispose();
   }
@@ -187,7 +187,7 @@ class EffectGridItemState extends State<EffectGridItem>
       onTap: widget.onTap,
       child: Container(
         key: const Key('effect_grid_item_container'),
-        // Set the background color of each grid item here.
+
         color: DB()
             .colorSettings
             .boardBackgroundColor, // Change to your preferred color.
@@ -216,7 +216,7 @@ class EffectGridItemState extends State<EffectGridItem>
               key: Key('effect_grid_item_sized_box'),
               height: 4.0,
             ),
-            // Customize text color here.
+
             Text(
               widget.effectItem.name,
               key: const Key('effect_grid_item_text'),
@@ -234,7 +234,7 @@ class EffectGridItemState extends State<EffectGridItem>
   }
 }
 
-/// Custom painter that uses the PieceEffectAnimation to draw the effect.
+
 class EffectPainter extends CustomPainter {
   EffectPainter({required this.animation, required this.animationValue});
 
@@ -243,19 +243,19 @@ class EffectPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Calculate the center and diameter based on the size of the widget.
+
     final Offset center = Offset(size.width / 2, size.height / 2);
-    // Reduce the diameter by applying a scale factor.
-    const double scale = 0.5; // Set this between 0 and 1 to adjust the size.
+
+    const double scale = 0.5;
     final double diameter = min(size.width, size.height) * scale;
 
-    // Use the animation's draw method to render the effect.
+
     animation.draw(canvas, center, diameter, animationValue);
   }
 
   @override
   bool shouldRepaint(covariant EffectPainter oldDelegate) {
-    // Repaint when the animation value changes.
+
     return oldDelegate.animationValue != animationValue ||
         oldDelegate.animation != animation;
   }

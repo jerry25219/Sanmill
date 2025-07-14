@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_utils.dart
+
+
+
 
 part of '../../../game_page/services/painters/painters.dart';
 
-/// The names of the rows
+
 const List<String> verticalNotations = <String>[
   '7',
   '6',
@@ -16,7 +16,7 @@ const List<String> verticalNotations = <String>[
   '1'
 ];
 
-/// The names of the columns
+
 const List<String> horizontalNotations = <String>[
   'a',
   'b',
@@ -27,22 +27,22 @@ const List<String> horizontalNotations = <String>[
   'g'
 ];
 
-/// The padding applied to the actual mill field
+
 double get boardMargin => AppTheme.boardPadding;
 
-/// Calculates the position of the given point
+
 Offset pointFromIndex(int index, Size size) {
   final double row = (index ~/ 7).toDouble();
   final double column = index % 7;
   return offsetFromPoint(Offset(column, row), size);
 }
 
-/// Calculates the index of the given point
+
 int indexFromPoint(Offset point) {
   return (point.dy * 7 + point.dx).toInt();
 }
 
-/// Calculates the square of the given point
+
 int? squareFromPoint(Offset point) {
   return indexToSquare[indexFromPoint(point)];
 }
@@ -51,7 +51,7 @@ Offset pointFromSquare(int square, Size size) {
   return pointFromIndex(squareToIndex[square]!, size);
 }
 
-/// Calculates the pressed point
+
 Offset pointFromOffset(Offset offset, double dimension) {
   final Offset point = (offset - Offset(boardMargin, boardMargin)) /
       ((dimension - boardMargin * 2) / 6);
@@ -59,7 +59,7 @@ Offset pointFromOffset(Offset offset, double dimension) {
   return point.round();
 }
 
-/// Calculates the offset for the given position
+
 Offset offsetFromPoint(Offset point, Size size) =>
     (point * (size.width - boardMargin * 2) / 6) +
     Offset(boardMargin, boardMargin);
@@ -71,9 +71,9 @@ Offset offsetFromPoint2(Offset point, Size size) =>
 double offsetFromInt(int point, Size size) =>
     (point * (size.width - boardMargin * 2) / 6) + boardMargin;
 
-/// List of points on the board.
+
 const List<Offset> points = <Offset>[
-  // ignore: use_named_constants
+
   Offset(0, 0), // 0
   Offset(0, 3), // 1
   Offset(0, 6), // 2
@@ -121,12 +121,12 @@ bool isTablet(BuildContext context) {
   return deviceWidth(context) >= 600;
 }
 
-/// Map engine's coordinate notation to board index
+
 int? coordinatesToIndex(int x, int y) {
-  // Convert engine coordinates to board index
-  // First convert from engine (x,y) to square
+
+
   final int square = makeSquare(x, y);
 
-  // Then convert from square to board index
+
   return squareToIndex[square];
 }

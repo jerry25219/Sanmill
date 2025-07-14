@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// sound_manager.dart
+
+
+
 
 part of '../mill.dart';
 
-/// Sounds the [SoundManager] can play through [SoundManager.playTone].
+
 enum Sound { draw, illegal, lose, mill, place, remove, select, win }
 
 class SoundManager {
@@ -52,7 +52,7 @@ class SoundManager {
     },
   };
 
-  // Map of Sound to SoundPlayer instances, which include the player and fileName.
+
   final Map<Sound, SoundPlayer> _players = <Sound, SoundPlayer>{};
 
   bool _isTemporaryMute = false;
@@ -72,11 +72,11 @@ class SoundManager {
 
     try {
       for (final Sound sound in sounds.keys) {
-        // Adjust the file path by replacing 'assets/' with ''.
+
         final String fileName = sounds[sound]!.replaceFirst('assets/', '');
         final AudioPlayer player = AudioPlayer();
         await player.setReleaseMode(ReleaseMode.stop);
-        // No need to set the source here; we'll set it and play immediately in playTone.
+
         _players[sound] = SoundPlayer(player, fileName);
       }
       _allSoundsLoaded = true;
@@ -86,7 +86,7 @@ class SoundManager {
     }
   }
 
-  /// Play the given sound.
+
   Future<void> playTone(Sound sound) async {
     if (_isTemporaryMute || DB().generalSettings.screenReaderSupport) {
       return;
@@ -105,14 +105,14 @@ class SoundManager {
       return;
     }
 
-    // Get the SoundPlayer instance for the sound.
+
     final SoundPlayer? soundPlayer = _players[sound];
     if (soundPlayer == null) {
       logger.e("No player found for sound $sound in theme $soundThemeName.");
       return;
     }
     try {
-      // Set the source and play immediately to avoid delays on Linux.
+
       await soundPlayer.player.play(AssetSource(soundPlayer.fileName));
     } catch (e) {
       logger.e("$_logTag Error playing sound: $e");
@@ -135,7 +135,7 @@ class SoundManager {
   }
 }
 
-/// Helper class to store AudioPlayer and associated fileName.
+
 class SoundPlayer {
   SoundPlayer(this.player, this.fileName);
   final AudioPlayer player;

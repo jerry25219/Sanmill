@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// annotation_manager.dart
+
+
+
 
 import 'dart:math';
 
@@ -11,32 +11,32 @@ import '../../../generated/intl/l10n.dart';
 import '../../../shared/database/database.dart';
 import '../../../shared/services/logger.dart';
 import '../../../shared/themes/app_theme.dart';
-import '../painters/painters.dart'; // Provides points, offsetFromPoint, pointFromIndex
+import '../painters/painters.dart';
 
-/// AnnotationTool is an enum listing the possible drawing tools.
+
 enum AnnotationTool { line, arrow, circle, dot, cross, rect, text, move }
 
-/// AnnotationShape is the base class for all drawable annotations.
-/// It holds a color field, and each subclass implements its own drawing and dragging logic.
+
+
 abstract class AnnotationShape {
   AnnotationShape({required this.color});
 
-  /// The color of this shape.
+
   Color color;
 
-  /// Draws the shape on the provided [canvas] within the specified [size].
+
   void draw(Canvas canvas, Size size);
 
-  /// Returns `true` if the tap position hits this shape (for selection).
+
   bool hitTest(Offset tapPosition);
 
-  /// Translates the shape by the given [delta] offset for dragging.
+
   void translate(Offset delta);
 }
 
-// ---------------------------------------------------------------------------
-// Shape Implementations
-// ---------------------------------------------------------------------------
+
+
+
 
 class AnnotationCircle extends AnnotationShape {
   AnnotationCircle({
@@ -51,7 +51,7 @@ class AnnotationCircle extends AnnotationShape {
       ..strokeWidth = strokeWidth;
   }
 
-  // Factory constructor remains available (but is no longer used by the circle tool).
+
   factory AnnotationCircle.fromPoints({
     required Offset start,
     required Offset end,
@@ -171,55 +171,55 @@ class AnnotationArrow extends AnnotationShape {
 
   @override
   void draw(Canvas canvas, Size size) {
-    // Set the paint color
+
     paint.color = color;
 
-    // Define arrow parameters
-    const double arrowLength = 15.0; // Length from arrow tip to the base center
-    const double arrowWidth = 12.0; // Maximum width of the arrow tip
 
-    // Calculate the angle of the line's direction
+    const double arrowLength = 15.0;
+    const double arrowWidth = 12.0;
+
+
     final double angle = (end - start).direction;
 
-    // Adjust the endpoint so that the arrow head does not extend beyond the target point
+
     final Offset adjustedEnd = end -
         Offset(
           arrowLength * cos(angle),
           arrowLength * sin(angle),
         );
 
-    // Draw the main line from the start to the adjusted endpoint
+
     canvas.drawLine(start, adjustedEnd, paint);
 
-    // Draw a solid circle at the start point (arrow tail)
-    // The diameter is set to half of the arrow tip's width, so the radius is arrowWidth/4
+
+
     final Paint circlePaint = Paint()
       ..color = paint.color
       ..style = PaintingStyle.fill;
     canvas.drawCircle(start, arrowWidth / 4, circlePaint);
 
-    // Calculate a perpendicular vector to the line's direction
+
     final Offset perpendicular = Offset(-sin(angle), cos(angle));
 
-    // Determine the two base points of the arrow head using the perpendicular vector
+
     final Offset arrowBaseLeft =
         adjustedEnd + (perpendicular * (arrowWidth / 2));
     final Offset arrowBaseRight =
         adjustedEnd - (perpendicular * (arrowWidth / 2));
 
-    // Construct a filled triangle for the arrow head with its tip at the target point
+
     final Path arrowPath = Path()
       ..moveTo(end.dx, end.dy) // Arrow tip exactly at the target point
       ..lineTo(arrowBaseLeft.dx, arrowBaseLeft.dy)
       ..lineTo(arrowBaseRight.dx, arrowBaseRight.dy)
       ..close();
 
-    // Use a paint with fill style for the arrow head to ensure a solid triangle
+
     final Paint arrowPaint = Paint()
       ..color = paint.color
       ..style = PaintingStyle.fill;
 
-    // Draw the filled arrow head
+
     canvas.drawPath(arrowPath, arrowPaint);
   }
 
@@ -310,13 +310,13 @@ class AnnotationCross extends AnnotationShape {
     this.strokeWidth = 3.0,
   });
 
-  /// The center point of the cross.
+
   Offset point;
 
-  /// Half the length of each diagonal line.
+
   double crossSize;
 
-  /// The stroke width for drawing the cross.
+
   final double strokeWidth;
 
   @override
@@ -326,13 +326,13 @@ class AnnotationCross extends AnnotationShape {
 
   @override
   void draw(Canvas canvas, Size size) {
-    // Create a paint object with stroke style for drawing the cross.
+
     final Paint paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
 
-    // Calculate the endpoints for the two diagonals to form an 'X'.
+
     final Offset topLeft = Offset(point.dx - crossSize, point.dy - crossSize);
     final Offset bottomRight =
         Offset(point.dx + crossSize, point.dy + crossSize);
@@ -340,14 +340,14 @@ class AnnotationCross extends AnnotationShape {
     final Offset bottomLeft =
         Offset(point.dx - crossSize, point.dy + crossSize);
 
-    // Draw the two diagonal lines to form an "X".
+
     canvas.drawLine(topLeft, bottomRight, paint);
     canvas.drawLine(topRight, bottomLeft, paint);
   }
 
   @override
   bool hitTest(Offset tapPosition) {
-    // Define a bounding box around the cross for hit testing.
+
     final double halfSize = crossSize + 5.0;
     final Rect bbox = Rect.fromCenter(
       center: point,
@@ -366,7 +366,7 @@ class AnnotationText extends AnnotationShape {
     this.fontSize = 16.0,
   });
 
-  // The point now represents the center of the text.
+
   Offset point;
   String text;
   final double fontSize;
@@ -378,7 +378,7 @@ class AnnotationText extends AnnotationShape {
 
   @override
   void draw(Canvas canvas, Size size) {
-    // Create a TextSpan with the desired style.
+
     final TextSpan span = TextSpan(
       text: text,
       style: TextStyle(
@@ -386,49 +386,49 @@ class AnnotationText extends AnnotationShape {
         fontSize: fontSize,
       ),
     );
-    // Layout the text to measure its dimensions.
+
     final TextPainter tp = TextPainter(
       text: span,
       textDirection: TextDirection.ltr,
     );
     tp.layout();
 
-    // Calculate the offset to draw the text so that it is centered at 'point'.
+
     final Offset drawOffset = point - Offset(tp.width / 2, tp.height / 2);
 
-    // Paint the text at the computed offset.
+
     tp.paint(canvas, drawOffset);
   }
 
   @override
   bool hitTest(Offset tapPosition) {
-    // Create a TextSpan with the desired style.
+
     final TextSpan span = TextSpan(
       text: text,
       style: TextStyle(color: color, fontSize: fontSize),
     );
-    // Layout the text to measure its dimensions.
+
     final TextPainter tp = TextPainter(
       text: span,
       textDirection: TextDirection.ltr,
     );
     tp.layout();
 
-    // Define the bounding box with the text centered at 'point'.
+
     final Rect bbox = Rect.fromCenter(
       center: point,
       width: tp.width,
       height: tp.height,
     ).inflate(5);
 
-    // Return true if the tap position falls within the bounding box.
+
     return bbox.contains(tapPosition);
   }
 }
 
-// ---------------------------------------------------------------------------
-// AnnotationCommand / Undo-Redo
-// ---------------------------------------------------------------------------
+
+
+
 
 enum AnnotationCommandType {
   addShape,
@@ -461,7 +461,7 @@ class AnnotationCommand {
   final String? newText;
   final Offset? oldOffset;
   final Offset? newOffset;
-  final Offset? delta; // Offset by which the shape was translated
+  final Offset? delta;
   final AnnotationManager manager;
 
   void redo() {
@@ -520,16 +520,16 @@ class AnnotationCommand {
         break;
       case AnnotationCommandType.translateShape:
         if (delta != null) {
-          shape.translate(-delta!); // Reverse the translation
+          shape.translate(-delta!);
         }
         break;
     }
   }
 }
 
-// ---------------------------------------------------------------------------
-// Manager
-// ---------------------------------------------------------------------------
+
+
+
 
 class AnnotationManager extends ChangeNotifier {
   static const int maxHistorySteps = 200;
@@ -544,7 +544,7 @@ class AnnotationManager extends ChangeNotifier {
   final List<AnnotationCommand> _undoStack = <AnnotationCommand>[];
   final List<AnnotationCommand> _redoStack = <AnnotationCommand>[];
 
-  // Set the default tool to circle (third button) instead of line.
+
   AnnotationTool currentTool = AnnotationTool.circle;
   Color currentColor = Colors.red;
 
@@ -552,11 +552,11 @@ class AnnotationManager extends ChangeNotifier {
 
   AnnotationShape? get selectedShape => _selectedShape;
 
-  // -------------------------------------------------------------------------
-  // Public APIs
-  // -------------------------------------------------------------------------
 
-  /// Translates the given [shape] by [delta] and records the action for undo/redo.
+
+
+
+
   void translateShape(AnnotationShape shape, Offset delta) {
     if (!shapes.contains(shape)) {
       return;
@@ -693,9 +693,9 @@ class AnnotationManager extends ChangeNotifier {
     }
   }
 
-  // -------------------------------------------------------------------------
-  // Internals
-  // -------------------------------------------------------------------------
+
+
+
 
   void _pushUndoCommand(AnnotationCommand cmd) {
     _undoStack.add(cmd);
@@ -705,12 +705,12 @@ class AnnotationManager extends ChangeNotifier {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Painters
-// ---------------------------------------------------------------------------
 
-/// A CustomPainter that draws all shapes from AnnotationManager.
-/// It also highlights the selected shape and draws currentDrawingShape if any.
+
+
+
+
+
 class AnnotationPainter extends CustomPainter {
   const AnnotationPainter(this.manager);
 
@@ -718,14 +718,14 @@ class AnnotationPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Draw committed shapes
+
     for (final AnnotationShape shape in manager.shapes) {
       shape.draw(canvas, size);
       if (shape == manager.selectedShape) {
         _drawHighlight(canvas, shape);
       }
     }
-    // Draw in-progress shape
+
     final AnnotationShape? temp = manager.currentDrawingShape;
     if (temp != null) {
       temp.draw(canvas, size);
@@ -737,7 +737,7 @@ class AnnotationPainter extends CustomPainter {
       ..color = Colors.yellow.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3;
-    // Highlight the bounding region of the shape.
+
     if (shape is AnnotationCircle) {
       canvas.drawCircle(shape.center, shape.radius + 5, p);
     } else if (shape is AnnotationLine) {
@@ -781,13 +781,13 @@ class AnnotationPainter extends CustomPainter {
   bool shouldRepaint(AnnotationPainter oldDelegate) => true;
 }
 
-// ---------------------------------------------------------------------------
-// AnnotationOverlay with context menu for deletion on long-press
-// ---------------------------------------------------------------------------
 
-/// AnnotationOverlay with gesture detection to support drawing shapes,
-/// strictly snapping them to the board intersections.
-/// Only long-press selection is kept (for deletion); single-tap selection is removed.
+
+
+
+
+
+
 class AnnotationOverlay extends StatefulWidget {
   const AnnotationOverlay({
     super.key,
@@ -805,14 +805,14 @@ class AnnotationOverlay extends StatefulWidget {
 }
 
 class _AnnotationOverlayState extends State<AnnotationOverlay> {
-  /// Two-tap tracking for line, arrow, and rect tools.
+
   Offset? _firstTapPosition;
 
-  /// The piece width (diameter) used to set forced sizes on shapes.
+
   double get _pieceWidth {
     final RenderObject? renderObject = context.findRenderObject();
     if (renderObject is! RenderBox) {
-      // Handle the null or unexpected type case, e.g., return a default value.
+
       return 0;
     }
     final RenderBox box = renderObject;
@@ -827,10 +827,10 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
   Widget build(BuildContext context) {
     return Stack(
       children: <Widget>[
-        // The board (or other content) underneath:
+
         widget.child,
 
-        // Annotation overlay:
+
         Positioned.fill(
           child: GestureDetector(
             onTapDown: (TapDownDetails details) {
@@ -855,25 +855,25 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     );
   }
 
-  // --------------------------------------------------------------------------
-  // Single Tap Logic
-  // --------------------------------------------------------------------------
-  //
-  // Only shape creation remains. Two-tap creation is used for line/arrow/rect,
-  // while circle/dot/cross/text are created with a single tap.
+
+
+
+
+
+
   void _handleTap(Offset tapPos) {
     final AnnotationTool currentTool = widget.annotationManager.currentTool;
     final Color currentColor = widget.annotationManager.currentColor;
 
-    // Conditionally snap the tap position based on the tool.
+
     Offset pos;
     if (currentTool == AnnotationTool.rect) {
-      pos = tapPos; // No snapping for the rectangle tool.
+      pos = tapPos;
     } else {
-      pos = _snapToBoardIntersection(tapPos); // Snap for other tools.
+      pos = _snapToBoardIntersection(tapPos);
     }
 
-    // Switch based on the current tool.
+
     switch (currentTool) {
       case AnnotationTool.dot:
         _createDot(pos, currentColor);
@@ -887,23 +887,23 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
       case AnnotationTool.line:
       case AnnotationTool.arrow:
       case AnnotationTool.rect:
-        // Lines, arrows, and rectangles are created via two taps.
+
         _handleTwoTapTool(pos, currentTool, currentColor);
         break;
       case AnnotationTool.circle:
         _createCircle(pos, currentColor);
         break;
       case AnnotationTool.move:
-        // Do nothing for the 'move' tool on single taps (disabled).
+
         break;
     }
 
     setState(() {});
   }
 
-  /// Snaps [overlayLocalTap] to the nearest board intersection.
+
   Offset _snapToBoardIntersection(Offset overlayLocalTap) {
-    // Attempt to get the board's RenderBox.
+
     final RenderObject? ro =
         widget.gameBoardKey.currentContext?.findRenderObject();
     if (ro is! RenderBox) {
@@ -912,13 +912,13 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     }
     final RenderBox boardBox = ro;
 
-    // Convert overlay-local tap to board-local coordinates.
+
     final RenderBox overlayBox = context.findRenderObject()! as RenderBox;
     final Offset globalTapPos = overlayBox.localToGlobal(overlayLocalTap);
     final Offset boardLocalTap = boardBox.globalToLocal(globalTapPos);
     final Size boardSize = boardBox.size;
 
-    // Find the closest intersection from `points`.
+
     Offset bestBoardLocal = boardLocalTap;
     double minDistance = double.infinity;
     for (final Offset boardLogicalPoint in points) {
@@ -930,17 +930,17 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
       }
     }
 
-    // Convert back to overlay-local coordinates.
+
     final Offset snappedGlobal = boardBox.localToGlobal(bestBoardLocal);
     final Offset snappedOverlayLocal = overlayBox.globalToLocal(snappedGlobal);
     return snappedOverlayLocal;
   }
 
-  // --------------------------------------------------------------------------
-  // Long Press Logic
-  // --------------------------------------------------------------------------
-  //
-  // Long-press is used to select a shape for deletion via a context menu.
+
+
+
+
+
   void _handleLongPressStart(LongPressStartDetails details) {
     final RenderBox box = context.findRenderObject()! as RenderBox;
     final Offset localPos = box.globalToLocal(details.globalPosition);
@@ -950,7 +950,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
       return;
     }
 
-    // On long press, select the shape.
+
     widget.annotationManager.selectShape(shape);
 
     final RenderBox? overlayBox =
@@ -982,7 +982,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     });
   }
 
-  /// Returns the topmost shape that contains [tapPos].
+
   AnnotationShape? _hitTestShape(Offset tapPos) {
     final List<AnnotationShape> shapes = widget.annotationManager.shapes;
     for (int i = shapes.length - 1; i >= 0; i--) {
@@ -993,15 +993,15 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     return null;
   }
 
-  /// Creates a dot at the snapped position with a fixed radius.
+
   void _createDot(Offset point, Color color) {
-    final double radius = _pieceWidth / 6; // For a small dot.
+    final double radius = _pieceWidth / 6;
     final AnnotationDot shape =
         AnnotationDot(point: point, color: color, radius: radius);
     widget.annotationManager.addShape(shape);
   }
 
-  /// Creates a cross at the snapped position with a bounding box equal to the piece diameter.
+
   void _createCross(Offset point, Color color) {
     final double crossSize = _pieceWidth / 2;
     final AnnotationCross shape = AnnotationCross(
@@ -1012,7 +1012,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     widget.annotationManager.addShape(shape);
   }
 
-  /// Creates a circle at the snapped position, using the piece radius.
+
   void _createCircle(Offset point, Color color) {
     final double forcedRadius = _pieceWidth / 2;
     final AnnotationCircle shape = AnnotationCircle(
@@ -1023,7 +1023,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     widget.annotationManager.addShape(shape);
   }
 
-  /// Prompts the user for text and creates an AnnotationText at the snapped position.
+
   Future<void> _createTextAt(Offset point, Color color) async {
     final TextEditingController controller = TextEditingController();
 
@@ -1064,7 +1064,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
     }
   }
 
-  /// Handles two-tap tools (line, arrow, rect).
+
   void _handleTwoTapTool(Offset tapPos, AnnotationTool tool, Color color) {
     if (_firstTapPosition == null) {
       _firstTapPosition = tapPos;
@@ -1084,7 +1084,7 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
           );
           break;
         case AnnotationTool.rect:
-          // Create a rectangle with the unsnapped start and end points.
+
           widget.annotationManager.addShape(
             AnnotationRect(start: start, end: end, color: color),
           );
@@ -1102,5 +1102,5 @@ class _AnnotationOverlayState extends State<AnnotationOverlay> {
   }
 }
 
-/// Extension to transform an offset into a direction vector with a length of 1.
+
 extension _OffsetDirection on Offset {}

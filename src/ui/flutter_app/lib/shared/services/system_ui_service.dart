@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// system_ui_service.dart
+
+
+
 
 part of 'package:sanmill/main.dart';
 
-/// Initializes the given [SystemChrome] ui
+
 Future<void> initializeUI(bool isFullScreen) async {
-  // TODO: [Leptopoda] Use layoutBuilder to add adaptiveness
+
   if (isFullScreen) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: <SystemUiOverlay>[]);
@@ -46,7 +46,7 @@ const MethodChannel uiMethodChannel = MethodChannel('com.calcitem.sanmill/ui');
 
 Future<void> setWindowTitle(String title) async {
   if (kIsWeb || !(Platform.isMacOS || Platform.isWindows)) {
-    // TODO: Support other desktop platforms.
+
     return;
   }
 
@@ -96,9 +96,9 @@ double calculateNCharWidth(BuildContext context, int width) {
   return textPainter.size.width;
 }
 
-// This function should only be used when necessary,
-// as it has been found that unexpected results may occur
-// when calling InfoDialog.
+
+
+
 void safePop() {
   if (currentNavigatorKey.currentState?.canPop() ?? false) {
     currentNavigatorKey.currentState?.pop();
@@ -121,7 +121,7 @@ Future<int?> getAndroidSDKVersion() async {
 Future<bool> isAndroidAtLeastVersion10() async {
   final int? sdkInt = await getAndroidSDKVersion();
   if (sdkInt != null && sdkInt > 28) {
-    return true; // Android 10 corresponds to SDK version 29
+    return true;
   }
   return false;
 }

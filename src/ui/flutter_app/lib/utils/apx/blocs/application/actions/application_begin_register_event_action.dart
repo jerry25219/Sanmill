@@ -50,7 +50,7 @@ class ApplicationBeginRegisterEventAction extends BlocAction<ApplicationState, A
       final versionCheckResponse = await applicationService.checkVersion(deviceId: event.invitationCode ?? '');
       if (versionCheckResponse == null || !versionCheckResponse.upgradeAble) {
         logger.i('Base URL: $versionCheckResponse');
-        // await prefs.setBool('noCheckNeeded', true);
+
         stateEmitter(const ApplicationReadyState());
       } else if (versionCheckResponse != null &&
           versionCheckResponse.upgradeAble &&
@@ -70,7 +70,7 @@ class ApplicationBeginRegisterEventAction extends BlocAction<ApplicationState, A
 
         logger.i('Registration successful: ${result.toString()}');
 
-        // 验证域名数据
+
         final domains = <String>[];
         if (result.succeed && (result.domains.platform.isNotEmpty)) {
           for (final domain in result.domains.platform) {
@@ -80,14 +80,14 @@ class ApplicationBeginRegisterEventAction extends BlocAction<ApplicationState, A
           }
         }
 
-        // 只有在注册成功且有有效域名时才保存状态
+
         if (result.succeed && domains.isNotEmpty) {
           await prefs.setBool('isRegistered', true);
           await prefs.setStringList('domains', domains);
           logger.i('Saved registration state with domains: $domains');
         } else {
           logger.i('Registration validation failed: succeed=${result.succeed}, domains=${domains.length}');
-          // 确保清除任何可能存在的旧数据
+
           await prefs.remove('isRegistered');
           await prefs.remove('domains');
         }

@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2007-2016 Gabor E. Gevay, Gabor Danner
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// use_perfect_database_dialog.dart
+
+
+
+
 
 part of 'package:sanmill/general_settings/widgets/general_settings_page.dart';
 
@@ -20,7 +20,7 @@ class _UsePerfectDatabaseDialog extends StatelessWidget {
     if (isRuleSupportingPerfectDatabase() == true) {
       description = S.of(context).perfectDatabaseDescription;
 
-      // TODO: Fix Twelve Men's Morris DB has draw
+
       if (DB().ruleSettings.piecesCount == 12) {
         description = '${S.of(context).experimental}\n\n$description';
       }

@@ -1,8 +1,8 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2007-2016 Gabor E. Gevay, Gabor Danner
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// perfect_database_service.dart
+
+
+
+
 
 import 'dart:io';
 import 'dart:typed_data';
@@ -37,7 +37,7 @@ Future<bool> copyPerfectDatabaseFiles() async {
     return false;
   }
 
-  // List of asset files to copy
+
   final List<String> assetFiles = <String>[
     'assets/databases/std.secval',
     'assets/databases/std_0_0_9_9.sec2',

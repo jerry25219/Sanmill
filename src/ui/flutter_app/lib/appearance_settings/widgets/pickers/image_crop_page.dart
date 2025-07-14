@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// image_crop_page.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 
-/// Image cropping page using crop_your_image plugin.
+
 class ImageCropPage extends StatefulWidget {
   const ImageCropPage({
     required this.imageData,
@@ -41,7 +41,7 @@ class ImageCropPageState extends State<ImageCropPage> {
       ),
       body: Stack(
         children: <Widget>[
-          // Crop widget
+
           Crop(
             key: const Key('image_crop_page_crop_widget'),
             controller: _cropController,
@@ -59,7 +59,7 @@ class ImageCropPageState extends State<ImageCropPage> {
                 if (result is CropSuccess) {
                   Navigator.pop(context, result.croppedImage);
                 } else if (result is CropFailure) {
-                  // Handle crop failure if necessary
+
                   logger.e("Crop failed: ${result.cause}");
                   if (result.stackTrace != null) {
                     logger.e("StackTrace: ${result.stackTrace}");
@@ -86,7 +86,7 @@ class ImageCropPageState extends State<ImageCropPage> {
               }
             },
           ),
-          // Reference lines overlay
+
           if (_currentCropRect != null)
             Positioned(
               key: const Key('image_crop_page_positioned_reference_lines'),
@@ -137,37 +137,37 @@ class ImageCropPageState extends State<ImageCropPage> {
   }
 }
 
-/// Enum to represent different types of reference lines
+
 enum ReferenceLineType {
   boardLines,
   circle,
   none,
 }
 
-/// CustomPainter to draw reference lines within the cropping area
+
 class ReferenceLinesPainter extends CustomPainter {
   ReferenceLinesPainter(this.lineType);
 
-  /// Specifies the type of reference lines to be drawn
+
   final ReferenceLineType lineType;
 
   @override
   void paint(Canvas canvas, Size size) {
     switch (lineType) {
       case ReferenceLineType.boardLines:
-        // Draw board lines similar to those on the game board
+
         BoardPainter.drawReferenceLines(canvas, size);
         break;
       case ReferenceLineType.circle:
-        // Draw dashed circular reference lines
+
         final double radius = size.width / 2;
         final Offset center = Offset(size.width / 2, size.height / 2);
 
-        // Use the BoardPainter to draw a dashed circular path
+
         BoardPainter.drawDashedCircle(canvas, center, radius);
         break;
       case ReferenceLineType.none:
-        // Do nothing (no lines drawn)
+
         break;
     }
   }

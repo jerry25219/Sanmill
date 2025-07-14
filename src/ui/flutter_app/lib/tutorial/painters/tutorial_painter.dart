@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// tutorial_painter.dart
+
+
+
 
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ import '../../game_page/services/painters/painters.dart';
 import '../../game_page/services/painters/piece.dart';
 import '../../shared/database/database.dart';
 
-/// Preview Piece Painter
+
 class TutorialPainter extends CustomPainter {
   TutorialPainter({this.blurIndex, this.focusIndex, required this.pieceList});
 
@@ -28,11 +28,11 @@ class TutorialPainter extends CustomPainter {
 
     final double pieceWidth = size.width * DB().displaySettings.pieceWidth / 7;
 
-    // Draw pieces on board
+
     for (int row = 0; row < 7; row++) {
       for (int col = 0; col < 7; col++) {
         final int index = row * 7 + col;
-        final PieceColor piece = pieceList[index]; // No Pieces when initial
+        final PieceColor piece = pieceList[index];
         if (piece == PieceColor.none) {
           continue;
         }
@@ -57,7 +57,7 @@ class TutorialPainter extends CustomPainter {
       }
     }
 
-    // Draw shadow of piece
+
     canvas.drawShadow(shadowPath, Colors.black, 2, true);
     paint.style = PaintingStyle.fill;
 
@@ -73,14 +73,14 @@ class TutorialPainter extends CustomPainter {
       final double pieceRadius = pieceWidth / 2;
       final double pieceInnerRadius = pieceRadius * 0.99;
 
-      // Draw Border of Piece
+
       paint.color = piece.pieceColor.borderColor;
       canvas.drawCircle(
         piece.pos,
         pieceRadius,
         paint,
       );
-      // Draw the piece
+
       paint.color = piece.pieceColor.mainColor;
       canvas.drawCircle(
         piece.pos,
@@ -89,7 +89,7 @@ class TutorialPainter extends CustomPainter {
       );
     }
 
-    // Draw focus and blur position
+
     if (focusIndex != null &&
         GameController().gameInstance.gameMode != GameMode.setupPosition) {
       paint.color = DB().colorSettings.pieceHighlightColor;

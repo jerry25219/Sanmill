@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// native_methods.dart
+
+
+
 
 import 'package:flutter/services.dart';
 import 'logger.dart';

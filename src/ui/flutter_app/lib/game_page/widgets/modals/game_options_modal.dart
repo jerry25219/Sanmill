@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_options_modal.dart
+
+
+
 
 import 'dart:io';
 
@@ -17,7 +17,7 @@ import '../../../shared/widgets/custom_spacer.dart';
 import '../../services/mill.dart';
 import '../game_page.dart';
 
-// ignore: unused_element
+
 class GameOptionsModal extends StatelessWidget {
   const GameOptionsModal({super.key, required this.onTriggerScreenshot});
 
@@ -33,11 +33,11 @@ class GameOptionsModal extends StatelessWidget {
         SimpleDialogOption(
           key: const Key('new_game_option'),
           onPressed: () async {
-            //Navigator.pop(context);
 
-            // TODO: If no dialog showing, When the AI is thinking,
-            //  restarting the game may cause two or three pieces to appear on the board,
-            //  sometimes it will keep displaying Thinking...
+
+
+
+
 
             GameController().loadedGameFilenamePrefix = null;
 
@@ -48,7 +48,7 @@ class GameOptionsModal extends StatelessWidget {
                     (GameController().gameRecorder.mainlineMoves.length <=
                         3)) ||
                 GameController().position.phase == Phase.gameOver) {
-              // TODO: Called stopSearching(); so isEngineGoing is always false?
+
               if (GameController().isEngineRunning == false) {
                 GameController().reset(force: true);
 
@@ -145,7 +145,7 @@ class GameOptionsModal extends StatelessWidget {
               child: Text(S.of(context).exportGame),
             ),
           ),
-        // TODO: Fix iOS bug
+
         if (DB().generalSettings.gameScreenRecorderSupport && !Platform.isIOS)
           const CustomSpacer(),
         if (DB().generalSettings.gameScreenRecorderSupport && !Platform.isIOS)
@@ -160,7 +160,7 @@ class GameOptionsModal extends StatelessWidget {
               child: Text(S.of(context).shareGIF),
             ),
           ),
-        // TODO: Support other platforms (Depend on native_screenshot package)
+
         if (Constants.isAndroid10Plus == true) const CustomSpacer(),
         if (Constants.isAndroid10Plus == true)
           SimpleDialogOption(
@@ -168,7 +168,7 @@ class GameOptionsModal extends StatelessWidget {
             onPressed: () async {
               Navigator.pop(context);
 
-              // Adding a short delay to ensure the modal has time to close before capturing the screenshot
+
               await Future<void>.delayed(const Duration(milliseconds: 500));
 
               onTriggerScreenshot();
@@ -201,7 +201,7 @@ class GameOptionsModal extends StatelessWidget {
               fontSize: AppTheme.textScaler.scale(AppTheme.defaultFontSize)),
         ),
         onPressed: () {
-          // TODO: Called stopSearching(); so isEngineGoing is always false?
+
           if (GameController().isEngineRunning == false) {
             GameController().reset(force: true);
 

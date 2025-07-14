@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// catcher_service.dart
+
+
+
 
 part of 'package:sanmill/main.dart';
 
 late Catcher2 catcher;
 
-/// Initializes the given [catcher]
+
 Future<void> _initCatcher(Catcher2 catcher) async {
   final Map<String, String> customParameters = <String, String>{};
   late final String externalDirStr;
@@ -42,9 +42,9 @@ Future<void> _initCatcher(Catcher2 catcher) async {
       ],
       customParameters: customParameters);
 
-  /// Release configuration.
-  /// Same as above, but once user accepts dialog,
-  /// user will be prompted to send email with crash to support.
+
+
+
   final Catcher2Options releaseOptions = Catcher2Options(
       kIsWeb || Platform.isLinux || Platform.isWindows || Platform.isMacOS
           ? SilentReportMode()
@@ -64,7 +64,7 @@ Future<void> _initCatcher(Catcher2 catcher) async {
       ],
       customParameters: customParameters);
 
-  /// Pass root widget (MyApp) along with Catcher configuration:
+
   catcher.updateConfig(
     debugConfig: debugOptions,
     releaseConfig: releaseOptions,
@@ -72,7 +72,7 @@ Future<void> _initCatcher(Catcher2 catcher) async {
   );
 }
 
-/// Generates content for the options.
+
 String generateOptionsContent() {
   String content = "";
 

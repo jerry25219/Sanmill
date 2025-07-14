@@ -1,4 +1,4 @@
-// ignore_for_file: avoid_dynamic_calls
+
 
 import 'dart:math';
 import 'package:flutter/material.dart';
@@ -39,7 +39,7 @@ String? getStringValueFrom({
     return null;
   }
 
-  // key = key.split('/').last;
+
 
   return node.toString();
 }
@@ -170,7 +170,7 @@ dynamic getJsonNodeAtPath(final Map<String, dynamic> json, final String path) {
   final nodeLevels = path.split('/');
   dynamic node = json;
   if (nodeLevels.length > 1) {
-    // nodeLevels = nodeLevels.sublist(0, nodeLevels.length - 1);
+
 
     for (final nodeName in nodeLevels) {
       node = node[nodeName];

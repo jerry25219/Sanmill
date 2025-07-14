@@ -1,9 +1,9 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// adapters.dart
 
-/// Although marked as a library this package is tightly integrated into the app
+
+
+
+
 
 library;
 

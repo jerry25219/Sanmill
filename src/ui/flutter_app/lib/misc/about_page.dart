@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// about_page.dart
+
+
+
 
 import 'dart:io';
 
@@ -67,37 +67,37 @@ class AboutPage extends StatelessWidget {
           );
         },
       ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_feedback'),
-      //   titleString: S.of(context).feedback,
-      //   onTap: () => launchURL(context, Constants.issuesURL),
-      // ),
-      // if (kIsWeb ||
-      //     Platform.isAndroid ||
-      //     Platform.isWindows ||
-      //     Platform.isLinux)
-      //   SettingsListTile(
-      //     key: const Key('settings_list_tile_eula'),
-      //     titleString: S.of(context).eula,
-      //     onTap: () => launchURL(context, Constants.endUserLicenseAgreementUrl),
-      //   ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_license'),
-      //   titleString: S.of(context).license,
-      //   onTap: () {
-      //     Navigator.push(
-      //       context,
-      //       MaterialPageRoute<LicenseAgreementPage>(
-      //         builder: (BuildContext context) => const LicenseAgreementPage(),
-      //       ),
-      //     );
-      //   },
-      // ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_source_code'),
-      //   titleString: S.of(context).sourceCode,
-      //   onTap: () => launchURL(context, Constants.repositoryUrl),
-      // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
         SettingsListTile(
           key: const Key('settings_list_tile_privacy_policy'),
@@ -107,36 +107,36 @@ class AboutPage extends StatelessWidget {
                 mode: LaunchMode.inAppWebView);
           },
         ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_oss_licenses'),
-      //   titleString: S.of(context).ossLicenses,
-      //   onTap: () => showLicensePage(
-      //     context: context,
-      //     applicationName: S.of(context).appName,
-      //   ),
-      // ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_help_improve_translate'),
-      //   titleString: S.of(context).helpImproveTranslate,
-      //   onTap: () {
-      //     final String locale = Localizations.localeOf(context).languageCode;
-      //     final UrlHelper url =
-      //         Constants.helpImproveTranslateURL.fromSubPath(locale);
-      //     launchURL(context, url);
-      //   },
-      // ),
-      // SettingsListTile(
-      //   key: const Key('settings_list_tile_thanks'),
-      //   titleString: S.of(context).thanks,
-      //   onTap: () => launchURL(context, Constants.thanksURL),
-      // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     ];
 
     return BlockSemantics(
       child: Scaffold(
         key: const Key('about_page_scaffold'),
         resizeToAvoidBottomInset: false,
-        // backgroundColor: AppTheme.aboutPageBackgroundColor,
+
         appBar: AppBar(
           key: const Key('about_page_appbar'),
           leading: CustomDrawerIcon.of(context)?.drawerIcon,
@@ -215,22 +215,22 @@ class _VersionDialog extends StatelessWidget {
         ],
       ),
       actions: <Widget>[
-        // TextButton(
-        //   key: const Key('version_dialog_more_button'),
-        //   child: Text(
-        //     S.of(context).more,
-        //     style: TextStyle(
-        //         fontSize: AppTheme.textScaler.scale(AppTheme.defaultFontSize)),
-        //   ),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //
-        //     showDialog(
-        //       context: context,
-        //       builder: (_) => const FlutterVersionAlert(),
-        //     );
-        //   },
-        // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         TextButton(
           key: const Key('version_dialog_ok_button'),
           child: Text(
@@ -288,7 +288,7 @@ class FlutterVersionAlertState extends State<FlutterVersionAlert> {
                 tapCount++;
                 if (tapCount >= 10 &&
                     DateTime.now().difference(startTime).inSeconds <= 10) {
-                  // Used to test whether the Catcher is working properly.
+
                   Catcher2.sendTestException();
                 }
               });

@@ -1,24 +1,24 @@
-// dart format width=80
-// coverage:ignore-file
-// GENERATED CODE - DO NOT MODIFY BY HAND
-// ignore_for_file: type=lint
-// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+
+
+
+
 
 part of 'check_version_response.dart';
 
-// **************************************************************************
-// FreezedGenerator
-// **************************************************************************
 
-// dart format off
+
+
+
+
 T _$identity<T>(T value) => value;
 
-/// @nodoc
+
 mixin _$CheckVersionResponse {
 
  bool get upgradeAble; set upgradeAble(bool value); String? get upgradeUri; set upgradeUri(String? value); String? get code; set code(String? value); String? get authorization; set authorization(String? value); String? get clientId; set clientId(String? value); String? get contentLanguage; set contentLanguage(String? value);
-/// Create a copy of CheckVersionResponse
-/// with the given fields replaced by the non-null parameter values.
+
+
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $CheckVersionResponseCopyWith<CheckVersionResponse> get copyWith => _$CheckVersionResponseCopyWithImpl<CheckVersionResponse>(this as CheckVersionResponse, _$identity);
@@ -42,7 +42,7 @@ String toString() {
 
 }
 
-/// @nodoc
+
 abstract mixin class $CheckVersionResponseCopyWith<$Res>  {
   factory $CheckVersionResponseCopyWith(CheckVersionResponse value, $Res Function(CheckVersionResponse) _then) = _$CheckVersionResponseCopyWithImpl;
 @useResult
@@ -54,7 +54,7 @@ $Res call({
 
 
 }
-/// @nodoc
+
 class _$CheckVersionResponseCopyWithImpl<$Res>
     implements $CheckVersionResponseCopyWith<$Res> {
   _$CheckVersionResponseCopyWithImpl(this._self, this._then);
@@ -62,8 +62,8 @@ class _$CheckVersionResponseCopyWithImpl<$Res>
   final CheckVersionResponse _self;
   final $Res Function(CheckVersionResponse) _then;
 
-/// Create a copy of CheckVersionResponse
-/// with the given fields replaced by the non-null parameter values.
+
+
 @pragma('vm:prefer-inline') @override $Res call({Object? upgradeAble = null,Object? upgradeUri = freezed,Object? code = freezed,Object? authorization = freezed,Object? clientId = freezed,Object? contentLanguage = freezed,}) {
   return _then(CheckVersionResponse(
 upgradeAble: null == upgradeAble ? _self.upgradeAble : upgradeAble // ignore: cast_nullable_to_non_nullable
@@ -79,4 +79,4 @@ as String?,
 }
 
 
-// dart format on
+

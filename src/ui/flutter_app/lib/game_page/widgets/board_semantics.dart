@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_semantics.dart
+
+
+
 
 part of 'game_page.dart';
 
-/// Semantics for the Board
-///
-/// This Widget only contains [Semantics] nodes to help impaired people interact with the [GameBoard].
+
+
+
 class _BoardSemantics extends StatefulWidget {
   const _BoardSemantics();
 
@@ -23,7 +23,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
   }
 
   void updateBoardSemantics() {
-    setState(() {}); // TODO
+    setState(() {});
   }
 
   @override
@@ -41,7 +41,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
         (int index) => Center(
           child: Semantics(
             key: Key('board_square_$index'),
-            // TODO: [Calcitem] Add more descriptive information
+
             label: squareDesc[index],
           ),
         ),
@@ -49,14 +49,14 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
     );
   }
 
-  /// Builds a list of Strings representing the label of each semantic node.
+
   List<String> _buildSquareDescription(BuildContext context) {
     final List<String> coordinates = <String>[];
     final List<String> pieceDesc = <String>[];
     final List<String> squareDesc = <String>[];
 
     const List<int> map = <int>[
-      /* 1 */
+
       1,
       8,
       15,
@@ -64,7 +64,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       29,
       36,
       43,
-      /* 2 */
+
       2,
       9,
       16,
@@ -72,7 +72,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       30,
       37,
       44,
-      /* 3 */
+
       3,
       10,
       17,
@@ -80,7 +80,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       31,
       38,
       45,
-      /* 4 */
+
       4,
       11,
       18,
@@ -88,7 +88,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       32,
       39,
       46,
-      /* 5 */
+
       5,
       12,
       19,
@@ -96,7 +96,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       33,
       40,
       47,
-      /* 6 */
+
       6,
       13,
       20,
@@ -104,7 +104,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       34,
       41,
       48,
-      /* 7 */
+
       7,
       14,
       21,
@@ -115,7 +115,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
     ];
 
     const List<int> checkPoints = <int>[
-      /* 1 */
+
       1,
       0,
       0,
@@ -123,7 +123,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       0,
       0,
       1,
-      /* 2 */
+
       0,
       1,
       0,
@@ -131,7 +131,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       0,
       1,
       0,
-      /* 3 */
+
       0,
       0,
       1,
@@ -139,7 +139,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       1,
       0,
       0,
-      /* 4 */
+
       1,
       1,
       1,
@@ -147,7 +147,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       1,
       1,
       1,
-      /* 5 */
+
       0,
       0,
       1,
@@ -155,7 +155,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       1,
       0,
       0,
-      /* 6 */
+
       0,
       1,
       0,
@@ -163,7 +163,7 @@ class _BoardSemanticsState extends State<_BoardSemantics> {
       0,
       1,
       0,
-      /* 7 */
+
       1,
       0,
       0,

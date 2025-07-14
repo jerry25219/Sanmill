@@ -1,14 +1,14 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// color_adapter.dart
+
+
+
 
 part of 'adapters.dart';
 
-/// Color Adapter
-///
-/// This adapter provides helper functions to be used with [JsonSerializable]
-/// and is a general [TypeAdapter] to be used with Hive [Box]es
+
+
+
+
 class ColorAdapter extends TypeAdapter<Color> {
   @override
   final int typeId = 6;

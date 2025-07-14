@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// how_to_play_screen.dart
+
+
+
 
 import 'package:flutter/material.dart';
 
@@ -31,9 +31,9 @@ class HowToPlayScreen extends StatelessWidget {
             color: AppTheme.helpTextColor,
           ),
         ),
-        // backgroundColor:
-        //     DB().colorSettings.darkBackgroundColor.withValues(alpha: 1.0),
-        // Ensure the background color is opaque
+
+
+
         body: SingleChildScrollView(
           key: const Key('how_to_play_screen_scrollview'),
           padding: const EdgeInsets.all(16),

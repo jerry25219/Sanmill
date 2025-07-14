@@ -1,12 +1,12 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// annotation_toolbar.dart
+
+
+
 
 part of '../game_toolbar.dart';
 
-/// AnnotationToolbar allows users to select tools, colors, and actions
-/// for annotating directly on the game board.
+
+
 class AnnotationToolbar extends StatefulWidget {
   const AnnotationToolbar({
     super.key,
@@ -42,7 +42,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     await ScreenshotService.takeScreenshot(storageLocation, filename);
   }
 
-  /// Shows a confirmation dialog before clearing all annotations.
+
   Future<bool?> _showClearConfirmationDialog(BuildContext context) async {
     return showDialog<bool>(
       context: context,
@@ -100,8 +100,8 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     );
   }
 
-  /// Builds a row of tool icons. The selected tool has an animated
-  /// highlight and border to indicate the current selection.
+
+
   Widget _buildToolRow(BuildContext context) {
     final AnnotationTool currentTool = widget.annotationManager.currentTool;
     final List<AnnotationTool> tools = AnnotationTool.values
@@ -113,7 +113,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
       children: tools.map((AnnotationTool tool) {
         final bool isSelected = (currentTool == tool);
         return Semantics(
-          // Provide a semantic label for the tool for screen readers.
+
           label: _toolLabel(context, tool),
           button: true,
           child: InkWell(
@@ -125,11 +125,11 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeInOut,
               decoration: BoxDecoration(
-                // Use a semi-transparent background color when selected.
+
                 color: isSelected
                     ? Colors.yellow.withAlpha(25)
                     : Colors.transparent,
-                // Always reserve border space by setting a fixed border.
+
                 border: Border.all(
                     color: isSelected ? Colors.yellow : Colors.transparent,
                     width: 2),
@@ -147,10 +147,10 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     );
   }
 
-  /// Returns a semantic label for the given annotation tool.
-  /// This label helps screen readers describe the tool to visually impaired users.
+
+
   String _toolLabel(BuildContext context, AnnotationTool tool) {
-    // TODO: l10n: Provide localized tool names for screen readers.
+
     switch (tool) {
       case AnnotationTool.line:
         return "Line Tool";
@@ -171,10 +171,10 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     }
   }
 
-  /// Helper method to get a color name string from a Color.
-  /// This is used for accessibility labels in the color picker.
+
+
   String _colorName(Color color) {
-    // TODO: l10n: Provide localized color names for screen readers.
+
     if (color == Colors.white) {
       return "white";
     }
@@ -208,8 +208,8 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     return "unknown";
   }
 
-  /// Builds a horizontal list of color circles. The selected color has
-  /// an animated border to indicate the current selection.
+
+
   Widget _buildColorRow(BuildContext context) {
     final AnnotationShape? selectedShape =
         widget.annotationManager.selectedShape;
@@ -223,7 +223,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
         children: _colorOptions.map((Color color) {
           final bool isSelected = (color == activeColor);
           return Semantics(
-            // Provide a semantic label for each color circle.
+
             label: 'Select ${_colorName(color)} color',
             button: true,
             child: GestureDetector(
@@ -242,7 +242,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
                 margin: const EdgeInsets.symmetric(horizontal: 6),
                 padding: const EdgeInsets.all(3),
                 decoration: BoxDecoration(
-                  // Always set a border with a fixed width.
+
                   border: Border.all(
                     color: isSelected ? Colors.yellow : Colors.transparent,
                     width: 2,
@@ -265,7 +265,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     );
   }
 
-  /// Builds a control row with actions such as exit, undo, redo, clear, and screenshot.
+
   Widget _buildControlRow(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -309,7 +309,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     );
   }
 
-  /// Returns an icon for the given annotation tool.
+
   IconData _iconForTool(AnnotationTool tool) {
     switch (tool) {
       case AnnotationTool.line:
@@ -331,7 +331,7 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
     }
   }
 
-  /// Builds a single control button with an animated hover and press effect.
+
   Widget _buildControlButton(
     BuildContext context, {
     required String tooltip,
@@ -346,8 +346,8 @@ class _AnnotationToolbarState extends State<AnnotationToolbar> {
   }
 }
 
-/// A reusable control button that shows an animated background highlight
-/// when hovered or pressed.
+
+
 class _ControlButton extends StatefulWidget {
   const _ControlButton({
     required this.tooltip,
@@ -369,7 +369,7 @@ class _ControlButtonState extends State<_ControlButton> {
 
   @override
   Widget build(BuildContext context) {
-    // Wrap the interactive control button with Semantics for accessibility.
+
     return Semantics(
       label: widget.tooltip,
       button: true,
@@ -386,7 +386,7 @@ class _ControlButtonState extends State<_ControlButton> {
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
             curve: Curves.easeInOut,
-            // Background changes color based on hover and press states.
+
             decoration: BoxDecoration(
               color: _isPressed
                   ? Colors.yellow.withValues(alpha: 0.2)

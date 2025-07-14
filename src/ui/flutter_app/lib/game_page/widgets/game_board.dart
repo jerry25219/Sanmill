@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_board.dart
+
+
+
 
 part of 'game_page.dart';
 
@@ -12,23 +12,23 @@ class GameImages {
   ui.Image? boardImage;
 }
 
-/// Game Board
-///
-/// The board the game is played on.
-/// This widget will also handle the input from the user.
+
+
+
+
 @visibleForTesting
 class GameBoard extends StatefulWidget {
-  /// Creates a [GameBoard] widget.
-  ///
-  /// The [boardImage] parameter is the ImageProvider for the selected board image.
+
+
+
   const GameBoard({
     super.key,
     required this.boardImage,
   });
 
-  /// The ImageProvider for the selected board image.
-  ///
-  /// If null, a default background color will be used.
+
+
+
   final ImageProvider? boardImage;
 
   static const String _logTag = "[board]";
@@ -42,10 +42,10 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
   late Future<GameImages> gameImagesFuture;
   late AnimationManager animationManager;
 
-  // Flag to prevent duplicate dialog display in AI vs AI mode
+
   bool _isDialogShowing = false;
 
-  // Define a mapping of animation names to their corresponding constructors.
+
   final Map<String, PieceEffectAnimation Function()> animationMap =
       <String, PieceEffectAnimation Function()>{
     'Aura': () => AuraPieceEffectAnimation(),
@@ -83,7 +83,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
     'RainRipple': () => RainRipplePieceEffectAnimation(),
     'BubblePop': () => BubblePopPieceEffectAnimation(),
 
-    // Add any additional animations here.
+
   };
 
   @override
@@ -97,7 +97,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
     if (visitedRuleSettingsPage == true) {
       GameController().reset();
       visitedRuleSettingsPage = false;
-      // Reset dialog flag when game is reset
+
       _isDialogShowing = false;
     }
 
@@ -115,7 +115,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
 
   Future<void> _setReadyState() async {
     logger.i("$_logTag Check if need to set Ready state...");
-    // TODO: v1 has "&& mounted && Config.settingsLoaded"
+
     if (GameController().isControllerReady == false) {
       logger.i("$_logTag Set Ready State...");
       GameController().isControllerReady = true;
@@ -158,17 +158,17 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       }
     } catch (e) {
       logger.e("$_logTag Error importing initial sharing move list: $e");
-      // if (mounted) {
-      //   rootScaffoldMessengerKey.currentState!
-      //       .showSnackBarClear("Error importing initial sharing move list: $e");
-      // }
+
+
+
+
     }
 
     if (mounted && GameController().loadedGameFilenamePrefix != null) {
       final String loadedGameFilenamePrefix =
           GameController().loadedGameFilenamePrefix!;
 
-      // Delay to show the tip after the navigation tip is shown
+
       Future<void>.delayed(Duration.zero, () {
         GameController().headerTipNotifier.showTip(loadedGameFilenamePrefix);
       });
@@ -202,13 +202,13 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       final ui.FrameInfo frame = await codec.getNextFrame();
       return frame.image;
     } catch (e) {
-      // Log the error for debugging
+
       logger.e("Error loading image from file path: $e");
       return null;
     }
   }
 
-  // Helper method to convert ImageProvider to ui.Image?
+
   Future<ui.Image?> _loadImageProvider(ImageProvider? provider) async {
     if (provider == null) {
       return null;
@@ -231,7 +231,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       final ui.Image image = await completer.future;
       return image;
     } catch (e) {
-      // Handle the error as needed, e.g., log it
+
       logger.e("Error loading board image: $e");
       return null;
     } finally {
@@ -239,12 +239,12 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
     }
   }
 
-  // Loading images and creating PiecePainter
+
   Future<GameImages> loadGameImages() async {
     final DisplaySettings displaySettings = DB().displaySettings;
     final GameImages gameImages = GameImages();
 
-    // Load white piece image from settings, if specified
+
     final String whitePieceImagePath = displaySettings.whitePieceImagePath;
     if (whitePieceImagePath.isEmpty) {
       gameImages.whitePieceImage = null;
@@ -253,7 +253,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
           await loadImageFromFilePath(whitePieceImagePath);
     }
 
-    // Load black piece image from settings, if specified
+
     final String blackPieceImagePath = displaySettings.blackPieceImagePath;
     if (blackPieceImagePath.isEmpty) {
       gameImages.blackPieceImage = null;
@@ -262,11 +262,11 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
           await loadImageFromFilePath(blackPieceImagePath);
     }
 
-    // Load marked piece image (static asset)
+
     gameImages.markedPieceImage =
         await loadImage('assets/images/marked_piece_image.png');
 
-    // Load board image from ImageProvider
+
     gameImages.boardImage = await _loadImageProvider(widget.boardImage);
 
     return gameImages;
@@ -278,11 +278,11 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
       context: context,
     );
 
-    // Retrieve the selected animation names from user settings.
+
     final String placeEffectName = DB().displaySettings.placeEffectAnimation;
     final String removeEffectName = DB().displaySettings.removeEffectAnimation;
 
-    // Use the map to get the corresponding animation instances.
+
     final PieceEffectAnimation placeEffectAnimation =
         animationMap[placeEffectName]?.call() ?? RadialPieceEffectAnimation();
 
@@ -307,7 +307,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasError) {
-              // Handle errors appropriately
+
               return const Center(
                 key: Key('center_error'),
                 child: Text('Error loading images'),
@@ -318,7 +318,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
                 key: const Key('sized_box_expand_custom_paint'),
                 child: CustomPaint(
                   key: const Key('custom_paint_board_painter'),
-                  // Pass the resolved ui.Image? to BoardPainter
+
                   painter: BoardPainter(context, gameImages?.boardImage),
                   foregroundPainter: PiecePainter(
                     placeAnimationValue: animationManager.placeAnimation.value,
@@ -404,7 +404,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
                   final EngineResponse response =
                       await tapHandler.onBoardTap(square);
 
-                  // Process engine response for displaying tips, etc.
+
                   switch (response) {
                     case EngineResponseOK():
                       GameController()
@@ -455,12 +455,12 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
 
     if (message != null && (force == true || winner != PieceColor.nobody)) {
       if (GameController().position.action == Act.remove) {
-        // Fix sometimes tip show "Please place" when action is remove
-        // Commit e9884ea
-        //GameController()
-        //    .headerTipNotifier
-        //    .showTip(S.of(context).tipRemove, snackBar: false);
-        // Because delayed(Duration.zero), so revert it.
+
+
+
+
+
+
         GameController().headerTipNotifier.showTip(message, snackBar: false);
       } else {
         GameController().headerTipNotifier.showTip(message, snackBar: false);
@@ -469,17 +469,17 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
 
     GameController().headerIconsNotifier.showIcons();
 
-    // Check conditions for showing game result dialog
+
     final bool shouldShowDialog = GameController().isAutoRestart() == false &&
         winner != PieceColor.nobody &&
         gameMode != GameMode.setupPosition;
 
-    // For AI vs AI mode, additional conditions must be met
+
     final bool aiVsAiConditions = gameMode != GameMode.aiVsAi ||
         (DB().displaySettings.animationDuration == 0.0 &&
             DB().generalSettings.shufflingEnabled == false);
 
-    // Prevent duplicate dialog display
+
     if (shouldShowDialog && aiVsAiConditions && !_isDialogShowing) {
       _isDialogShowing = true;
       showDialog(
@@ -488,7 +488,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
           winner: winner,
         ),
       ).then((_) {
-        // Reset flag when dialog is dismissed
+
         _isDialogShowing = false;
       });
     }
@@ -498,7 +498,7 @@ class _GameBoardState extends State<GameBoard> with TickerProviderStateMixin {
   void dispose() {
     GameController().isDisposed = true;
     GameController().engine.stopSearching();
-    //GameController().engine.shutdown();
+
     animationManager.dispose();
     GameController().gameResultNotifier.removeListener(_showResult);
     _removeValueNotifierListener();

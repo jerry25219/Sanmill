@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// language_picker.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 

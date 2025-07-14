@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// piece_effect_animation.dart
+
+
+
 
 import 'dart:math';
 import 'dart:ui' as ui;
@@ -10,13 +10,13 @@ import 'package:flutter/material.dart';
 
 import '../../../../shared/database/database.dart';
 
-/// Abstract class for PlaceEffect animations.
+
 abstract class PieceEffectAnimation {
   void draw(
       Canvas canvas, Offset center, double diameter, double animationValue);
 }
 
-/// Default implementation of the RemoveEffect animation.
+
 class ExplodePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -67,8 +67,8 @@ class ExplodePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Aura effect for placing a piece.
-/// Displays a halo around the piece that pulsates like a breathing light.
+
+
 class AuraPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -81,7 +81,7 @@ class AuraPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Use a sinusoidal function to create a breathing effect.
+
     final double easedAnimation =
         (sin(animationValue * pi * 2 - pi / 2) + 1) / 2;
 
@@ -100,8 +100,8 @@ class AuraPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Burst effect for placing a piece.
-/// Emits small particles in random directions that fade out over time.
+
+
 class BurstPieceEffectAnimation implements PieceEffectAnimation {
   final int particleCount = 20;
   final List<Offset> directions = List<Offset>.generate(
@@ -139,8 +139,8 @@ class BurstPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Echo effect for placing a piece.
-/// Creates multiple fading outlines of the piece expanding outward.
+
+
 class EchoPieceEffectAnimation implements PieceEffectAnimation {
   final int echoCount = 3;
 
@@ -174,7 +174,7 @@ class EchoPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Expand effect for placing a piece.
+
 class ExpandPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -201,20 +201,20 @@ class ExpandPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Fireworks effect animation.
-/// Simulates a realistic fireworks explosion with colorful trajectories.
-/// Particles shoot upwards, spread out, then slowly fall down and disappear,
-/// leaving colorful trails that show both the upward and downward motion.
+
+
+
+
 class FireworksPieceEffectAnimation implements PieceEffectAnimation {
   FireworksPieceEffectAnimation()
       : initialVelocities = List<Offset>.generate(
           particleCount,
           (int index) {
             final Random random = Random();
-            // Initial speed
+
             final double speed = random.nextDouble() * 200 + 500;
 
-            // Angle spread from -π to π to cover all directions (360 degrees)
+
             final double angle = -pi + (random.nextDouble() * 2 * pi);
 
             final double vx = speed * cos(angle);
@@ -226,7 +226,7 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
           particleCount,
           (int index) {
             final Random random = Random();
-            // Generate random bright and varied colors for realism
+
             return ui.Color.fromARGB(
               255,
               100 + random.nextInt(156), // 100-255 to ensure brightness
@@ -236,7 +236,7 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
           },
         );
   static const int particleCount =
-      100; // Increased for denser and more vibrant effect
+      100;
   final List<Offset> initialVelocities;
   final List<ui.Color> particleColors;
   final double gravity = 800.0;
@@ -250,17 +250,17 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    final double t = animationValue * duration; // Current time in seconds
-    final double scale = diameter / 300.0; // Scale to fit within diameter
+    final double t = animationValue * duration;
+    final double scale = diameter / 300.0;
 
-    final double g = gravity * scale; // Scaled gravity
-    const int steps = 30; // Increased steps for smoother trajectories
+    final double g = gravity * scale;
+    const int steps = 30;
 
     for (int i = 0; i < particleCount; i++) {
       final Offset initialVelocity = initialVelocities[i] * scale;
       final ui.Color color = particleColors[i];
 
-      // Create a path to represent the particle's trajectory
+
       final Path path = Path();
 
       for (int j = 0; j <= steps; j++) {
@@ -269,10 +269,10 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
           continue;
         }
 
-        // Position calculation: s = ut + 0.5 * a * t^2
+
         final Offset position = center +
             initialVelocity * tj +
-            Offset(0, 0.5 * g * tj * tj); // Gravity affects y-axis
+            Offset(0, 0.5 * g * tj * tj);
 
         if (j == 0) {
           path.moveTo(position.dx, position.dy);
@@ -281,7 +281,7 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
         }
       }
 
-      // Fade out the trail over time
+
       final double opacity = (1.0 - animationValue).clamp(0.0, 1.0);
 
       final Paint paint = Paint()
@@ -290,10 +290,10 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
 
-      // Draw the trajectory path
+
       canvas.drawPath(path, paint);
 
-      // Draw the particle at its current position
+
       final Offset currentPosition =
           center + initialVelocity * t + Offset(0, 0.5 * g * t * t);
 
@@ -301,19 +301,19 @@ class FireworksPieceEffectAnimation implements PieceEffectAnimation {
         ..color = color.withValues(alpha: opacity)
         ..style = PaintingStyle.fill;
 
-      // Increase particle size for better visibility
+
       canvas.drawCircle(
           currentPosition, 4.0 * (1.0 - animationValue), particlePaint);
     }
   }
 }
 
-/// Glow effect animation.
+
 class GlowPieceEffectAnimation extends PieceEffectAnimation {
   @override
   void draw(
       Canvas canvas, Offset center, double diameter, double animationValue) {
-    // Draw a glowing effect by drawing multiple circles with increasing radius and decreasing opacity.
+
     const int numCircles = 5;
     final ui.Color pieceHighlightColor = DB().colorSettings.pieceHighlightColor;
 
@@ -329,8 +329,8 @@ class GlowPieceEffectAnimation extends PieceEffectAnimation {
   }
 }
 
-/// Orbit effect for placing a piece.
-/// Displays small circles orbiting around the center point.
+
+
 class OrbitPieceEffectAnimation implements PieceEffectAnimation {
   final int orbitCount = 3;
 
@@ -362,8 +362,8 @@ class OrbitPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// RadialAnimation implementation of the PlaceEffect animation.
-/// Renamed from DefaultPieceEffectAnimation to a single-word name.
+
+
 class RadialPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -372,45 +372,45 @@ class RadialPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Apply easing to the animation value.
+
     final double easedAnimation = Curves.easeOut.transform(animationValue);
 
-    // Calculate the maximum and current radius based on the diameter and animation.
+
     final double maxRadius = diameter * 0.25;
     final double currentRadius = diameter + maxRadius * easedAnimation;
 
-    // Define the main and secondary opacities.
+
     final double mainOpacity = 0.6 * (1.0 - easedAnimation);
     final double secondOpacity = mainOpacity * 0.8;
 
-    // Cache the board line color to avoid repeated calls.
+
     final ui.Color boardLineColor = DB().colorSettings.boardLineColor;
 
-    // Define the configuration for each effect layer.
+
     final List<_EffectLayer> layers = <_EffectLayer>[
-      // Main layer.
+
       _EffectLayer(
         radiusFactor: 1.0,
         opacityFactor: 0.8,
       ),
-      // Second layer.
+
       _EffectLayer(
         radiusFactor: 0.75,
         opacityFactor: 0.5,
       ),
-      // Third layer.
+
       _EffectLayer(
         radiusFactor: 0.5,
         opacityFactor: 0.2,
       ),
     ];
 
-    // Iterate over each layer configuration to draw the circles.
+
     for (final _EffectLayer layer in layers) {
-      // Determine the radius for the current layer.
+
       final double layerRadius = currentRadius * layer.radiusFactor;
 
-      // Determine the opacity for the current layer.
+
       double layerOpacity;
       if (layer.opacityFactor == 1.0) {
         layerOpacity = mainOpacity;
@@ -420,7 +420,7 @@ class RadialPieceEffectAnimation implements PieceEffectAnimation {
         layerOpacity = mainOpacity * layer.opacityFactor;
       }
 
-      // Create the paint with a radial gradient shader.
+
       final Paint paint = Paint()
         ..shader = RadialGradient(
           colors: <ui.Color>[
@@ -434,13 +434,13 @@ class RadialPieceEffectAnimation implements PieceEffectAnimation {
         ).createShader(Rect.fromCircle(center: center, radius: layerRadius))
         ..style = PaintingStyle.fill;
 
-      // Draw the circle on the canvas.
+
       canvas.drawCircle(center, layerRadius, paint);
     }
   }
 }
 
-/// Ripple effect for placing a piece.
+
 class RipplePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -453,7 +453,7 @@ class RipplePieceEffectAnimation implements PieceEffectAnimation {
     final double easedAnimation = Curves.easeOut.transform(animationValue);
     final ui.Color boardLineColor = DB().colorSettings.boardLineColor;
 
-    // Draw multiple concentric circles with varying opacity and radius.
+
     for (int i = 0; i < 3; i++) {
       final double progress = (easedAnimation + i * 0.3) % 1.0;
       final double radius = maxRadius * progress;
@@ -469,7 +469,7 @@ class RipplePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Rotate effect for placing a piece.
+
 class RotatePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -505,12 +505,12 @@ class RotatePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Sparkle effect animation.
+
 class SparklePieceEffectAnimation extends PieceEffectAnimation {
   @override
   void draw(
       Canvas canvas, Offset center, double diameter, double animationValue) {
-    // Draw multiple small circles (sparkles) around the piece.
+
     const int numSparkles = 10;
     final ui.Color pieceHighlightColor = DB().colorSettings.pieceHighlightColor;
 
@@ -528,7 +528,7 @@ class SparklePieceEffectAnimation extends PieceEffectAnimation {
   }
 }
 
-/// Spiral effect for placing a piece.
+
 class SpiralPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -566,9 +566,9 @@ class SpiralPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-////////////////////////////////////////////////////////////////////////////////
 
-/// Fade effect for removing a piece.
+
+
 class FadePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -577,11 +577,11 @@ class FadePieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Calculate opacity based on animation progress.
+
     final double opacity = (1.0 - animationValue).clamp(0.0, 1.0);
     final ui.Color boardLineColor = DB().colorSettings.boardLineColor;
 
-    // Draw the piece with decreasing opacity.
+
     final Paint paint = Paint()
       ..color = boardLineColor.withValues(alpha: opacity)
       ..style = PaintingStyle.fill;
@@ -590,7 +590,7 @@ class FadePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Shrink effect for removing a piece.
+
 class ShrinkPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -599,11 +599,11 @@ class ShrinkPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Calculate the shrinking size.
+
     final double scale = (1.0 - animationValue).clamp(0.0, 1.0);
     final ui.Color boardLineColor = DB().colorSettings.boardLineColor;
 
-    // Draw the shrinking piece.
+
     final Paint paint = Paint()
       ..color = boardLineColor
       ..style = PaintingStyle.fill;
@@ -613,7 +613,7 @@ class ShrinkPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Shatter effect for removing a piece.
+
 class ShatterPieceEffectAnimation implements PieceEffectAnimation {
   ShatterPieceEffectAnimation()
       : shardDirections = List<Offset>.generate(
@@ -655,7 +655,7 @@ class ShatterPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Disperse effect for removing a piece.
+
 class DispersePieceEffectAnimation implements PieceEffectAnimation {
   DispersePieceEffectAnimation()
       : particleOffsets = List<Offset>.generate(
@@ -695,20 +695,20 @@ class DispersePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Vanish effect for removing a piece.
+
 class VanishPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
       Canvas canvas, Offset center, double diameter, double animationValue) {
-    // Instantly removes the piece without animation.
+
     if (DB().displaySettings.animationDuration == 0.0) {
       return;
     }
-    // No drawing needed as the piece vanishes.
+
   }
 }
 
-/// Melt effect for removing a piece.
+
 class MeltPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -736,8 +736,8 @@ class MeltPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// RippleGradient effect animation for placing or removing a piece.
-/// Creates a smooth gradient ripple that radiates outward with a colorful hue shift.
+
+
 class RippleGradientPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -746,38 +746,38 @@ class RippleGradientPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Apply easing to the animation value
+
     final double easedAnimation = Curves.easeOut.transform(animationValue);
 
-    // Wave parameters
+
     const int numWaves = 3;
     final double maxRadius = diameter * 2.0;
 
-    // Get colors from settings for the gradient
+
     final ui.Color primaryColor = DB().colorSettings.pieceHighlightColor;
     final ui.Color secondaryColor = DB().colorSettings.boardLineColor;
 
     for (int i = 0; i < numWaves; i++) {
-      // Calculate wave phase (offset in the animation cycle)
+
       final double phase = i / numWaves;
       final double waveProgress = (easedAnimation + phase) % 1.0;
 
-      // Calculate wave properties
+
       final double radius = maxRadius * waveProgress;
       final double opacity = (1.0 - waveProgress).clamp(0.1, 0.7);
 
-      // Create a gradient that shifts in hue based on wave and time
+
       final HSLColor baseHSL = HSLColor.fromColor(primaryColor);
       final HSLColor targetHSL = HSLColor.fromColor(secondaryColor);
 
-      // Interpolate between colors for a smooth transition
+
       final HSLColor innerColor = HSLColor.lerp(baseHSL, targetHSL,
           (waveProgress + sin(easedAnimation * pi * 2) * 0.3) % 1.0)!;
 
       final HSLColor outerColor = HSLColor.lerp(targetHSL, baseHSL,
           (waveProgress + cos(easedAnimation * pi * 2) * 0.3) % 1.0)!;
 
-      // Create a radial gradient shader
+
       final Gradient gradient = RadialGradient(
         colors: <ui.Color>[
           innerColor.toColor().withValues(alpha: opacity),
@@ -796,8 +796,8 @@ class RippleGradientPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Rainbow wave animation for placing or removing a piece.
-/// Creates a circular rainbow effect that ripples outward.
+
+
 class RainbowWavePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -806,7 +806,7 @@ class RainbowWavePieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Rainbow colors with transparency
+
     final List<Color> rainbowColors = <ui.Color>[
       Colors.red.withValues(alpha: 0.7),
       Colors.orange.withValues(alpha: 0.7),
@@ -817,27 +817,27 @@ class RainbowWavePieceEffectAnimation implements PieceEffectAnimation {
       Colors.purple.withValues(alpha: 0.7),
     ];
 
-    // Apply easing for smoother animation
+
     final double easedAnimation = Curves.easeInOut.transform(animationValue);
 
-    // Calculate maximum radius
+
     final double maxRadius = diameter * 1.25;
     final double baseThickness = diameter * 0.08;
 
-    // Draw rainbow rings that expand outward
+
     for (int i = 0; i < rainbowColors.length; i++) {
-      // Apply a phase offset to each color to create a wave effect
+
       final double phase = i / rainbowColors.length;
       final double waveProgress = (easedAnimation + phase) % 1.0;
 
-      // Calculate radius for this ring
+
       final double radius = maxRadius * waveProgress;
 
-      // Fade out as the ring expands
+
       final double opacity = (1.0 - waveProgress).clamp(0.1, 0.8);
       final Color ringColor = rainbowColors[i].withValues(alpha: opacity);
 
-      // Create a ring with varying thickness based on the sine wave
+
       final double thickness =
           baseThickness * (0.8 + 0.2 * sin(waveProgress * 2 * pi));
 
@@ -849,7 +849,7 @@ class RainbowWavePieceEffectAnimation implements PieceEffectAnimation {
       canvas.drawCircle(center, radius, paint);
     }
 
-    // Add a shimmering effect in the center
+
     final double shimmerRadius = diameter * 0.4 * (1.0 - easedAnimation);
     final Paint shimmerPaint = Paint()
       ..shader = RadialGradient(
@@ -863,8 +863,8 @@ class RainbowWavePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Starburst effect animation for placing or removing a piece.
-/// Creates a star-shaped burst of energy from the center point.
+
+
 class StarburstPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -873,29 +873,29 @@ class StarburstPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Calculate eased animation value
+
     final double easedAnimation = Curves.easeOutBack.transform(animationValue);
 
-    // Number of points in the star
+
     const int numPoints = 12;
 
-    // Maximum radius of the outer points
+
     final double maxOuterRadius = diameter * 1.6;
     final double outerRadius = maxOuterRadius * easedAnimation;
 
-    // Inner radius (between star points)
+
     final double innerRadius = outerRadius * 0.4;
 
-    // Get highlight color from settings
+
     final ui.Color highlightColor = DB().colorSettings.pieceHighlightColor;
 
-    // Calculate opacity based on animation progress
+
     final double opacity = (1.0 - easedAnimation).clamp(0.1, 0.8);
 
-    // Create a star path
+
     final Path starPath = Path();
     for (int i = 0; i < numPoints * 2; i++) {
-      // Alternate between outer and inner points
+
       final double radius = i.isEven ? outerRadius : innerRadius;
       final double angle = (i * pi / numPoints) + (easedAnimation * pi / 2);
 
@@ -910,7 +910,7 @@ class StarburstPieceEffectAnimation implements PieceEffectAnimation {
     }
     starPath.close();
 
-    // Create gradient for the star
+
     final Paint starPaint = Paint()
       ..shader = RadialGradient(
         colors: <ui.Color>[
@@ -925,10 +925,10 @@ class StarburstPieceEffectAnimation implements PieceEffectAnimation {
       ))
       ..style = PaintingStyle.fill;
 
-    // Draw the star
+
     canvas.drawPath(starPath, starPaint);
 
-    // Add a subtle outline
+
     final Paint outlinePaint = Paint()
       ..color = highlightColor.withValues(alpha: opacity * 0.8)
       ..style = PaintingStyle.stroke
@@ -936,7 +936,7 @@ class StarburstPieceEffectAnimation implements PieceEffectAnimation {
 
     canvas.drawPath(starPath, outlinePaint);
 
-    // Add a center glow
+
     final Paint centerGlowPaint = Paint()
       ..shader = RadialGradient(
         colors: <ui.Color>[
@@ -953,8 +953,8 @@ class StarburstPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// Twist effect animation for placing or removing a piece.
-/// Creates a spiraling, twisted pattern that rotates around the center.
+
+
 class TwistPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -963,58 +963,58 @@ class TwistPieceEffectAnimation implements PieceEffectAnimation {
       return;
     }
 
-    // Use a sinusoidal easing for a more fluid twist effect
+
     final double easedAnimation = (sin(animationValue * pi - pi / 2) + 1) / 2;
 
-    // Get colors from settings
+
     final ui.Color primaryColor = DB().colorSettings.boardLineColor;
 
-    // Calculate opacity based on animation progress
+
     final double opacity = (1.0 - animationValue).clamp(0.2, 0.8);
 
-    // Maximum radius of the spiral
+
     final double maxRadius = diameter * 1.3;
 
-    // Number of spiral arms
+
     const int numArms = 6;
 
-    // Number of points to draw per arm to create the spiral
+
     const int pointsPerArm = 30;
 
     canvas.save();
     canvas.translate(center.dx, center.dy);
 
-    // Rotate the entire spiral based on animation progress
+
     canvas.rotate(easedAnimation * pi * 2);
 
-    // Draw each spiral arm
+
     for (int arm = 0; arm < numArms; arm++) {
       final double armAngleOffset = arm * (2 * pi / numArms);
 
-      // Create the spiral path
+
       final Path spiralPath = Path();
-      spiralPath.moveTo(0, 0); // Start at center
+      spiralPath.moveTo(0, 0);
 
       for (int i = 0; i < pointsPerArm; i++) {
-        // Calculate progress along the arm (0 to 1)
+
         final double t = i / (pointsPerArm - 1);
 
-        // Calculate radius that increases with t
+
         final double radius = maxRadius * t * easedAnimation;
 
-        // Calculate angle that increases with t and has a twist factor
+
         final double twistFactor =
-            2.0 + 3.0 * (1.0 - easedAnimation); // Twist more at the beginning
+            2.0 + 3.0 * (1.0 - easedAnimation);
         final double angle = armAngleOffset + t * twistFactor * pi * 2;
 
-        // Calculate point position
+
         final double x = radius * cos(angle);
         final double y = radius * sin(angle);
 
         spiralPath.lineTo(x, y);
       }
 
-      // Create a gradient along the spiral path
+
       final Paint spiralPaint = Paint()
         ..color = primaryColor.withValues(
             alpha: opacity * (1.0 - arm / numArms * 0.5))
@@ -1027,7 +1027,7 @@ class TwistPieceEffectAnimation implements PieceEffectAnimation {
       canvas.drawPath(spiralPath, spiralPaint);
     }
 
-    // Add a subtle glow at the center
+
     final Paint centerGlowPaint = Paint()
       ..shader = RadialGradient(
         colors: <ui.Color>[
@@ -1045,8 +1045,8 @@ class TwistPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// PulseRing effect animation.
-/// Draws two expanding rings that fade out to create a pulsing ripple effect.
+
+
 class PulseRingPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1067,8 +1067,8 @@ class PulseRingPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// PixelGlitch effect animation.
-/// Draws small translucent squares at random positions to simulate a glitch.
+
+
 class PixelGlitchPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1095,8 +1095,8 @@ class PixelGlitchPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// FireTrail effect animation.
-/// Emits flame-like streaks that trail outward from center.
+
+
 class FireTrailPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1121,8 +1121,8 @@ class FireTrailPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// WarpWave effect animation.
-/// Draws concentric sine-wave circles that appear to warp outward.
+
+
 class WarpWavePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1160,8 +1160,8 @@ class WarpWavePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// ShockWave effect animation.
-/// Draws a high-velocity shock ring that expands and quickly fades.
+
+
 class ShockWavePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1181,8 +1181,8 @@ class ShockWavePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// ColorSwirl effect animation.
-/// Creates a rotating sweep gradient swirl around the center.
+
+
 class ColorSwirlPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1212,8 +1212,8 @@ class ColorSwirlPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// NeonFlash effect animation.
-/// Creates a quick neon flash that brightens and then dims.
+
+
 class NeonFlashPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1231,8 +1231,8 @@ class NeonFlashPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// InkSpread effect animation.
-/// Draws multiple semi-transparent ink circles spreading outward.
+
+
 class InkSpreadPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1254,8 +1254,8 @@ class InkSpreadPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// ShadowPulse effect animation.
-/// Draws a pulsing shadow beneath the piece with a bouncy effect.
+
+
 class ShadowPulsePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1272,8 +1272,8 @@ class ShadowPulsePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// RainRipple effect animation.
-/// Draws concentric small ripples to simulate raindrop effects.
+
+
 class RainRipplePieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1296,8 +1296,8 @@ class RainRipplePieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// BubblePop effect animation.
-/// Draws expanding bubbles that pop (fade) over time.
+
+
 class BubblePopPieceEffectAnimation implements PieceEffectAnimation {
   @override
   void draw(
@@ -1323,16 +1323,16 @@ class BubblePopPieceEffectAnimation implements PieceEffectAnimation {
   }
 }
 
-/// A helper class to define the properties of each effect layer.
+
 class _EffectLayer {
   _EffectLayer({
     required this.radiusFactor,
     required this.opacityFactor,
   });
 
-  /// The factor by which to multiply the current radius.
+
   final double radiusFactor;
 
-  /// The factor by which to multiply the main opacity.
+
   final double opacityFactor;
 }

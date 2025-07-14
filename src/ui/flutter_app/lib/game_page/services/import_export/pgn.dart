@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// pgn.dart
+
+
+
 
 import 'dart:math' as math;
 
@@ -12,10 +12,10 @@ import '../mill.dart';
 
 typedef PgnHeaders = Map<String, String>;
 
-/// A small stub to replace references to an `fromPgn`.
-/// Adjust if you have a different result-handling approach.
 
-/// Minimal stub to parse a string like `1-0` / `0-1` / `1/2-1/2` / `*`.
+
+
+
 String fromPgn(String? result) {
   if (result == '1-0' || result == '0-1' || result == '1/2-1/2') {
     return result!;
@@ -23,10 +23,10 @@ String fromPgn(String? result) {
   return '*';
 }
 
-/// Return the same string for PGN writing.
+
 String toPgnString(String result) => result;
 
-/// Minimal stub for a `Square` class.
+
 @immutable
 class Square {
   const Square(this.name);
@@ -34,10 +34,10 @@ class Square {
   final String name;
 
   static Square? parse(String str) {
-    // Nine Men's Morris uses a..g, 1..7, etc.
+
     if (str.length == 2) {
-      final int file = str.codeUnitAt(0); // 'a'..'g'
-      final int rank = str.codeUnitAt(1); // '1'..'7'
+      final int file = str.codeUnitAt(0);
+      final int rank = str.codeUnitAt(1);
       if (file >= 97 && file <= 103 && rank >= 49 && rank <= 55) {
         return Square(str);
       }
@@ -54,7 +54,7 @@ class Square {
   int get hashCode => name.hashCode;
 }
 
-// Use a small helper class instead of a record, so we can mutate .context
+
 class _TransformStackFrame<U extends PgnNodeData, T extends PgnNodeData, C> {
   _TransformStackFrame({
     required this.after,
@@ -67,64 +67,64 @@ class _TransformStackFrame<U extends PgnNodeData, T extends PgnNodeData, C> {
   C context;
 }
 
-/// A Portable Game Notation (PGN) representation adapted for Nine Men's Morris.
-///
-/// A PGN game is composed of [PgnHeaders] and moves represented by a [PgnNode] tree.
-/// This parser retains all logic for comments, NAGs, shapes, times, etc., but
-/// focuses on Nine Men's Morris move notation (e.g. `d6`, `d5-c5`, `d6-d5xd7`, `xxx`, `p` for pass).
-///
-/// ## Parser
-///
-/// This class provides 2 parsers: `parsePgn` to create a single [PgnGame] and
-/// `parseMultiGamePgn` that can handle a string containing multiple games.
-///
-/// ```dart
-/// const pgn = '1. d6 f4 *';
-/// final game = PgnGame.parsePgn(pgn);
-/// Position position = PgnGame.startingPosition(game.headers);
-/// for (final node in game.moves.mainline()) {
-///   final move = position.parseSan(node.san);
-///   if (move == null) break; // Illegal move
-///   position = position.play(move);
-/// }
-/// ```
-///
-/// ## Augmenting game tree
-///
-/// You can use [PgnNode.transform] to augment all nodes in the game tree with user data.
-///
-/// It allows you to provide context. You update the context inside the
-/// callback. Context object itself should be immutable to prevent any unwanted mutation.
-/// In the example below, the current [Position] `pos` is provided as context.
-///
-/// ```dart
-/// class PgnNodeWithFen extends PgnNodeData {
-///   final String fen;
-///   const PgnNodeWithFen(
-///       {required this.fen,
-///       required super.san,
-///       super.startingComments,
-///       super.comments,
-///       super.nags});
-///
-///    // Override == and hashCode
-///    // ...
-/// }
-///
-/// final game = PgnGame.parsePgn('1. d6 d5 *');
-/// final pos = PgnGame.startingPosition(game.headers);
-/// final PgnNode<NodeWithFen> res = game.moves.transform<NodeWithFen, Position>(pos,
-///   (pos, data, _) {
-///     final move = pos.parseSan(data.san);
-///     if (move != null) {
-///       final newPos = pos.play(move);
-///       return (
-///           newPos, NodeWithFen(fen: newPos.fen, san: data.san, comments: data.comments, nags: data.nags));
-///     }
-///     return null;
-///   },
-/// );
-/// ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class PgnGame<T extends PgnNodeData> {
   PgnGame({required this.headers, required this.moves, required this.comments});
 
@@ -238,7 +238,7 @@ class PgnGame<T extends PgnNodeData> {
       switch (frame.state) {
         case _PgnState.pre:
           {
-            // If data is not null, we can read the stored info
+
             if (frame.node.data?.startingComments != null) {
               for (final String comment in frame.node.data!.startingComments!) {
                 token.write('{ ${_safeComment(comment)} } ');
@@ -316,7 +316,7 @@ class PgnGame<T extends PgnNodeData> {
   }
 }
 
-/// PGN data for a [PgnNode].
+
 class PgnNodeData {
   PgnNodeData({
     required this.san,
@@ -325,36 +325,36 @@ class PgnNodeData {
     this.nags,
   });
 
-  /// SAN representation of the move (adapted for Nine Men's Morris).
+
   final String san;
 
-  /// PGN comments before the move.
+
   final List<String>? startingComments;
 
-  /// PGN comments after the move.
+
   List<String>? comments;
 
-  /// Numeric Annotation Glyphs for the move.
+
   List<int>? nags;
 }
 
-/// Parent node containing a list of child nodes, but can also store data if it's not the root.
-/// If [data] is null, this node is considered the root with no move data. Otherwise it represents a move node.
+
+
 class PgnNode<T extends PgnNodeData> {
-  /// Constructor. If [data] is provided, this node represents a move node; otherwise it's a root.
+
   PgnNode([this.data]);
 
-  /// The actual move data. If null, this node is considered the root.
+
   T? data;
 
-  /// Optional link back to the parent node. This allows you to climb up.
+
   PgnNode<T>? parent;
 
-  /// A list of child nodes.
+
   final List<PgnNode<T>> children = <PgnNode<T>>[];
 
-  /// Mainline iteration: always follow [children[0]] if it exists.
-  /// If the child's data is not null, yield it.
+
+
   Iterable<T> mainline() sync* {
     PgnNode<T> node = this;
     while (node.children.isNotEmpty) {
@@ -366,11 +366,11 @@ class PgnNode<T extends PgnNodeData> {
     }
   }
 
-  /// Transform this node into a [PgnNode<U>] tree.
-  ///
-  /// The callback function [f] is called for each node in the tree. If the
-  /// callback returns null, the node is not added to the result tree.
-  /// The callback should return a tuple of the updated context and node data.
+
+
+
+
+
   PgnNode<U> transform<U extends PgnNodeData, C>(
       C context, (C, U)? Function(C context, T data, int childIndex) f) {
     final PgnNode<U> root = PgnNode<U>();
@@ -382,29 +382,29 @@ class PgnNode<T extends PgnNodeData> {
     while (stack.isNotEmpty) {
       final _TransformStackFrame<U, T, C> frame = stack.removeLast();
 
-      // If the current 'before' node has data, try to transform it
+
       if (frame.before.data != null) {
         final T originalData = frame.before.data!;
-        // We pass childIdx = -1 here, but we can keep it if we want to differentiate
+
         final (C, U)? result = f(frame.context, originalData, -1);
         if (result == null) {
-          // If it's null, skip the node entirely (including its subtree).
+
           continue;
         }
         final (C newCtx, U data) = result;
-        frame.context = newCtx; // We can set .context on our class
+        frame.context = newCtx;
 
-        // Put this data on 'after' node
+
         frame.after.data = data;
       }
 
-      // Now transform children
+
       for (int childIdx = 0;
           childIdx < frame.before.children.length;
           childIdx++) {
         final PgnNode<T> childBefore = frame.before.children[childIdx];
         if (childBefore.data == null) {
-          // If child has no data, it may be just a root-like subnode. Skip or handle differently.
+
           continue;
         }
         final (C, U)? transformData =
@@ -429,9 +429,9 @@ class PgnNode<T extends PgnNodeData> {
   }
 }
 
-/// Represents the color of a PGN comment shape.
-///
-/// Can be green, red, yellow, and blue.
+
+
+
 enum CommentShapeColor {
   green,
   red,
@@ -467,9 +467,9 @@ enum CommentShapeColor {
   }
 }
 
-/// A PGN comment shape.
-///
-/// Example of a comment shape "%cal Ra1b2" with color: Red from:a1 to:b2.
+
+
+
 @immutable
 class PgnCommentShape {
   const PgnCommentShape({
@@ -519,10 +519,10 @@ class PgnCommentShape {
   int get hashCode => Object.hash(color, from, to);
 }
 
-/// Represents the type of [PgnEvaluation].
+
 enum EvalType { pawns, mate }
 
-/// Pgn representation of a move evaluation.
+
 @immutable
 class PgnEvaluation {
   const PgnEvaluation.pawns({
@@ -572,7 +572,7 @@ class PgnEvaluation {
   int get hashCode => Object.hash(pawns, depth, mate, evalType);
 }
 
-/// A PGN comment.
+
 @immutable
 class PgnComment {
   const PgnComment({
@@ -648,19 +648,19 @@ class PgnComment {
     );
   }
 
-  /// Comment string.
+
   final String? text;
 
-  /// List of comment shapes.
+
   final IList<PgnCommentShape> shapes;
 
-  /// Player's remaining time.
+
   final Duration? clock;
 
-  /// Player's elapsed move time.
+
   final Duration? emt;
 
-  /// Move evaluation.
+
   final PgnEvaluation? eval;
 
   String makeComment() {
@@ -713,7 +713,7 @@ class PgnComment {
   int get hashCode => Object.hash(text, shapes, clock, emt, eval);
 }
 
-/// A parser frame used internally
+
 class _ParserFrame {
   _ParserFrame({required this.parent, required this.root});
 
@@ -745,16 +745,16 @@ class _PgnFrame {
   bool inVariation;
 }
 
-/// Remove escape sequence from the string
+
 String _escapeHeader(String value) =>
     value.replaceAll(RegExp(r'\\'), r'\\').replaceAll(RegExp('"'), r'\"');
 
-/// Remove '}' from the comment string
+
 String _safeComment(String value) => value.replaceAll(RegExp(r'\}'), '');
 
-/// For Nine Men's Morris, we don't do advanced FEN parsing for ply. Return 0 here.
+
 int _getPlyFromSetup(String fen) {
-  return 0; // Minimal stub
+  return 0;
 }
 
 const String _bom = '\ufeff';
@@ -763,7 +763,7 @@ bool _isWhitespace(String line) => RegExp(r'^\s*$').hasMatch(line);
 
 bool _isCommentLine(String line) => line.startsWith('%');
 
-/// A class to read a string and create a [PgnGame] (adapted for Nine Men's Morris).
+
 class _PgnParser {
   _PgnParser(this.emitGame, this.initHeaders) {
     _resetGame();
@@ -778,10 +778,10 @@ class _PgnParser {
   late List<_ParserFrame> _stack;
   late List<String> _commentBuf;
 
-  /// Function to which the parsed game is passed
+
   final void Function(PgnGame<PgnNodeData>) emitGame;
 
-  /// Function to create the headers
+
   final PgnHeaders Function() initHeaders;
 
   void _resetGame() {
@@ -807,7 +807,7 @@ class _PgnParser {
     _resetGame();
   }
 
-  /// Parse the PGN string
+
   void parse(String data) {
     int idx = 0;
     for (;;) {
@@ -887,7 +887,7 @@ class _PgnParser {
                 return;
               }
             }
-            // Adapted Nine Men's Morris token regex:
+
             final RegExp tokenRegex = RegExp(
                 r'(?:p|(?:[a-g][1-7](?:[-x][a-g][1-7])*)|(?:x[a-g][1-7](?:[-x][a-g][1-7])*))'
                 r'|{|;|\$\d{1,4}|[?!]{1,2}|\(|\)|\*|1-0|0-1|1\/2-1\/2');
@@ -897,7 +897,7 @@ class _PgnParser {
               final String? token = match[0];
               if (token != null) {
                 if (token == ';') {
-                  // Remainder of line is a comment
+
                   return;
                 } else if (token.startsWith(r'$')) {
                   _handleNag(int.parse(token.substring(1)));
@@ -938,9 +938,9 @@ class _PgnParser {
                   }
                   continue continuedLine;
                 } else {
-                  // Any Nine Men's Morris move, pass, or x-series
+
                   if (frame.node != null) {
-                    // Use ! to avoid assigning a nullable node to a non-null field
+
                     frame.parent = frame.node!;
                   }
                   frame.node = PgnNode<PgnNodeData>(PgnNodeData(
@@ -999,7 +999,7 @@ class _PgnParser {
   }
 }
 
-/// Make the clock to string from seconds
+
 String _makeClk(Duration duration) {
   final double seconds = duration.inMilliseconds / 1000;
   final num positiveSecs = math.max(0, seconds);

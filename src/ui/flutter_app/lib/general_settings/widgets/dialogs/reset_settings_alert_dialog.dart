@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// reset_settings_alert_dialog.dart
+
+
+
 
 part of 'package:sanmill/general_settings/widgets/general_settings_page.dart';
 
@@ -16,7 +16,7 @@ class _ResetSettingsAlertDialog extends StatelessWidget {
 
     Navigator.pop(context);
 
-    // TODO: Seems to need to close and reopen the program for it to work.
+
     await DB.reset();
 
     GameController().reset(force: true);

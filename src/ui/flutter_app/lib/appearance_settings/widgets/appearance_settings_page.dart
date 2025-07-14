@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// appearance_settings_page.dart
+
+
+
 
 import 'dart:async';
 import 'dart:convert';
@@ -174,7 +174,7 @@ class AppearanceSettingsPage extends StatelessWidget {
     final String strImported = S.of(context).imported;
     final String strInvalidFormat = S.of(context).pleaseCopyJsonToClipboard;
 
-    // Get clipboard data
+
     final ClipboardData? data = await Clipboard.getData('text/plain');
     if (data == null || data.text == null) {
       rootScaffoldMessengerKey.currentState!.showSnackBar(
@@ -186,10 +186,10 @@ class AppearanceSettingsPage extends StatelessWidget {
       return;
     }
 
-    // Check if clipboard content contains only ASCII characters
+
     final String clipboardText = data.text!;
     if (!isAscii(clipboardText)) {
-      // If content is not ASCII, show a SnackBar with the invalid format message
+
       rootScaffoldMessengerKey.currentState!.showSnackBar(
         SnackBar(
           key: const Key(
@@ -201,7 +201,7 @@ class AppearanceSettingsPage extends StatelessWidget {
     }
 
     try {
-      // Try to parse the clipboard content as JSON
+
       final Map<String, dynamic> json =
           jsonDecode(clipboardText) as Map<String, dynamic>;
       final Widget importButton = TextButton(
@@ -245,7 +245,7 @@ class AppearanceSettingsPage extends StatelessWidget {
             fontSize: AppTheme.textScaler.scale(AppTheme.largeFontSize),
           ),
         ),
-        // Show content if it's valid JSON
+
         content: Text(
           clipboardText,
           key: const Key('import_color_settings_alert_dialog_content'),
@@ -266,7 +266,7 @@ class AppearanceSettingsPage extends StatelessWidget {
         },
       );
     } catch (e) {
-      // If parsing fails (not valid JSON), show a SnackBar with the invalid format message
+
       rootScaffoldMessengerKey.currentState!.showSnackBar(
         SnackBar(
           key: const Key(
@@ -277,7 +277,7 @@ class AppearanceSettingsPage extends StatelessWidget {
     }
   }
 
-  // Function to check if a string contains only ASCII characters
+
   bool isAscii(String text) {
     return text.codeUnits.every((int unit) => unit <= 127);
   }
@@ -350,7 +350,7 @@ class AppearanceSettingsPage extends StatelessWidget {
 
   Future<void> _setTheme(
       BuildContext context, ColorSettings colorSettings) async {
-    // Navigate to the theme selection page instead of showing modal
+
     final ColorTheme? selectedTheme = await Navigator.push<ColorTheme>(
       context,
       MaterialPageRoute<ColorTheme>(
@@ -361,10 +361,10 @@ class AppearanceSettingsPage extends StatelessWidget {
     );
 
     if (selectedTheme == null || selectedTheme == ColorTheme.current) {
-      return; // No theme selected or current theme selected
+      return;
     }
 
-    // Update the color settings with the selected theme
+
     DB().colorSettings = colorSettings.copyWith(
       boardLineColor: AppTheme.colorThemes[selectedTheme]!.boardLineColor,
       darkBackgroundColor:
@@ -616,26 +616,26 @@ class AppearanceSettingsPage extends StatelessWidget {
         key: const Key('display_settings_card_title'),
       ),
       children: <Widget>[
-        // SettingsListTile(
-        //   key: const Key('display_settings_card_language_settings_list_tile'),
-        //   titleString: S.of(context).language,
-        //   trailingString: DB().displaySettings.locale != null
-        //       ? localeToLanguageName[displaySettings.locale]
-        //       : null,
-        //   onTap: () => _selectLanguage(context, displaySettings),
-        // ),
-        // if (!kIsWeb && (Platform.isAndroid || Platform.isIOS))
-        //   SettingsListTile.switchTile(
-        //     key: const Key('display_settings_card_full_screen_switch_tile'),
-        //     value: displaySettings.isFullScreen,
-        //     onChanged: (bool val) {
-        //       DB().displaySettings =
-        //           displaySettings.copyWith(isFullScreen: val);
-        //       rootScaffoldMessengerKey.currentState!
-        //           .showSnackBarClear(S.of(context).reopenToTakeEffect);
-        //     },
-        //     titleString: S.of(context).fullScreen,
-        //   ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         SettingsListTile.switchTile(
           key: const Key(
               'display_settings_card_piece_count_in_hand_shown_switch_tile'),
@@ -669,23 +669,23 @@ class AppearanceSettingsPage extends StatelessWidget {
               displaySettings.copyWith(isHistoryNavigationToolbarShown: val),
           titleString: S.of(context).isHistoryNavigationToolbarShown,
         ),
-        // if (EnvironmentConfig.devMode)
-        //   SettingsListTile.switchTile(
-        //     key: const Key(
-        //         'display_settings_card_analysis_toolbar_shown_switch_tile'),
-        //     value: displaySettings.isAnalysisToolbarShown,
-        //     onChanged: (bool val) => DB().displaySettings =
-        //         displaySettings.copyWith(isAnalysisToolbarShown: val),
-        //     titleString: S.of(context).isAnalysisToolbarShown,
-        //   ),
-        // SettingsListTile.switchTile(
-        //   key: const Key(
-        //       'display_settings_card_annotation_toolbar_shown_switch_tile'),
-        //   value: displaySettings.isAnnotationToolbarShown,
-        //   onChanged: (bool val) => DB().displaySettings =
-        //       displaySettings.copyWith(isAnnotationToolbarShown: val),
-        //   titleString: S.of(context).isAnnotationToolbarShown,
-        // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         SettingsListTile.switchTile(
           key: const Key('display_settings_card_toolbar_at_bottom_switch_tile'),
           value: displaySettings.isToolbarAtBottom,
@@ -724,36 +724,36 @@ class AppearanceSettingsPage extends StatelessWidget {
                 displaySettings.copyWith(swipeToRevealTheDrawer: val),
             titleString: S.of(context).swipeToRevealTheDrawer,
           ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_board_corner_radius_settings_list_tile'),
-        //   titleString: S.of(context).boardCornerRadius,
-        //   onTap: () => setBoardCornerRadius(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_board_border_line_width_settings_list_tile'),
-        //   titleString: S.of(context).boardBorderLineWidth,
-        //   onTap: () => setBoardBorderLineWidth(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_board_inner_line_width_settings_list_tile'),
-        //   titleString: S.of(context).boardInnerLineWidth,
-        //   onTap: () => setBoardInnerLineWidth(context),
-        // ),
-        // SettingsListTile(
-        //   key:
-        //       const Key('display_settings_card_point_style_settings_list_tile'),
-        //   titleString: S.of(context).pointStyle,
-        //   onTap: () => setPointPaintingStyle(context, displaySettings),
-        // ),
-        // SettingsListTile(
-        //   key:
-        //       const Key('display_settings_card_point_width_settings_list_tile'),
-        //   titleString: S.of(context).pointWidth,
-        //   onTap: () => setPointWidth(context),
-        // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         SettingsListTile(
           key: const Key('display_settings_card_board_top_settings_list_tile'),
           titleString: S.of(context).boardTop,
@@ -767,35 +767,35 @@ class AppearanceSettingsPage extends StatelessWidget {
               displaySettings.copyWith(isNumbersOnPiecesShown: val),
           titleString: S.of(context).showNumbersOnPieces,
         ),
-        // SettingsListTile(
-        //   key:
-        //       const Key('display_settings_card_piece_width_settings_list_tile'),
-        //   titleString: S.of(context).pieceWidth,
-        //   onTap: () => setPieceWidth(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key('display_settings_card_font_size_settings_list_tile'),
-        //   titleString: S.of(context).fontSize,
-        //   onTap: () => setFontSize(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_animation_duration_settings_list_tile'),
-        //   titleString: S.of(context).animationDuration,
-        //   onTap: () => setAnimationDuration(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_place_effect_animation_settings_list_tile'),
-        //   titleString: S.of(context).placeEffectAnimation,
-        //   onTap: () => setPlaceEffectAnimation(context),
-        // ),
-        // SettingsListTile(
-        //   key: const Key(
-        //       'display_settings_card_remove_effect_animation_settings_list_tile'),
-        //   titleString: S.of(context).removeEffectAnimation,
-        //   onTap: () => setRemoveEffectAnimation(context),
-        // ),
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         SettingsListTile.switchTile(
           key: const Key('display_settings_card_vignette_effect_switch_tile'),
           value: displaySettings.vignetteEffectEnabled,
@@ -840,7 +840,7 @@ class AppearanceSettingsPage extends StatelessWidget {
       child: Scaffold(
         key: const Key('appearance_settings_page_scaffold'),
         resizeToAvoidBottomInset: false,
-        // backgroundColor: AppTheme.lightBackgroundColor,
+
         appBar: AppBar(
           key: const Key('appearance_settings_page_appbar'),
           leading: CustomDrawerIcon.of(context)?.drawerIcon,
@@ -859,13 +859,13 @@ class AppearanceSettingsPage extends StatelessWidget {
               valueListenable: DB().listenDisplaySettings,
               builder: _buildDisplaySettings,
             ),
-            // if (Constants.isSmallScreen(context) == false)
-            //   ValueListenableBuilder<Box<ColorSettings>>(
-            //     key: const Key(
-            //         'appearance_settings_page_color_settings_value_listenable_builder'),
-            //     valueListenable: DB().listenColorSettings,
-            //     builder: _buildColorSettings,
-            //   ),
+
+
+
+
+
+
+
           ],
         ),
       ),

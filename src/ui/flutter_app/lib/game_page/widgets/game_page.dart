@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_page.dart
+
+
+
 
 import 'dart:async';
 import 'dart:io';
@@ -58,11 +58,11 @@ part 'game_header.dart';
 part 'game_page_action_sheet.dart';
 part 'modals/move_options_modal.dart';
 
-/// Main GamePage widget that initializes the game controller and passes it
-/// to a stateful inner widget managing annotation mode.
+
+
 class GamePage extends StatelessWidget {
   GamePage(this.gameMode, {super.key}) {
-    // Reset game score when creating a new game page.
+
     Position.resetScore();
   }
 
@@ -72,12 +72,12 @@ class GamePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final GameController controller = GameController();
     controller.gameInstance.gameMode = gameMode;
-    // Use a stateful inner widget to manage annotation mode state.
+
     return _GamePageInner(controller: controller);
   }
 }
 
-/// Stateful widget that holds the internal state for annotation mode.
+
 class _GamePageInner extends StatefulWidget {
   const _GamePageInner({required this.controller});
 
@@ -88,7 +88,7 @@ class _GamePageInner extends StatefulWidget {
 }
 
 class _GamePageInnerState extends State<_GamePageInner> {
-  // GlobalKey to reference the real board's RenderBox
+
   final GlobalKey _gameBoardKey = GlobalKey();
 
   bool _isAnnotationMode = false;
@@ -97,35 +97,35 @@ class _GamePageInnerState extends State<_GamePageInner> {
   @override
   void initState() {
     super.initState();
-    // Initialize annotation manager from game controller.
+
     _annotationManager = widget.controller.annotationManager;
 
-    // Listen for analysis mode state changes
+
     AnalysisMode.stateNotifier.addListener(_updateAnalysisButton);
   }
 
-  // Method to update only the analysis button when state changes
+
   void _updateAnalysisButton() {
-    // This will force a rebuild of only the analysis button area
-    // without requiring a full board repaint
+
+
     setState(() {
-      // No need to do anything in the setState body
-      // The Icon will check AnalysisMode.isEnabled when rebuilding
+
+
     });
   }
 
   @override
   void dispose() {
-    // Remove listener when the widget is disposed
+
     AnalysisMode.stateNotifier.removeListener(_updateAnalysisButton);
     super.dispose();
   }
 
-  // Toggle annotation mode without rebuilding the entire widget tree.
+
   void _toggleAnnotationMode() {
     setState(() {
       if (_isAnnotationMode) {
-        // Clear annotations when turning off annotation mode.
+
         _annotationManager.clear();
       }
       _isAnnotationMode = !_isAnnotationMode;
@@ -136,13 +136,13 @@ class _GamePageInnerState extends State<_GamePageInner> {
 
   @override
   Widget build(BuildContext context) {
-    // Build base content (game board, background, etc.)
+
     final Widget baseContent = Scaffold(
       key: const Key('game_page_scaffold'),
       resizeToAvoidBottomInset: false,
       body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          // Calculate board dimensions and game board rectangle.
+
           final double maxWidth = constraints.maxWidth;
           final double maxHeight = constraints.maxHeight;
           final double boardDimension =
@@ -157,11 +157,11 @@ class _GamePageInnerState extends State<_GamePageInner> {
           return Stack(
             key: const Key('game_page_stack'),
             children: <Widget>[
-              // Background image or solid color.
+
               _buildBackground(),
-              // Game board widget.
+
               _buildGameBoard(context, widget.controller),
-              // Drawer icon in the top-left corner.
+
               Align(
                 key: const Key('game_page_drawer_icon_align'),
                 alignment: AlignmentDirectional.topStart,
@@ -169,7 +169,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                   child: CustomDrawerIcon.of(context)!.drawerIcon,
                 ),
               ),
-              // Analysis button in the top-right corner
+
               if (GameController().gameInstance.gameMode ==
                   GameMode.humanVsHuman)
                 Align(
@@ -195,7 +195,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                     ),
                   ),
                 ),
-              // Board image recognition button in the top-right corner (only in Setup Position mode)
+
               if (GameController().gameInstance.gameMode ==
                   GameMode.setupPosition)
                 Align(
@@ -209,7 +209,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            // Parameters adjustment button (only shown in dev mode)
+
                             if (EnvironmentConfig.devMode)
                               IconButton(
                                 key: const Key(
@@ -222,7 +222,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                                 onPressed: () =>
                                     _showRecognitionParamsDialog(context),
                               ),
-                            // Camera button for board recognition
+
                             IconButton(
                               key: const Key(
                                   'game_page_image_recognition_button'),
@@ -231,7 +231,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                                 color: Colors.white,
                               ),
                               tooltip: S.of(context).recognizeBoardFromImage,
-                              // Board image recognition
+
                               onPressed: () =>
                                   _recognizeBoardFromImage(context),
                             ),
@@ -241,7 +241,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                     ),
                   ),
                 ),
-              // Vignette overlay if enabled in display settings.
+
               if (DB().displaySettings.vignetteEffectEnabled)
                 VignetteOverlay(
                   key: const Key('game_page_vignette_overlay'),
@@ -253,19 +253,19 @@ class _GamePageInnerState extends State<_GamePageInner> {
       ),
     );
 
-    // Build annotation overlay as a separate layer.
-    // It is always part of the widget tree, but its visibility is controlled by Offstage.
+
+
     final Widget annotationOverlay = Offstage(
       offstage: !_isAnnotationMode,
       child: AnnotationOverlay(
         annotationManager: _annotationManager,
-        // We pass the GlobalKey down so that _snapToBoardFeatures can find the board box
+
         gameBoardKey: _gameBoardKey,
         child: const SizedBox(width: double.infinity, height: double.infinity),
       ),
     );
 
-    // Build annotation toolbar if enabled in display settings.
+
     Widget toolbar = Container();
     if (DB().displaySettings.isAnnotationToolbarShown) {
       toolbar = Positioned(
@@ -280,7 +280,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
       );
     }
 
-    // Return a Stack with base content, annotation overlay, and toolbar.
+
     return Stack(
       children: <Widget>[
         baseContent,
@@ -290,21 +290,21 @@ class _GamePageInnerState extends State<_GamePageInner> {
     );
   }
 
-  // Builds the background widget based on display settings.
+
   Widget _buildBackground() {
     final DisplaySettings displaySettings = DB().displaySettings;
-    // Get background image provider if available.
+
     final ImageProvider? backgroundImage =
         getBackgroundImageProvider(displaySettings);
 
     if (backgroundImage == null) {
-      // No image selected, return a container with a solid color.
+
       return Container(
         key: const Key('game_page_background_container'),
         color: DB().colorSettings.darkBackgroundColor,
       );
     } else {
-      // Return image with error handling.
+
       return Image(
         key: const Key('game_page_background_image'),
         image: backgroundImage,
@@ -313,7 +313,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
         height: double.infinity,
         errorBuilder:
             (BuildContext context, Object error, StackTrace? stackTrace) {
-          // Fallback to a solid color if image fails to load.
+
           return Container(
             key: const Key('game_page_background_error_container'),
             color: DB().colorSettings.darkBackgroundColor,
@@ -323,7 +323,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
     }
   }
 
-  // Builds the game board widget including orientation handling and layout constraints.
+
   Widget _buildGameBoard(BuildContext context, GameController controller) {
     return OrientationBuilder(
       builder: (BuildContext context, Orientation orientation) {
@@ -339,7 +339,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   key: Key('game_page_center_loading'),
-                  // Optionally add a CircularProgressIndicator here
+
                 );
               }
 
@@ -375,7 +375,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                           )!;
                           return PlayArea(
                             boardImage: getBoardImageProvider(displaySettings),
-                            // Pass the GlobalKey here to the GameBoard:
+
                             child: GameBoard(
                               key: _gameBoardKey,
                               boardImage:
@@ -395,7 +395,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
     );
   }
 
-  // Calculates the toolbar height based on display settings.
+
   double _calculateToolbarHeight(BuildContext context) {
     double toolbarHeight =
         GamePageToolbar.height + ButtonTheme.of(context).height;
@@ -409,16 +409,16 @@ class _GamePageInnerState extends State<_GamePageInner> {
     return toolbarHeight;
   }
 
-  // Add analysis method to the GamePage class
+
   Future<void> _analyzePosition(BuildContext context) async {
-    // If analysis is already enabled, disable it and exit
+
     if (AnalysisMode.isEnabled) {
       AnalysisMode.disable();
-      // No need to call setState here as the listener will handle it
+
       return;
     }
 
-    // Run analysis and display results
+
     final PositionAnalysisResult result =
         await GameController().engine.analyzePosition();
 
@@ -426,33 +426,33 @@ class _GamePageInnerState extends State<_GamePageInner> {
       return;
     }
 
-    // Enable analysis mode with the results
+
     AnalysisMode.enable(result.possibleMoves);
 
-    // setState is still called here to ensure board is repainted
-    // when user explicitly clicks the analysis button
+
+
     if (mounted) {
       setState(() {});
     }
   }
 
-  // Method to handle board image recognition
+
   void _recognizeBoardFromImage(BuildContext context) {
     try {
-      // Pick image from gallery and analyze it directly
+
       _pickAndRecognizeImage(context);
     } catch (e) {
-      // Show error message if recognition fails
+
       rootScaffoldMessengerKey.currentState?.showSnackBarClear(
           S.of(context).unableToStartImageRecognition(e.toString()));
       logger.e("Error initiating board recognition: $e");
     }
   }
 
-  /// Display a dialog to adjust board recognition parameters
-  /// These parameters will be stored and used for future recognitions
+
+
   void _showRecognitionParamsDialog(BuildContext context) {
-    // Load current parameters from BoardImageRecognitionService
+
     double contrastEnhancementFactor =
         BoardImageRecognitionService.contrastEnhancementFactor;
     double pieceThreshold = BoardImageRecognitionService.pieceThreshold;
@@ -474,7 +474,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
       builder: (BuildContext dialogContext) {
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setState) {
-            // Function to build a parameter slider
+
             Widget buildParameterSlider({
               required String label,
               required double value,
@@ -541,7 +541,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                       ),
                       const SizedBox(height: 16),
 
-                      // Contrast Enhancement Factor
+
                       buildParameterSlider(
                         label: "Contrast Enhancement",
                         value: contrastEnhancementFactor,
@@ -553,7 +553,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Piece Detection Threshold
+
                       buildParameterSlider(
                         label: "Piece Detection Threshold",
                         value: pieceThreshold,
@@ -565,7 +565,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Board Color Distance Threshold
+
                       buildParameterSlider(
                         label: "Board Color Distance",
                         value: boardColorDistanceThreshold,
@@ -577,7 +577,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Piece Color Match Threshold
+
                       buildParameterSlider(
                         label: "Piece Color Match Threshold",
                         value: pieceColorMatchThreshold,
@@ -589,7 +589,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // White Brightness Threshold
+
                       buildParameterSlider(
                         label: "White Brightness Threshold",
                         value: whiteBrightnessThreshold.toDouble(),
@@ -601,7 +601,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Black Brightness Threshold
+
                       buildParameterSlider(
                         label: "Black Brightness Threshold",
                         value: blackBrightnessThreshold.toDouble(),
@@ -613,7 +613,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Black Saturation Threshold
+
                       buildParameterSlider(
                         label: "Black Saturation Threshold",
                         value: blackSaturationThreshold,
@@ -625,7 +625,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                         },
                       ),
 
-                      // Black Color Variance Threshold
+
                       buildParameterSlider(
                         label: "Black Color Variance",
                         value: blackColorVarianceThreshold.toDouble(),
@@ -643,7 +643,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
-                    // Reset parameters to defaults
+
                     setState(() {
                       contrastEnhancementFactor = 1.8;
                       pieceThreshold = 0.25;
@@ -665,7 +665,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    // Save parameters to service
+
                     BoardImageRecognitionService.updateParameters(
                       contrastEnhancementFactor: contrastEnhancementFactor,
                       pieceThreshold: pieceThreshold,
@@ -677,10 +677,10 @@ class _GamePageInnerState extends State<_GamePageInner> {
                       blackColorVarianceThreshold: blackColorVarianceThreshold,
                     );
 
-                    // Close the dialog
+
                     Navigator.of(context).pop();
 
-                    // Display a confirmation message
+
                     rootScaffoldMessengerKey.currentState?.showSnackBar(
                       SnackBar(
                         content:
@@ -699,32 +699,32 @@ class _GamePageInnerState extends State<_GamePageInner> {
     );
   }
 
-  /// Pick an image from gallery and analyze it
+
   Future<void> _pickAndRecognizeImage(BuildContext context) async {
     final ImagePicker picker = ImagePicker();
 
-    // Pick image from gallery (async gap)
+
     final XFile? pickedFile = await picker.pickImage(
       source: ImageSource.gallery,
     );
 
-    // Early return if user cancels or widget was disposed
+
     if (pickedFile == null) {
       return;
     }
-    // Check if the context is still mounted after the async gap
+
     if (!context.mounted) {
       return;
     }
-    // Capture context dependent members BEFORE the await/async gap.
-    // We will re-check mounted *after* the async gap.
+
+
     final NavigatorState currentNavigator = Navigator.of(context);
     final ScaffoldMessengerState currentMessenger =
         ScaffoldMessenger.of(context);
-    final BuildContext currentContext = context; // Keep for initial dialog
+    final BuildContext currentContext = context;
     final S strings = S.of(context);
 
-    // At this point context is still valid for initial dialog
+
     final AlertDialog dialogContent = AlertDialog(
       title: Text(strings.waiting),
       content: Row(
@@ -739,7 +739,7 @@ class _GamePageInnerState extends State<_GamePageInner> {
     );
 
     bool isDialogShowing = true;
-    // Show the dialog using the captured context
+
     showDialog(
       context: currentContext, // Use captured context for the initial dialog
       barrierDismissible: false,
@@ -747,14 +747,14 @@ class _GamePageInnerState extends State<_GamePageInner> {
     );
 
     try {
-      // Read bytes and recognize (async)
+
       final Uint8List imageData = await pickedFile.readAsBytes();
       final Map<int, PieceColor> recognizedPieces =
           await BoardImageRecognitionService.recognizeBoardFromImage(imageData);
 
-      // Check if the context is still mounted after the async gap
+
       if (!context.mounted) {
-        // Try to dismiss dialog if showing, handle potential errors
+
         if (isDialogShowing) {
           try {
             currentNavigator.pop();
@@ -764,25 +764,25 @@ class _GamePageInnerState extends State<_GamePageInner> {
         return;
       }
 
-      // Dismiss the processing dialog using captured navigator
+
       if (isDialogShowing) {
         currentNavigator.pop();
         isDialogShowing = false;
       }
 
-      // Check if dev mode is enabled - only show debug UI in dev mode
+
       if (EnvironmentConfig.devMode) {
-        // Use the captured context instead of the original one after the async gap
+
         final Size screenSize = MediaQuery.of(currentContext).size;
 
         showDialog<bool>(
           context: currentContext, // Use captured context after the async gap
           barrierDismissible: false,
           builder: (BuildContext dialogContext) {
-            // Use dialogContext for navigator inside the dialog
+
             final NavigatorState dialogNavigator = Navigator.of(dialogContext);
             return Dialog(
-              // Use insetPadding to make dialog larger
+
               insetPadding: EdgeInsets.symmetric(
                 horizontal: screenSize.width * 0.05,
                 vertical: screenSize.height * 0.1,
@@ -798,17 +798,17 @@ class _GamePageInnerState extends State<_GamePageInner> {
                 debugInfo: BoardImageRecognitionService.lastDebugInfo,
                 context: dialogContext,
                 onResult: (bool shouldApply) {
-                  // Close dialog using dialog's navigator
+
                   dialogNavigator.pop(shouldApply);
 
-                  // Check if the context is still mounted after the async gap
+
                   if (!context.mounted) {
                     return;
                   }
 
-                  // Apply the recognized state if user confirmed
+
                   if (shouldApply) {
-                    // Pass the captured messenger (captured before await)
+
                     _applyRecognizedBoardState(
                         recognizedPieces, currentMessenger, context);
                   }
@@ -818,13 +818,13 @@ class _GamePageInnerState extends State<_GamePageInner> {
           },
         );
       } else {
-        // In normal mode, directly apply recognition results without showing debug view
+
         if (recognizedPieces.isNotEmpty) {
-          // Apply the recognized state directly
+
           _applyRecognizedBoardState(
               recognizedPieces, currentMessenger, context);
         } else {
-          // Show error if no pieces recognized
+
           currentMessenger.showSnackBar(
             SnackBar(
                 content: Text(
@@ -833,33 +833,33 @@ class _GamePageInnerState extends State<_GamePageInner> {
         }
       }
     } catch (e) {
-      // Ensure the dialog is closed on error using captured navigator
+
       if (isDialogShowing) {
         try {
-          currentNavigator.pop(); // Use navigator captured before await
+          currentNavigator.pop();
         } catch (_) {}
         isDialogShowing = false;
       }
 
-      // Check if the context is still mounted after the async gap before showing snackbar
+
       if (!context.mounted) {
         return;
       }
 
-      // Use captured messenger for snackbar (captured before await)
+
       currentMessenger.showSnackBar(SnackBar(
           content: Text(strings.imageRecognitionFailed(e.toString()))));
       logger.e("Error during board recognition: $e");
     }
   }
 
-  /// Apply the recognized board state to the game (uses captured context for S)
+
   void _applyRecognizedBoardState(Map<int, PieceColor> recognizedPieces,
       ScaffoldMessengerState? messenger, BuildContext context) {
     final S strings = S.of(context);
 
     try {
-      // Generate FEN string from recognized pieces
+
       final String? fen =
           BoardRecognitionDebugView.generateTempFenString(recognizedPieces);
 
@@ -869,26 +869,26 @@ class _GamePageInnerState extends State<_GamePageInner> {
         return;
       }
 
-      // Reset board first
+
       GameController().position.reset();
 
-      // Set FEN string to the position
+
       if (GameController().position.setFen(fen)) {
-        // Successfully set FEN
-        // Log successful operation
+
+
         logger.i("Successfully applied FEN from image recognition: $fen");
 
-        // Update position notifier to refresh UI
+
         GameController().setupPositionNotifier.updateIcons();
         GameController().boardSemanticsNotifier.updateSemantics();
 
-        // Show success message with details
+
         final int whiteCount =
             GameController().position.countPieceOnBoard(PieceColor.white);
         final int blackCount =
             GameController().position.countPieceOnBoard(PieceColor.black);
 
-        // Construct localized message parts
+
         final String message = strings.appliedPositionDetails(
           whiteCount,
           blackCount,
@@ -899,17 +899,17 @@ class _GamePageInnerState extends State<_GamePageInner> {
                 : strings.blackSMove;
         final String fenCopiedMsg = strings.fenCopiedToClipboard;
 
-        // Update the game recorder with the setup position
+
         GameController().gameRecorder =
             GameRecorder(lastPositionWithRemove: fen, setupPosition: fen);
 
-        // Copy FEN to clipboard for user convenience
+
         Clipboard.setData(ClipboardData(text: fen));
 
-        // Show success message (using captured S strings)
+
         messenger?.showSnackBarClear('$message, $next $fenCopiedMsg');
       } else {
-        // Failed to set FEN
+
         messenger
             ?.showSnackBarClear(strings.failedToApplyRecognizedBoardPosition);
         logger.e("Failed to set FEN: $fen");

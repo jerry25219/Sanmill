@@ -1,28 +1,28 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// stat_settings.dart
+
+
+
 
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:meta/meta.dart';
 
-/// Unique Hive type-ids for statistics related objects.
-///
-/// NOTE:  These numbers must be unique within the whole application.  We pick
-/// high values (50-51) to avoid collisions with the already assigned ids in
-/// other feature areas.
+
+
+
+
+
 const int kPlayerStatsTypeId = 50;
 const int kStatsSettingsTypeId = 51;
 
-/// Statistics and rating data for a player (either human or AI).
-///
-/// Stores both the ELO rating and aggregated game statistics including:
-/// - Total games played, wins, draws, and losses
-/// - Color-specific statistics (when playing as white or black)
-/// - Last update timestamp
-///
-/// This class is serializable to JSON and has a Hive [TypeAdapter]
-/// defined in `stat_adapter.dart`.
+
+
+
+
+
+
+
+
+
 @immutable
 @HiveType(typeId: kPlayerStatsTypeId)
 class PlayerStats {
@@ -33,7 +33,7 @@ class PlayerStats {
     this.losses = 0,
     this.draws = 0,
     this.lastUpdated,
-    // Colour-specific statistics
+
     this.whiteGamesPlayed = 0,
     this.whiteWins = 0,
     this.whiteLosses = 0,
@@ -65,7 +65,7 @@ class PlayerStats {
     );
   }
 
-  /// Encodes this object to a JSON map that only contains simple data types.
+
   Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'rating': rating,
@@ -98,7 +98,7 @@ class PlayerStats {
   @HiveField(5)
   final DateTime? lastUpdated;
 
-  // Colour specific
+
   @HiveField(6)
   final int whiteGamesPlayed;
   @HiveField(7)
@@ -151,7 +151,7 @@ class PlayerStats {
   }
 }
 
-/// Root object that contains all statistics related user data.
+
 @immutable
 @HiveType(typeId: kStatsSettingsTypeId)
 class StatsSettings {
@@ -164,7 +164,7 @@ class StatsSettings {
 
   factory StatsSettings.fromJson(Map<String, dynamic> json) {
     final Map<int, PlayerStats> levelStatsMap = <int, PlayerStats>{};
-    // Using the canonical key name (no backward compatibility needed)
+
     if (json['aiDifficultyStatsMap'] is Map) {
       (json['aiDifficultyStatsMap'] as Map<String, dynamic>)
           .forEach((String key, dynamic value) {
@@ -183,7 +183,7 @@ class StatsSettings {
     );
   }
 
-  /// Serialises the object to a JSON map.
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> jsonMap = <String, dynamic>{};
     aiDifficultyStatsMap.forEach((int key, PlayerStats value) {
@@ -196,30 +196,30 @@ class StatsSettings {
     };
   }
 
-  /// Whether statistics collection is enabled.
+
   @HiveField(0, defaultValue: true)
   final bool isStatsEnabled;
 
-  /// The human player's rating & statistics.
+
   @HiveField(1)
   final PlayerStats humanStats;
 
-  /// Map from AI difficulty level (1-30) to its statistics.
+
   @HiveField(2)
   final Map<int, PlayerStats> aiDifficultyStatsMap;
 
-  /// Get statistics for a specific AI difficulty level.
-  ///
-  /// [level] is the AI difficulty level (1-30).
-  /// Returns the statistics for that level, or empty stats if none exists.
+
+
+
+
   PlayerStats getAiDifficultyStats(int level) =>
       aiDifficultyStatsMap[level] ?? const PlayerStats();
 
-  /// Updates statistics for a specific AI difficulty level.
-  ///
-  /// [level] is the AI difficulty level (1-30).
-  /// [stats] is the new statistics to store for that level.
-  /// Returns a new StatsSettings object with the updated statistics.
+
+
+
+
+
   StatsSettings updateAiDifficultyStats(int level, PlayerStats stats) {
     final Map<int, PlayerStats> updated =
         Map<int, PlayerStats>.from(aiDifficultyStatsMap)..[level] = stats;

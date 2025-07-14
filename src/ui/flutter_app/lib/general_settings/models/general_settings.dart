@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// general_settings.dart
+
+
+
 
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/cupertino.dart';
@@ -101,9 +101,9 @@ extension LlmProviderName on LlmProvider {
   }
 }
 
-/// GeneralSettings data model
-///
-/// Holds the data needed for the General Settings
+
+
+
 @HiveType(typeId: 2)
 @JsonSerializable()
 @CopyWith()
@@ -159,7 +159,7 @@ class GeneralSettings {
     this.llmTemperature = 0.7,
   });
 
-  /// Encodes a Json style map into a [GeneralSettings] object
+
   factory GeneralSettings.fromJson(Map<String, dynamic> json) =>
       _$GeneralSettingsFromJson(json);
 
@@ -272,11 +272,11 @@ class GeneralSettings {
   @HiveField(32, defaultValue: 0)
   final int humanMoveTime;
 
-  // The header part of LLM prompt
+
   @HiveField(33, defaultValue: "")
   final String llmPromptHeader;
 
-  // The footer part of LLM prompt
+
   @HiveField(34, defaultValue: "")
   final String llmPromptFooter;
 
@@ -295,10 +295,10 @@ class GeneralSettings {
   @HiveField(39, defaultValue: 0.7)
   final double llmTemperature;
 
-  /// Decodes a Json from a [GeneralSettings] object
+
   Map<String, dynamic> toJson() => _$GeneralSettingsToJson(this);
 
-  // For backwards compatibility with code that uses static properties
+
   static String get defaultLlmPromptHeader => PromptDefaults.llmPromptHeader;
 
   static String get defaultLlmPromptFooter => PromptDefaults.llmPromptFooter;

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// skill_level_picker.dart
+
+
+
 
 part of 'package:sanmill/general_settings/widgets/general_settings_page.dart';
 
@@ -19,35 +19,35 @@ class _SkillLevelPickerState extends State<_SkillLevelPicker> {
   @override
   void initState() {
     super.initState();
-    // Initialize skill level and scroll controller
+
     _level = DB().generalSettings.skillLevel;
     _controller = FixedExtentScrollController(initialItem: _level - 1);
   }
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed
+
     _controller.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // Adjusting the overall background color of the dialog based on theme
+
     final Color? backgroundColor =
         MediaQuery.of(context).platformBrightness == Brightness.dark
             ? Colors.grey[900] // Dark mode background color
-            : Colors.white; // Light mode background color
+            : Colors.white;
 
     final Color textColor =
         MediaQuery.of(context).platformBrightness == Brightness.dark
             ? Colors.white // Text color in dark mode
-            : Colors.black; // Text color in light mode
+            : Colors.black;
 
     return AlertDialog(
       key: const Key('skill_level_picker_alert_dialog'),
       backgroundColor: backgroundColor,
-      // Set the AlertDialog's background
+
       title: Text(
         S.of(context).skillLevel,
         key: const Key('skill_level_picker_title'),
@@ -59,7 +59,7 @@ class _SkillLevelPickerState extends State<_SkillLevelPicker> {
         child: CupertinoPicker(
           key: const Key('skill_level_picker_cupertino_picker'),
           backgroundColor: backgroundColor,
-          // Consistent with the AlertDialog
+
           scrollController: _controller,
           itemExtent: 44,
           children: List<Widget>.generate(

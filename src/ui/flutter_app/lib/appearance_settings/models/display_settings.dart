@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// display_settings.dart
+
+
+
 
 import 'package:copy_with_extension/copy_with_extension.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +12,7 @@ import '../../shared/database/adapters/adapters.dart';
 
 part 'display_settings.g.dart';
 
-/// Strategies for painting shapes and paths on points.
+
 @HiveType(typeId: 9)
 enum PointPaintingStyle {
   @HiveField(0)
@@ -23,7 +23,7 @@ enum PointPaintingStyle {
   stroke,
 }
 
-/// Defines possible view layouts for moves list page.
+
 @HiveType(typeId: 12)
 enum MovesViewLayout {
   @HiveField(0)
@@ -38,9 +38,9 @@ enum MovesViewLayout {
   details,
 }
 
-/// Display Settings data model
-///
-/// Holds the data needed for the Display Settings
+
+
+
 @HiveType(typeId: 1)
 @JsonSerializable()
 @CopyWith(copyWithNull: true)
@@ -92,7 +92,7 @@ class DisplaySettings {
     this.isScreenshotGameInfoShown = true,
   });
 
-  /// Encodes a Json style map into a [DisplaySettings] object
+
   factory DisplaySettings.fromJson(Map<String, dynamic> json) =>
       _$DisplaySettingsFromJson(json);
 
@@ -230,6 +230,6 @@ class DisplaySettings {
   @HiveField(40, defaultValue: true)
   final bool isScreenshotGameInfoShown;
 
-  /// Decodes a Json from a [DisplaySettings] object
+
   Map<String, dynamic> toJson() => _$DisplaySettingsToJson(this);
 }

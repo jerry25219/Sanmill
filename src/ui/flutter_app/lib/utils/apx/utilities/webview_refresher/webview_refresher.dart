@@ -6,11 +6,11 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'src/gesture_recognizer.dart';
 
-/// A builder for the default refresh indicator.
+
 typedef DefaultRefreshBuilder = Widget Function(
     RefreshCallback? onRefresh, Widget child);
 
-/// a wrapper of webview
+
 class WebviewRefresher extends StatefulWidget {
   const WebviewRefresher({
     super.key,
@@ -26,34 +26,34 @@ class WebviewRefresher extends StatefulWidget {
   });
   final bool isRefresherEnabled;
 
-  /// a [WebviewController], same as [WebViewWidget]'s controller
+
   final WebViewController? controller;
 
-  /// a [ScrollController] that can be used to control the scrolling of the view
-  ///
-  /// note: not the webview scroller
+
+
+
   final ScrollController? scrollController;
 
-  /// same as [WebViewWidget]'s gestureRecognizers
+
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
-  /// The [onRefresh] argument will be called when pulled to trigger a refresh.
+
   final RefreshCallback? onRefresh;
 
-  /// The [platoform] argument will be used to determine the platform-specific
-  ///
-  /// defaults to use the [defaultTargetPlatform].
+
+
+
   final TargetPlatform? platform;
 
-  /// The [androidRefresherBuilder] argument will be used to build the android refresher.
+
   final DefaultRefreshBuilder androidRefresherBuilder;
 
-  /// The [defaultRefresherBuilder] argument will be used to build other platform refresher.
-  ///
-  /// defaults not use refresher.
+
+
+
   final DefaultRefreshBuilder defaultRefresherBuilder;
 
-  /// The [iosRefresherBuilder] argument will be used to build the ios refresher.
+
   final DefaultRefreshBuilder iosRefreshBuilder;
 
   static Widget _defaultAndroidBuilder(

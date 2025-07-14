@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_full_action_modal.dart
+
+
+
 
 part of 'package:sanmill/rule_settings/widgets/rule_settings_page.dart';
 

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// piece_image_picker.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 
@@ -25,8 +25,8 @@ final List<String> _pieceBgPaths = <String>[
   Assets.images.blackPieceImage8.path,
 ];
 
-/// A stateful widget that allows users to pick piece images for both players,
-/// including the option to select custom images from the device with cropping.
+
+
 class _PieceImagePicker extends StatefulWidget {
   const _PieceImagePicker();
 
@@ -35,8 +35,8 @@ class _PieceImagePicker extends StatefulWidget {
 }
 
 class _PieceImagePickerState extends State<_PieceImagePicker> {
-  /// This flag prevents concurrent image picking operations. It is set to `true`
-  /// when an image pick starts and reset to `false` when the operation completes.
+
+
   bool _isPicking = false;
 
   @override
@@ -64,7 +64,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
                 key: const Key('piece_image_picker_column'),
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Row for Player 1
+
                   _buildPlayerRow(
                     context,
                     S.of(context).player1,
@@ -83,7 +83,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
                     key: Key('piece_image_picker_sized_box_player1'),
                     height: 20,
                   ),
-                  // Row for Player 2
+
                   _buildPlayerRow(
                     context,
                     S.of(context).player2,
@@ -119,7 +119,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
   }) {
     final ScrollController scrollController = ScrollController();
 
-    // Get aspect ratio for cropping (assuming square for pieces)
+
     const double aspectRatio = 1.0;
 
     return GestureDetector(
@@ -173,7 +173,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
                       : const Key('player2_row_list_view_builder'),
                   scrollDirection: Axis.horizontal,
                   itemCount: _pieceBgPaths.length + 1,
-                  // Include custom image item
+
                   controller: scrollController,
                   itemBuilder: (BuildContext context, int index) {
                     if (index < _pieceBgPaths.length) {
@@ -208,7 +208,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
                         ),
                       );
                     } else {
-                      // Custom Image Item
+
                       return Padding(
                         key: Key(
                             'player${isPlayerOne ? '1' : '2'}_custom_piece_padding'),
@@ -220,7 +220,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
                           isSelected: selectedImagePath == customImagePath,
                           customImagePath: customImagePath,
                           onSelect: () {
-                            // Set selectedImagePath to customImagePath
+
                             onImageSelected(customImagePath ?? '');
                           },
                           onPickImage: () => _pickImage(
@@ -281,16 +281,16 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
     );
   }
 
-  /// Handles the image picking and cropping process for custom piece images.
+
   Future<void> _pickImage(
     BuildContext context, {
     required bool isPlayerOne,
     required DisplaySettings displaySettings,
     required double aspectRatio,
   }) async {
-    // If an image pick is already in progress, exit immediately
+
     if (_isPicking) {
-      // Optionally, show a message or toast here to indicate a pick is already in progress.
+
       return;
     }
 
@@ -310,7 +310,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
           return;
         }
 
-        // Navigate to the cropping page
+
         final Uint8List? croppedData = await navigator.push<Uint8List?>(
           MaterialPageRoute<Uint8List?>(
             builder: (BuildContext context) => ImageCropPage(
@@ -324,7 +324,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
         );
 
         if (croppedData != null) {
-          // Determine the appropriate directory based on the platform
+
           final Directory? appDir = (!kIsWeb && Platform.isAndroid)
               ? await getExternalStorageDirectory()
               : await getApplicationDocumentsDirectory();
@@ -337,16 +337,16 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
               imagesDir.createSync(recursive: true);
             }
 
-            // Generate a unique filename using the current timestamp
+
             final String timestamp =
                 DateTime.now().millisecondsSinceEpoch.toString();
             final String filePath = '$imagesDirPath/$timestamp.png';
 
-            // Save the cropped image to the designated directory
+
             final File imageFile = File(filePath);
             await imageFile.writeAsBytes(croppedData);
 
-            // Update displaySettings with the new custom image path
+
             if (isPlayerOne) {
               DB().displaySettings = displaySettings.copyWith(
                 customWhitePieceImagePath: filePath,
@@ -362,9 +362,9 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
         }
       }
     } on PlatformException catch (e) {
-      // In case the error is 'already_active', handle it gracefully
+
       if (e.code == 'already_active') {
-        // You could show a message to the user that the picker is busy
+
         logger.e('Another image picking operation is already in progress.');
       } else {
         rethrow;
@@ -375,7 +375,7 @@ class _PieceImagePickerState extends State<_PieceImagePicker> {
   }
 }
 
-/// A widget representing a single built-in piece image.
+
 class _PieceImageItem extends StatelessWidget {
   const _PieceImageItem({
     required this.asset,
@@ -424,10 +424,10 @@ class _PieceImageItem extends StatelessWidget {
   }
 }
 
-/// A widget representing the custom piece image picker.
-/// - When no custom image is selected, it shows a large add icon in the center.
-/// - If a custom image is selected, it displays the image with an edit icon at
-///   the center and a check icon if selected.
+
+
+
+
 class _CustomPieceImageItem extends StatelessWidget {
   const _CustomPieceImageItem({
     required this.isSelected,
@@ -446,13 +446,13 @@ class _CustomPieceImageItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       key: const Key('custom_piece_image_gesture_detector'),
-      // Tap to select the image if customImagePath is available,
-      // otherwise prompt to pick an image
+
+
       onTap: customImagePath != null ? onSelect : onPickImage,
       child: Stack(
         key: const Key('custom_piece_image_stack'),
         children: <Widget>[
-          // Background container with image or placeholder color
+
           Container(
             key: const Key('custom_piece_image_container'),
             width: 60,
@@ -471,7 +471,7 @@ class _CustomPieceImageItem extends StatelessWidget {
                   isSelected ? Border.all(color: Colors.green, width: 2) : null,
               borderRadius: BorderRadius.circular(8),
             ),
-            // Centered add icon when no custom image is selected
+
             child: customImagePath == null
                 ? const Center(
                     key: Key('custom_piece_image_add_icon'),
@@ -483,7 +483,7 @@ class _CustomPieceImageItem extends StatelessWidget {
                   )
                 : null,
           ),
-          // Centered edit icon when custom image is present
+
           if (customImagePath != null)
             Center(
               key: const Key('custom_piece_image_edit_icon_center'),
@@ -498,7 +498,7 @@ class _CustomPieceImageItem extends StatelessWidget {
                 tooltip: S.of(context).chooseYourPicture,
               ),
             ),
-          // Checkmark icon when selected
+
           if (isSelected)
             const Align(
               key: Key('custom_piece_image_selected_icon'),

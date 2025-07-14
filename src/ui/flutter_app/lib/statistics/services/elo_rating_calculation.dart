@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// elo_rating_calculation.dart
+
+
+
 
 part of 'stats_service.dart';
 
-/// Official FIDE tables (8.1.1 & 8.1.2) for dp and expected score.
-/// We keep them unmodified, but note we do cap rating differences at ±400.
-/// Table 8.1.1: p → dp lookup table
+
+
+
 final Map<double, int> _table_8_1_1 = <double, int>{
   1.00: 800,
   0.83: 273,
@@ -112,8 +112,8 @@ final Map<double, int> _table_8_1_1 = <double, int>{
   0.16: -284,
 };
 
-/// Table 8.1.2: Rating difference → Expected score (PD) lookup data
-/// Format: [min_diff, max_diff, higher_rating_expectation, lower_rating_expectation]
+
+
 final List<List<num>> _table_8_1_2 = <List<num>>[
   <num>[0, 3, 0.50, 0.50],
   <num>[92, 98, 0.63, 0.37],
@@ -168,9 +168,9 @@ final List<List<num>> _table_8_1_2 = <List<num>>[
   <num>[329, 344, 0.88, 0.12],
 ];
 
-/// Look up the performance difference (dp) for a given score percentage (p).
+
 int _lookupDp(double p) {
-  // Find the closest match in the table (by absolute difference).
+
   int? closestDp;
   double minDiff = double.infinity;
 
@@ -185,22 +185,22 @@ int _lookupDp(double p) {
   return closestDp ?? 0;
 }
 
-/// Look up expected score (PD) based on rating difference, ignoring differences >400.
+
 double _lookupPD(int absDiff, bool isHumanHigher) {
   for (final List<num> range in _table_8_1_2) {
     if (absDiff >= range[0] && absDiff <= range[1]) {
       return isHumanHigher ? range[2].toDouble() : range[3].toDouble();
     }
   }
-  // If diff > 735, PD is effectively 1.0 or 0.0
+
   return isHumanHigher ? 1.0 : 0.0;
 }
 
-/// Compute expected score for human vs. AI, capping rating difference at ±400.
+
 double _computeExpected(int humanRating, int aiRating) {
   int diff = humanRating - aiRating;
 
-  // Cap difference at 400
+
   if (diff > 400) {
     diff = 400;
   } else if (diff < -400) {
@@ -213,23 +213,23 @@ double _computeExpected(int humanRating, int aiRating) {
   return _lookupPD(absDiff, isHumanHigher);
 }
 
-/// Select appropriate K-factor based on player experience (games) and current rating.
-/// CUSTOMIZATION: We do *not* use the under-18 rule or a permanent K=10 once 2400 is reached.
-/// We only use current rating for deciding K=20 or K=10, reverting if rating dips below 2400.
+
+
+
 int _selectK(int totalGamesPlayed, int humanRating, int gamesThisPeriod) {
   int k;
-  // FIDE rule: K=40 if fewer than 30 total games (a “new” player).
+
   if (totalGamesPlayed < 30) {
     k = 40;
   }
-  // If rating <2400 => K=20, else K=10
+
   else if (humanRating < 2400) {
     k = 20;
   } else {
     k = 10;
   }
 
-  // Ensure K × n ≤ 700 (FIDE 8.3.3 last paragraph).
+
   if (gamesThisPeriod * k > 700) {
     k = 700 ~/ gamesThisPeriod;
   }
@@ -237,17 +237,17 @@ int _selectK(int totalGamesPlayed, int humanRating, int gamesThisPeriod) {
   return k;
 }
 
-/// Calculate a provisional (initial) rating for an unrated or <5-games player.
-/// CUSTOMIZATION: We do *not* ignore an all-loss (0 score) event.
-/// We do bound the result as per your custom logic:
-///  - For 1–4 total games: [1400 .. (1400 + n*150)]
-///  - For exactly 5 games: [1400 .. 2200]
-///
-/// We also add two hypothetical 1800-rated opponents with 0.5 score each (FIDE 8.2.2).
+
+
+
+
+
+
+
 int _calculateInitialRating(List<int> aiRatingsList, List<double> resultsList) {
   final int n = resultsList.length;
 
-  // Add two virtual opponents rated 1800 with 0.5 score each
+
   final List<int> ratingsExtended = List<int>.from(aiRatingsList)
     ..addAll(<int>[1800, 1800]);
   final List<double> resultsExtended = List<double>.from(resultsList)
@@ -262,21 +262,21 @@ int _calculateInitialRating(List<int> aiRatingsList, List<double> resultsList) {
   final int dp = _lookupDp(p);
   int ru = (ra + dp).round();
 
-  // IMPORTANT NOTE (CUSTOMIZATION):
-  // Official FIDE (8.2.1–8.2.4) requires at least 5 total rated games
-  // before publishing an initial rating and discarding a 0-score first event.
-  // We skip that, giving immediate rating:
-  //   * 1–4 total games => provisional bounding 1400..(1400 + n*150)
-  //   * exactly 5 => bounding 1400..2200.
+
+
+
+
+
+
   int lowerBound;
   int upperBound;
 
   if (n >= 5) {
-    // For 5 or more games in the single batch, treat as "5th game" bounding.
+
     lowerBound = 1400;
     upperBound = 2200;
   } else {
-    // Provisional bounds for 1–4 games
+
     lowerBound = 1400;
     upperBound = 1400 + n * 150;
   }
@@ -290,7 +290,7 @@ int _calculateInitialRating(List<int> aiRatingsList, List<double> resultsList) {
   return ru;
 }
 
-/// Standard ELO update for players who already have a rating and >=5 total games.
+
 int _updateRating(
   int humanRating,
   List<int> aiRatingsList,
@@ -300,20 +300,20 @@ int _updateRating(
   final int n = resultsList.length;
   double sumDelta = 0;
 
-  // sumDelta = Σ (score_i - expected_i)
+
   for (int i = 0; i < n; i++) {
     final double expected = _computeExpected(humanRating, aiRatingsList[i]);
     final double delta = resultsList[i] - expected;
     sumDelta += delta;
   }
 
-  // Apply K factor
+
   final int k = _selectK(totalGamesPlayed, humanRating, n);
 
-  // Continuous rating change
+
   final double continuousChange = k * sumDelta;
 
-  // Round away from zero
+
   int ratingChange;
   if (continuousChange >= 0) {
     ratingChange = (continuousChange + 0.5).floor();
@@ -324,8 +324,8 @@ int _updateRating(
   return humanRating + ratingChange;
 }
 
-/// Calculate new ELO ratings from a single game result, ignoring the "fewer than 5 games" logic.
-/// This is just a helper if you need a direct calculation for one game.
+
+
 (int, int) calculateNewRatings(
   int humanRating,
   int aiRating,
@@ -345,16 +345,16 @@ int _updateRating(
       break;
   }
 
-  // For single game calculation, use _computeExpected for expected score
+
   final double expectedScore = _computeExpected(humanRating, aiRating);
 
-  // Select appropriate K factor based on player experience and rating
+
   final int k = _selectK(totalGamesPlayed, humanRating, 1);
 
-  // Calculate rating change using calculated K factor
+
   final double continuousChange = k * (actualScore - expectedScore);
 
-  // Round away from zero
+
   int ratingChange;
   if (continuousChange >= 0) {
     ratingChange = (continuousChange + 0.5).floor();
@@ -362,24 +362,24 @@ int _updateRating(
     ratingChange = (continuousChange - 0.5).ceil();
   }
 
-  // Return new ratings
+
   return (humanRating + ratingChange, aiRating - ratingChange);
 }
 
-/// Process multiple games in a batch.
-/// CUSTOMIZATION: If total < 5, use `_calculateInitialRating` with bounding; else `_updateRating`.
+
+
 int processGamesForHumanRating(
   int? currentHumanRating,
   List<int> aiRatingsList,
   List<double> resultsList,
   int totalGamesPlayed,
 ) {
-  // If unrated or fewer than 5 total games => treat as provisional.
+
   if (currentHumanRating == null || totalGamesPlayed < 5) {
     return _calculateInitialRating(aiRatingsList, resultsList);
   }
 
-  // Otherwise standard ELO update.
+
   return _updateRating(
       currentHumanRating, aiRatingsList, resultsList, totalGamesPlayed);
 }

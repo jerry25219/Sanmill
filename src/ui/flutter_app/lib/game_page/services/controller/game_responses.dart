@@ -1,11 +1,11 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_responses.dart
+
+
+
 
 part of '../mill.dart';
 
-/// Custom response we can catch without affecting other thrown exceptions.
+
 abstract class GameResponse {}
 
 class GameResponseOK implements GameResponse {
@@ -20,7 +20,7 @@ class IllegalPhase implements GameResponse {
   const IllegalPhase();
 }
 
-/// Custom response we throw when selecting a piece.
+
 abstract class SelectResponse implements GameResponse {}
 
 class CanOnlyMoveToAdjacentEmptyPoints implements SelectResponse {
@@ -35,7 +35,7 @@ class SelectOurPieceToMove implements SelectResponse {
   const SelectOurPieceToMove();
 }
 
-/// Custom response we throw when removing pieces.
+
 abstract class RemoveResponse implements GameResponse {}
 
 class NoPieceToRemove implements RemoveResponse {
@@ -58,7 +58,7 @@ class CanNotRemoveNonadjacent implements RemoveResponse {
   const CanNotRemoveNonadjacent();
 }
 
-/// Custom response to throw related to the engine.
+
 abstract class EngineResponse {}
 
 class EngineResponseOK implements EngineResponse {
@@ -89,7 +89,7 @@ class EngineDummy implements EngineResponse {
   const EngineDummy();
 }
 
-/// Custom response to throw when navigating the game history.
+
 abstract class HistoryResponse {
   static const String tag = "[_HistoryResponse]";
 }

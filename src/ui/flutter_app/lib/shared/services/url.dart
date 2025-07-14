@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// url.dart
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';

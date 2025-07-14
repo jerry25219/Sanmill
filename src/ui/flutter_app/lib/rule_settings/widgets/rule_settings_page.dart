@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// rule_settings_page.dart
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart' show Box;
@@ -30,13 +30,13 @@ bool visitedRuleSettingsPage = false;
 class RuleSettingsPage extends StatelessWidget {
   const RuleSettingsPage({super.key});
 
-  // Rule set
+
   void _setRuleSet(BuildContext context, RuleSettings ruleSettings) {
     void callback(RuleSet? ruleSet) {
-      Navigator.pop(context); // Closes the modal after selection.
+      Navigator.pop(context);
 
       if (ruleSet == RuleSet.current) {
-        return; // If the selected rule set is the current one, do nothing.
+        return;
       }
 
       if (ruleSet == RuleSet.zhiQi ||
@@ -49,9 +49,9 @@ class RuleSettingsPage extends StatelessWidget {
             .showSnackBarClear(S.of(context).experimental);
       }
 
-      // Updates the rule settings with the new rule set.
+
       DB().ruleSettings = ruleSettings.copyWith(
-          // General
+
           piecesCount: ruleSetProperties[ruleSet]!.piecesCount,
           hasDiagonalLines: ruleSetProperties[ruleSet]!.hasDiagonalLines,
           nMoveRule: ruleSetProperties[ruleSet]!.nMoveRule,
@@ -59,32 +59,32 @@ class RuleSettingsPage extends StatelessWidget {
           threefoldRepetitionRule:
               ruleSetProperties[ruleSet]!.threefoldRepetitionRule,
 
-          // Placing phase
+
           millFormationActionInPlacingPhase:
               ruleSetProperties[ruleSet]!.millFormationActionInPlacingPhase,
           boardFullAction: ruleSetProperties[ruleSet]!.boardFullAction,
           mayMoveInPlacingPhase:
               ruleSetProperties[ruleSet]!.mayMoveInPlacingPhase,
 
-          // Moving phase
+
           isDefenderMoveFirst: ruleSetProperties[ruleSet]!.isDefenderMoveFirst,
           restrictRepeatedMillsFormation:
               ruleSetProperties[ruleSet]!.restrictRepeatedMillsFormation,
           stalemateAction: ruleSetProperties[ruleSet]!.stalemateAction,
           piecesAtLeastCount: ruleSetProperties[ruleSet]!.piecesAtLeastCount,
 
-          //  Flying
+
           mayFly: ruleSetProperties[ruleSet]!.mayFly,
           flyPieceCount: ruleSetProperties[ruleSet]!.flyPieceCount,
 
-          // Removing
+
           mayRemoveFromMillsAlways:
               ruleSetProperties[ruleSet]!.mayRemoveFromMillsAlways,
           mayRemoveMultiple: ruleSetProperties[ruleSet]!.mayRemoveMultiple,
           oneTimeUseMill: ruleSetProperties[ruleSet]!.oneTimeUseMill);
     }
 
-    // Display a modal bottom sheet with the available rule sets.
+
     showModalBottomSheet(
       context: context,
       builder: (_) => _RuleSetModal(
@@ -94,7 +94,7 @@ class RuleSettingsPage extends StatelessWidget {
     );
   }
 
-  // General
+
   void _setNTotalPiecesEachSide(
     BuildContext context,
     RuleSettings ruleSettings,
@@ -139,7 +139,7 @@ class RuleSettingsPage extends StatelessWidget {
     );
   }
 
-  // TODO: This feature EndgameNMoveRule is not implemented yet
+
   void _setEndgameNMoveRule(BuildContext context, RuleSettings ruleSettings) {
     void callback(int? endgameNMoveRule) {
       if (endgameNMoveRule == null ||
@@ -202,7 +202,7 @@ class RuleSettingsPage extends StatelessWidget {
     logger.t("[config] threefoldRepetitionRule: $value");
   }
 
-  // Placing
+
   void _setBoardFullAction(BuildContext context, RuleSettings ruleSettings) {
     void callback(BoardFullAction? boardFullAction) {
       Navigator.pop(context);
@@ -212,7 +212,7 @@ class RuleSettingsPage extends StatelessWidget {
 
       logger.t("[config] boardFullAction = $boardFullAction");
 
-      // TODO: BoardFullAction: experimental
+
       if (boardFullAction != BoardFullAction.firstPlayerLose &&
           boardFullAction != BoardFullAction.agreeToDraw) {
         rootScaffoldMessengerKey.currentState!
@@ -284,7 +284,7 @@ class RuleSettingsPage extends StatelessWidget {
     );
   }
 
-  // Moving
+
   void _setMayMoveInPlacingPhase(
     BuildContext context,
     RuleSettings ruleSettings,
@@ -325,7 +325,7 @@ class RuleSettingsPage extends StatelessWidget {
 
       logger.t("[config] stalemateAction = $stalemateAction");
 
-      // TODO: StalemateAction: experimental
+
       if (stalemateAction != StalemateAction.endWithStalemateLoss &&
           stalemateAction != StalemateAction.changeSideToMove) {
         rootScaffoldMessengerKey.currentState!
@@ -342,7 +342,7 @@ class RuleSettingsPage extends StatelessWidget {
     );
   }
 
-  // Removing
+
   void _setAllowRemovePieceInMill(RuleSettings ruleSettings, bool value) {
     DB().ruleSettings = ruleSettings.copyWith(mayRemoveFromMillsAlways: value);
 
@@ -384,8 +384,8 @@ class RuleSettingsPage extends StatelessWidget {
             SettingsListTile(
               key: const Key('rule_settings_tile_rule_set'),
               titleString: S.of(context).ruleSet,
-              //subtitleString: S.of(context).ruleSet_Detail,
-              //trailingString: ruleSettings.ruleSet,
+
+
               onTap: () => _setRuleSet(context, ruleSettings),
             ),
           ],
@@ -561,13 +561,13 @@ class RuleSettingsPage extends StatelessWidget {
     GameController().isControllerActive = false;
     GameController().reset();
 
-    //GameController().engine.shutdown();
+
 
     return BlockSemantics(
       child: Scaffold(
         key: const Key('rule_settings_scaffold'),
         resizeToAvoidBottomInset: false,
-        // backgroundColor: AppTheme.lightBackgroundColor,
+
         appBar: AppBar(
           key: const Key('rule_settings_appbar'),
           leading: CustomDrawerIcon.of(context)?.drawerIcon,

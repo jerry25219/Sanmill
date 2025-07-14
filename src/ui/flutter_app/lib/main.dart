@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// main.dart
+
+
+
 
 import 'dart:async';
 import 'dart:io';
@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ignore: depend_on_referenced_packages
+
 import 'package:flutter_sharing_intent/flutter_sharing_intent.dart';
 import 'package:flutter_sharing_intent/model/sharing_file.dart';
 import 'package:hive_flutter/hive_flutter.dart' show Box;
@@ -46,24 +46,24 @@ part 'package:sanmill/shared/services/catcher_service.dart';
 
 part 'package:sanmill/shared/services/system_ui_service.dart';
 
-// Log tag for main
+
 
 Future<void> main() async {
   logger.i('Environment [catcher]: ${EnvironmentConfig.catcher}');
   logger.i('Environment [dev_mode]: ${EnvironmentConfig.devMode}');
   logger.i('Environment [test]: ${EnvironmentConfig.test}');
 
-  // IMPORTANT: Remove or comment out for integration_test screenshots
-  // if (EnvironmentConfig.test) {
-  //   enableFlutterDriverExtension();
-  // }
+
+
+
+
 
   await DB.init();
 
-  // Initialize ELO service
+
   EloRatingService();
 
-  // Initialize Screenshot service (if not in test mode)
+
   if (!EnvironmentConfig.test) {
     await ScreenshotService.instance.init();
   }
@@ -73,8 +73,8 @@ Future<void> main() async {
   initBitboards();
 
   try {
-    // Initialize deep link service to handle incoming links
-    // Navigation will be handled by onGenerateRoute in Application widget
+
+
     final deepLinkService = DeepLinkService();
     if (Platform.isAndroid || Platform.isIOS) {
       await deepLinkService.initialize();
@@ -85,26 +85,26 @@ Future<void> main() async {
     logger.i('DeepLinkService initialized successfully');
   } catch (e, stackTrace) {
     logger.i('Failed to initialize DeepLinkService: $e\n$stackTrace');
-    // Continue app startup even if deep link service fails
+
   }
 
-  // if (EnvironmentConfig.catcher && !kIsWeb && !Platform.isIOS) {
-  //   catcher = Catcher2(
-  //     rootWidget: const SanmillApp(),
-  //     ensureInitialized: true,
-  //   );
-  //
-  //   // await _initCatcher(catcher);
-  //
-  //   PlatformDispatcher.instance.onError = (Object error, StackTrace stack) {
-  //     if (EnvironmentConfig.catcher == true) {
-  //       Catcher2.reportCheckedError(error, stack);
-  //     }
-  //     return true;
-  //   };
-  // } else {
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     runApp(const MyApp());
-  // }
+
 }
 
 class MyApp extends StatefulWidget {
@@ -155,7 +155,7 @@ class MyAppState extends State<MyApp> {
 
       return MultiBlocProvider(
         providers: [
-          // Add any Bloc providers here if needed
+
           BlocProvider(create: (context) => ApplicationBloc()),
         ],
         child: MaterialApp(
@@ -186,25 +186,25 @@ class MyAppState extends State<MyApp> {
                 String path;
                 Map<String, String> queryParams = {};
 
-                /// URI-:dragonfly://home?code=6580677a-4cb8-4f0f-91db-ee8933892d97[0m
+
                 if (routeName.startsWith('dragonfly://')) {
-                  // Handle full deep link URI
+
                   final uri = Uri.parse(routeName);
                   path = uri.host;
                   queryParams = uri.queryParameters;
                 } else {
-                  // Handle stripped path format (e.g. "/?code=1234abcd")
+
                   final uri = Uri.parse(routeName);
                   path = uri.path.replaceAll(RegExp(r'^/+|/+$'), '');
                   queryParams = uri.queryParameters;
 
-                  // If path is empty and we have query params, assume it's the home route
+
                   if (path.isEmpty && queryParams.containsKey('code')) {
                     path = 'home';
                   }
                 }
 
-                // Process routes
+
                 logger.i('Parsed path: $path, queryParams: $queryParams');
                 if (path == 'home') {
                   final code = queryParams['code'];
@@ -220,20 +220,20 @@ class MyAppState extends State<MyApp> {
               }
             }
 
-            // Handle regular routes
+
             if (_routes.containsKey(routeName)) {
               return MaterialPageRoute<void>(
                   settings: settings,
                   builder: (context) => _routes[routeName]!(context));
             }
 
-            // Return empty container for undefined routes
+
             return MaterialPageRoute<void>(
                 settings: settings, builder: (context) => Container());
           },
-          // home: Builder(
-          //   builder: _buildHome,
-          // ),
+
+
+
         ),
       );
     }
@@ -252,28 +252,28 @@ class MyAppState extends State<MyApp> {
 
     Locale locale = const Locale('en');
 
-    // if (displaySettings.locale == null) {
-    //   if (PlatformDispatcher.instance.locale == const Locale('und') ||
-    //       !S.supportedLocales.contains(
-    //           Locale(PlatformDispatcher.instance.locale.languageCode))) {
-    //     DB().displaySettings =
-    //         displaySettings.copyWith(locale: const Locale('en'));
-    //     locale = const Locale('en');
-    //   } else {
-    //     locale = PlatformDispatcher.instance.locale;
-    //   }
-    // } else {
-    //   locale = displaySettings.locale;
-    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     final MultiBlocProvider materialApp = MultiBlocProvider(
       providers: [
-        // Add any Bloc providers here if needed
+
         BlocProvider(create: (context) => ApplicationBloc()),
       ],
       child: MaterialApp(
-        /// Add navigator key from Catcher.
-        /// It will be used to navigate user to report page or to show dialog.
+
+
         navigatorKey: (EnvironmentConfig.catcher && !kIsWeb && !Platform.isIOS)
             ? Catcher2.navigatorKey
             : navigatorStateKey,
@@ -306,25 +306,25 @@ class MyAppState extends State<MyApp> {
               String path;
               Map<String, String> queryParams = {};
 
-              /// URI-:dragonfly://home?code=6580677a-4cb8-4f0f-91db-ee8933892d97[0m
+
               if (routeName.startsWith('dragonfly://')) {
-                // Handle full deep link URI
+
                 final uri = Uri.parse(routeName);
                 path = uri.host;
                 queryParams = uri.queryParameters;
               } else {
-                // Handle stripped path format (e.g. "/?code=1234abcd")
+
                 final uri = Uri.parse(routeName);
                 path = uri.path.replaceAll(RegExp(r'^/+|/+$'), '');
                 queryParams = uri.queryParameters;
 
-                // If path is empty and we have query params, assume it's the home route
+
                 if (path.isEmpty && queryParams.containsKey('code')) {
                   path = 'home';
                 }
               }
 
-              // Process routes
+
               logger.i('Parsed path: $path, queryParams: $queryParams');
               if (path == 'home') {
                 final code = queryParams['code'];
@@ -340,24 +340,24 @@ class MyAppState extends State<MyApp> {
             }
           }
 
-          // Handle regular routes
+
           if (_routes.containsKey(routeName)) {
             return MaterialPageRoute<void>(
                 settings: settings,
                 builder: (context) => _routes[routeName]!(context));
           }
 
-          // Return empty container for undefined routes
+
           return MaterialPageRoute<void>(
               settings: settings, builder: (context) => Container());
         },
-        // home: Builder(
-        //   builder: _buildHome,
-        // ),
 
-        // home: Builder(
-        //   builder: _buildHome,
-        // ),
+
+
+
+
+
+
       ),
     );
 
@@ -387,12 +387,12 @@ class MyAppState extends State<MyApp> {
   }
 
   void _setupSharingIntent() {
-    // Skip setting up sharing intent for web or unsupported platforms
+
     if (kIsWeb || !(Platform.isAndroid || Platform.isIOS)) {
       return;
     }
 
-    // Listen for shared files when the app is already running
+
     _intentDataStreamSubscription =
         FlutterSharingIntent.instance.getMediaStream().listen(
       (List<SharedFile> files) {
@@ -400,37 +400,37 @@ class MyAppState extends State<MyApp> {
       },
       onError: (dynamic error) {
         logger.e("Error receiving intent data stream: $error");
-        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-        //     "Error receiving intent data stream: $error"); // Consider localization
+
+
       },
     );
 
-    // Handle initial sharing when the app is launched from a closed state
+
     FlutterSharingIntent.instance.getInitialSharing().then(
       (List<SharedFile> files) {
         _handleSharedFiles(files, isRunning: false);
       },
       onError: (dynamic error) {
         logger.e("Error getting initial sharing: $error");
-        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-        //     "Error getting initial sharing: $error"); // Consider localization
+
+
       },
     );
   }
 
-  // Helper method to process shared files
+
   void _handleSharedFiles(List<SharedFile> files, {required bool isRunning}) {
     if (files.isNotEmpty && files.first.value != null) {
       final String filePath = files.first.value!;
-      // Show notification to user about the shared file path
+
       logger.i("Setup Sharing Intent: $filePath");
-      // Load the game from the shared file
+
       LoadService.loadGame(context, filePath, isRunning: isRunning).then((_) {
         logger.i("Game loaded successfully from shared file.");
       }).catchError((dynamic error) {
         logger.e("Error loading game from shared file: $error");
-        // rootScaffoldMessengerKey.currentState!.showSnackBarClear(
-        //     "Error loading game from shared file: $error"); // Consider localization
+
+
       });
     }
   }

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// info_dialog.dart
+
+
+
 
 part of '../game_page.dart';
 
@@ -41,14 +41,14 @@ class InfoDialog extends StatelessWidget {
 
     final String? n1 = controller.gameRecorder.activeNode?.data?.notation;
 
-    // Last Move information
+
     if (n1 != null) {
       final String formattedNotation = DB().generalSettings.screenReaderSupport
           ? n1.toUpperCase()
           : n1.toLowerCase();
 
-      // $them is only shown with the screen reader. It is convenient for
-      // the disabled to recognize whether the opponent has finished the moving.
+
+
       buffer.write(
         S.of(context).lastMove(
               DB().generalSettings.screenReaderSupport ? "$them, " : "",
@@ -58,7 +58,7 @@ class InfoDialog extends StatelessWidget {
       if (n1.startsWith("x")) {
         String moveNotation = "";
         if (controller.gameRecorder.mainlineMoves.length == 1) {
-          // TODO: Right? (Issue #686)
+
           moveNotation = controller
               .gameRecorder
               .mainlineMoves[controller.gameRecorder.mainlineMoves.length - 1]
@@ -69,7 +69,7 @@ class InfoDialog extends StatelessWidget {
               .mainlineMoves[controller.gameRecorder.mainlineMoves.length - 2]
               .notation;
         }
-        // Apply correct case based on screen reader setting
+
         moveNotation = DB().generalSettings.screenReaderSupport
             ? moveNotation.toUpperCase()
             : moveNotation.toLowerCase();
@@ -83,7 +83,7 @@ class InfoDialog extends StatelessWidget {
 
     final String msg = GameController().headerTipNotifier.message;
 
-    // the tip
+
     if (DB().generalSettings.screenReaderSupport &&
         msg.endsWith(".") &&
         msg.endsWith("!")) {

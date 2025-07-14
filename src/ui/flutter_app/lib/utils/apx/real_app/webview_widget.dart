@@ -35,7 +35,7 @@ class _WebviewWidgetState extends State<WebviewWidget>
   ValueNotifier<int> loadProgress = ValueNotifier<int>(0);
   bool _enableRefresh = true;
 
-  // ignore: strict_raw_type
+
   Future onRefresh() async {
     final connectivity = await Connectivity().checkConnectivity();
     final isOffline = connectivity.contains(ConnectivityResult.none);
@@ -86,13 +86,13 @@ class _WebviewWidgetState extends State<WebviewWidget>
       controller.setUserAgent(userAgent);
       forward();
     });
-    // controller.setUserAgent('match-learn');
 
-    // Enable WebView features for proper image loading
+
+
     controller.enableZoom(false);
     controller.setBackgroundColor(const Color.fromARGB(255, 30, 31, 34));
 
-    // Configure WebView settings
+
     controller.setNavigationDelegate(
       NavigationDelegate(
         onPageFinished: (url) {
@@ -155,7 +155,7 @@ class _WebviewWidgetState extends State<WebviewWidget>
       },
     );
 
-    /// 监听网络连接状态变化
+
     _streamSubscription = Connectivity().onConnectivityChanged.listen((result) {
       if (!result.contains(ConnectivityResult.none)) {
         setState(() {
@@ -195,11 +195,11 @@ class _WebviewWidgetState extends State<WebviewWidget>
           controller.goBack();
         } else {
           if (_isExitWarningActive) {
-            // User pressed back twice within the time window, exit the app
+
             _exitTimer?.cancel();
             SystemNavigator.pop();
           } else {
-            // First back press, show warning and start timer
+
             _isExitWarningActive = true;
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -229,7 +229,7 @@ class _WebviewWidgetState extends State<WebviewWidget>
                           ? TargetPlatform.android
                           : TargetPlatform.iOS,
                     ),
-                    // 进度条
+
                     Align(
                       alignment: Alignment.topCenter,
                       child: ValueListenableBuilder<int>(
@@ -256,7 +256,7 @@ class _WebviewWidgetState extends State<WebviewWidget>
   Widget _networkError() {
     final ThemeData themeData = Theme.of(context);
 
-    /// 日夜间模式判断
+
     final bool isDarkMode = themeData.brightness == Brightness.dark;
     return Center(
       child: Column(

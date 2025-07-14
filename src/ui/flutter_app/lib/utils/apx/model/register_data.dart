@@ -19,9 +19,9 @@ class RegisterData with _$RegisterData {
   Map<String, dynamic> toJson() => _$RegisterDataToJson(this);
 
   String encrypt() {
-    // First we generate json string from self
+
     final jsonString = json.encode(toJson());
-    // Then we encrypt the json string using the public key using RSA
+
 
     return CryptoUtils().encrypt(jsonString);
   }

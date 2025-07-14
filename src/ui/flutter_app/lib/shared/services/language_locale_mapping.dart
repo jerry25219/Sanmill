@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// language_locale_mapping.dart
+
+
+
 
 import 'package:flutter/material.dart';
 
@@ -63,7 +63,7 @@ import '../../generated/intl/l10n_uk.dart';
 import '../../generated/intl/l10n_ur.dart';
 import '../../generated/intl/l10n_uz.dart';
 import '../../generated/intl/l10n_vi.dart';
-// import '../../generated/intl/l10n_zh.dart';
+
 import '../../generated/intl/l10n_zu.dart';
 
 Map<Locale, String> localeToLanguageName = <Locale, String>{
@@ -126,8 +126,8 @@ Map<Locale, String> localeToLanguageName = <Locale, String>{
   const Locale("ur"): SUr().languageName, // Urdu
   const Locale("uz"): SUz().languageName, // Uzbek
   const Locale("vi"): SVi().languageName, // Vietnamese
-  // const Locale("zh"): SZh().languageName, // Chinese (Simplified)
-  // const Locale.fromSubtags(languageCode: "zh", scriptCode: "Hant"):
-  //     SZhHant().languageName, // Chinese (Traditional),
+
+
+
   const Locale("zu"): SZu().languageName, // Zulu
 };

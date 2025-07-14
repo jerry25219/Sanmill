@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// moves_list_page.dart
+
+
+
 
 import 'dart:async';
 import 'dart:io' show Platform;
@@ -27,15 +27,15 @@ import '../services/mill.dart';
 import 'cat_fishing_game.dart';
 import 'mini_board.dart';
 
-// Key for the LLM prompt dialog screen
+
 const String _kLlmPromptDialogKey = 'llm_prompt_dialog';
-// Text for the S.of(context).askLlm button
-// Text for when LLM is loading
+
+
 const String _kLlmLoading = 'Loading response...';
 
-/// MovesListPage can display PGN nodes in different layouts.
-/// The user can pick from a set of layout options via a single active icon which,
-/// when tapped, reveals a row of layout icons.
+
+
+
 class MovesListPage extends StatefulWidget {
   const MovesListPage({super.key});
 
@@ -44,19 +44,19 @@ class MovesListPage extends StatefulWidget {
 }
 
 class MovesListPageState extends State<MovesListPage> {
-  /// A flat list of all PGN nodes (collected recursively).
+
   final List<PgnNode<ExtMove>> _allNodes = <PgnNode<ExtMove>>[];
 
-  /// Whether to reverse the order of the nodes.
+
   bool _isReversedOrder = false;
 
-  /// ScrollController to control the scrolling of the ListView or GridView.
+
   final ScrollController _scrollController = ScrollController();
 
-  /// Current layout selection, loaded from DB settings
+
   MovesViewLayout _currentLayout = DB().displaySettings.movesViewLayout;
 
-  // Timer to track elapsed seconds while waiting for LLM response
+
   Timer? loadingTimer;
   DateTime? requestStartTime;
   int elapsedSeconds = 0;
@@ -64,81 +64,81 @@ class MovesListPageState extends State<MovesListPage> {
   @override
   void initState() {
     super.initState();
-    // Collect all nodes from the PGN tree into _allNodes.
-    // For example:
-    // final PgnNode<ExtMove> root = GameController().gameRecorder.pgnRoot;
-    // _collectAllNodes(root);
+
+
+
+
     _refreshAllNodes();
   }
 
-  // Uncomment if you want a fully recursive collecting method.
-  // void _collectAllNodes(PgnNode<ExtMove> node) {
-  //   _allNodes.add(node);
-  //   for (final PgnNode<ExtMove> child in node.children) {
-  //     _collectAllNodes(child);
-  //   }
-  // }
 
-  /// Clears and refreshes _allNodes from the game recorder.
+
+
+
+
+
+
+
+
   void _refreshAllNodes() {
     _allNodes
       ..clear()
       ..addAll(GameController().gameRecorder.mainlineNodes);
 
-    int currentMoveIndex = 0; // Initialize move index for the first node
-    int currentRound = 1; // Initialize round number starting at 1
+    int currentMoveIndex = 0;
+    int currentRound = 1;
     PieceColor?
-        lastNonRemoveSide; // To track the side of the last non-remove move
+        lastNonRemoveSide;
 
     for (int i = 0; i < _allNodes.length; i++) {
       final PgnNode<ExtMove> node = _allNodes[i];
 
-      // Set moveIndex as before
+
       if (i == 0) {
-        // First node always gets moveIndex 0
+
         node.data?.moveIndex = currentMoveIndex;
       } else if (node.data?.type == MoveType.remove) {
-        // If it's a remove type, use the previous node's moveIndex
+
         node.data?.moveIndex = _allNodes[i - 1].data?.moveIndex;
       } else {
-        // Otherwise, increment the previous node's moveIndex
+
         currentMoveIndex = (_allNodes[i - 1].data?.moveIndex ?? 0) + 1;
         node.data?.moveIndex = currentMoveIndex;
       }
 
-      // Calculate and assign roundIndex for each move
+
       if (node.data != null) {
         if (node.data!.type == MoveType.remove) {
-          // For remove moves, assign the same round as the last non-remove move
+
           node.data!.roundIndex = currentRound;
         } else {
-          // For non-remove moves:
-          // If the last non-remove move was made by Black and current move is by White,
-          // it indicates a new round should start.
+
+
+
           if (lastNonRemoveSide == PieceColor.black &&
               node.data!.side == PieceColor.white) {
             currentRound++;
           }
           node.data!.roundIndex = currentRound;
           lastNonRemoveSide =
-              node.data!.side; // Update last non-remove move side
+              node.data!.side;
         }
       }
     }
   }
 
-  /// Helper method to load a game, then refresh.
+
   Future<void> _loadGame() async {
     await GameController.load(context, shouldPop: false);
-    // Wait briefly, then refresh our list of nodes.
+
     await Future<void>.delayed(const Duration(milliseconds: 500));
     setState(_refreshAllNodes);
   }
 
-  /// Helper method to import a game, then refresh.
+
   Future<void> _importGame() async {
     await GameController.import(context, shouldPop: false);
-    // Wait briefly, then refresh our list of nodes.
+
     await Future<void>.delayed(const Duration(milliseconds: 500));
     setState(_refreshAllNodes);
   }
@@ -151,8 +151,8 @@ class MovesListPageState extends State<MovesListPage> {
     GameController.export(context, shouldPop: false);
   }
 
-  /// Copies the moveListPrompt (a special format for LLM) into the clipboard.
-  /// Displays a SnackBar indicating success or if there's no prompt data.
+
+
   Future<void> _copyLLMPrompt(String promptText) async {
     if (promptText.isEmpty) {
       rootScaffoldMessengerKey.currentState!.showSnackBar(
@@ -168,9 +168,9 @@ class MovesListPageState extends State<MovesListPage> {
         .showSnackBarClear(S.of(context).llmPromptCopiedToClipboard);
   }
 
-  /// Shows a dialog with LLM prompt content that can be edited and copied
+
   Future<void> _showLLMPromptDialog() async {
-    // Get the initial prompt text
+
     final String initialPrompt = GameController().gameRecorder.moveListPrompt;
 
     if (initialPrompt.isEmpty) {
@@ -179,19 +179,19 @@ class MovesListPageState extends State<MovesListPage> {
       return;
     }
 
-    // Create a controller for the text editing
+
     final TextEditingController controller =
         TextEditingController(text: initialPrompt);
 
-    // Flag to track if user wants the response in current app language
+
     const bool useCurrentLanguage = true;
 
-    // Show dialog and await result
+
     if (!mounted) {
       return;
     }
 
-    // Calculate dialog size based on screen size
+
     final Size screenSize = MediaQuery.of(context).size;
     final double dialogWidth = screenSize.width * 0.85;
     final double dialogHeight = screenSize.height * 0.7;
@@ -200,7 +200,7 @@ class MovesListPageState extends State<MovesListPage> {
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        // Use app theme colors
+
         final DialogThemeData dialogThemeObj = Theme.of(context).dialogTheme;
         final Color bgColor = dialogThemeObj.backgroundColor ??
             Theme.of(context).colorScheme.surface;
@@ -208,23 +208,23 @@ class MovesListPageState extends State<MovesListPage> {
         final Color borderColor =
             DB().colorSettings.messageColor.withValues(alpha: 0.3);
 
-        // Local state for checkbox
+
         bool localUseCurrentLanguage = useCurrentLanguage;
 
-        // LLM state variables
+
         bool isLoading = false;
         String llmResponse = '';
         bool showLlmResponse = false;
         final bool isLlmConfigured =
-            LlmService().isLlmConfigured(); // Check if LLM is configured
+            LlmService().isLlmConfigured();
 
-        // Add a flag to track if the dialog is still active
+
         bool isDialogActive = true;
 
         return StatefulBuilder(
           key: const Key(_kLlmPromptDialogKey),
           builder: (BuildContext context, StateSetter setState) {
-            // Function to generate LLM response
+
             Future<void> generateLlmResponse() async {
               if (!isLlmConfigured) {
                 setState(() {
@@ -241,16 +241,16 @@ class MovesListPageState extends State<MovesListPage> {
                 showLlmResponse = true;
                 llmResponse = _kLlmLoading;
 
-                // Initialize timer for fun loading messages
+
                 requestStartTime = DateTime.now();
                 elapsedSeconds = 0;
 
                 loadingTimer?.cancel();
                 loadingTimer =
                     Timer.periodic(const Duration(seconds: 1), (Timer t) {
-                  // Update elapsed time every second while loading
+
                   if (!isDialogActive) {
-                    // Cancel timer if dialog is closed
+
                     t.cancel();
                     return;
                   }
@@ -264,15 +264,15 @@ class MovesListPageState extends State<MovesListPage> {
               final String promptToUse = _getPromptWithLanguage(
                   controller.text, localUseCurrentLanguage);
 
-              // Call LLM service for real response
+
               final LlmService llmService = LlmService();
               String fullResponse = '';
               try {
                 await for (final String chunk
                     in llmService.generateResponse(promptToUse, context)) {
-                  // Check if the dialog is still active
+
                   if (!isDialogActive) {
-                    // Dialog closed, interrupt processing
+
                     break;
                   }
                   setState(() {
@@ -281,58 +281,58 @@ class MovesListPageState extends State<MovesListPage> {
                   });
                 }
               } catch (e) {
-                // Check if the dialog is still active
+
                 if (isDialogActive) {
                   setState(() {
                     llmResponse = 'Error: $e';
                   });
                 }
               } finally {
-                // Check if the dialog is still active
+
                 if (isDialogActive) {
                   setState(() {
                     isLoading = false;
                     loadingTimer?.cancel();
                   });
                 } else {
-                  // Ensure timer is cancelled
+
                   loadingTimer?.cancel();
                 }
               }
             }
 
-            // Function to import moves from LLM response
+
             void importMovesFromResponse() {
               final String extractedMoves =
                   LlmService().extractMoves(llmResponse);
 
               try {
-                // Import the moves directly without using the clipboard
+
                 ImportService.import(extractedMoves);
 
-                // Ensure the widget is still in the widget tree before using the context
+
                 if (!context.mounted) {
                   return;
                 }
 
-                // Close the dialog first
+
                 Navigator.of(context).pop();
 
-                // Perform history navigation to refresh the board state
+
                 HistoryNavigator.takeBackAll(context, pop: false).then((_) {
                   if (context.mounted) {
-                    // Show success message
+
                     rootScaffoldMessengerKey.currentState
                         ?.showSnackBarClear(S.of(context).gameImported);
                     GameController()
                         .headerTipNotifier
                         .showTip(S.of(context).gameImported);
 
-                    // Wait briefly, then refresh the move list in the parent page
+
                     Future<void>.delayed(const Duration(milliseconds: 500))
                         .then((_) {
                       if (mounted) {
-                        // Call the parent setState to refresh nodes
+
                         this.setState(_refreshAllNodes);
                       }
                     });
@@ -350,9 +350,9 @@ class MovesListPageState extends State<MovesListPage> {
               }
             }
 
-            // Function to show LLM config dialog
+
             void showLlmConfigDialog() {
-              // Store reference to the current outer context
+
               final BuildContext outerContext = context;
 
               showDialog<void>(
@@ -361,19 +361,19 @@ class MovesListPageState extends State<MovesListPage> {
                     false, // Prevent dismissing by tapping outside
                 builder: (BuildContext context) => const LlmConfigDialog(),
               ).then((_) {
-                // No need to reopen the LLM prompt dialog since we never closed it
-                // Just refresh any data that might have been updated in config dialog if needed
+
+
                 if (outerContext.mounted) {
                   setState(() {
-                    // Update any state that might have changed in the config dialog
+
                   });
                 }
               });
             }
 
-            // Function to show LLM prompt template dialog
+
             void showLlmPromptTemplateDialog() {
-              // Store reference to the current outer context
+
               final BuildContext outerContext = context;
 
               showDialog<void>(
@@ -382,11 +382,11 @@ class MovesListPageState extends State<MovesListPage> {
                     false, // Prevent dismissing by tapping outside
                 builder: (BuildContext context) => const LlmPromptDialog(),
               ).then((_) {
-                // No need to reopen the LLM prompt dialog since we never closed it
-                // Just refresh any data that might have been updated in template dialog if needed
+
+
                 if (outerContext.mounted) {
                   setState(() {
-                    // Update any state that might have changed in the template dialog
+
                   });
                 }
               });
@@ -394,7 +394,7 @@ class MovesListPageState extends State<MovesListPage> {
 
             return PopScope<dynamic>(
               onPopInvokedWithResult: (bool didPop, dynamic result) {
-                // Set flag and cancel timer when dialog is closed
+
                 isDialogActive = false;
                 loadingTimer?.cancel();
               },
@@ -409,7 +409,7 @@ class MovesListPageState extends State<MovesListPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        // Dialog title
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
@@ -424,7 +424,7 @@ class MovesListPageState extends State<MovesListPage> {
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: <Widget>[
-                                // LLM Prompt Template button
+
                                 IconButton(
                                   onPressed: showLlmPromptTemplateDialog,
                                   icon: const Icon(
@@ -432,7 +432,7 @@ class MovesListPageState extends State<MovesListPage> {
                                   tooltip: S.of(context).llmPromptTemplate,
                                   color: DB().colorSettings.pieceHighlightColor,
                                 ),
-                                // LLM Config button
+
                                 IconButton(
                                   onPressed: showLlmConfigDialog,
                                   icon: const Icon(
@@ -440,7 +440,7 @@ class MovesListPageState extends State<MovesListPage> {
                                   tooltip: S.of(context).llmConfig,
                                   color: DB().colorSettings.pieceHighlightColor,
                                 ),
-                                // Close button - with enhanced visibility
+
                                 Container(
                                   margin: const EdgeInsets.only(left: 8.0),
                                   child: IconButton(
@@ -453,7 +453,7 @@ class MovesListPageState extends State<MovesListPage> {
                                     ),
                                     tooltip: S.of(context).close,
                                     onPressed: () {
-                                      // Set flag and cancel timer when user closes dialog
+
                                       isDialogActive = false;
                                       loadingTimer?.cancel();
                                       Navigator.of(context).pop();
@@ -466,7 +466,7 @@ class MovesListPageState extends State<MovesListPage> {
                         ),
                         const SizedBox(height: 16),
 
-                        // Content area - either prompt input or LLM response
+
                         Expanded(
                           child: AnimatedSwitcher(
                             duration: const Duration(milliseconds: 300),
@@ -488,7 +488,7 @@ class MovesListPageState extends State<MovesListPage> {
 
                         const SizedBox(height: 16),
 
-                        // Only show language checkbox when prompt is visible
+
                         if (!showLlmResponse)
                           Row(
                             children: <Widget>[
@@ -506,7 +506,7 @@ class MovesListPageState extends State<MovesListPage> {
                               const SizedBox(width: 8),
                               Expanded(
                                 child: Text(
-                                  // Using app language for output text
+
                                   S.of(context).outputInCurrentLanguage,
                                   style: const TextStyle(
                                     fontSize: 14,
@@ -514,8 +514,8 @@ class MovesListPageState extends State<MovesListPage> {
                                   ),
                                 ),
                               ),
-                              // Fish button for debugging the cat fishing mini-game
-                              // Only shown in dev mode to help with testing
+
+
                               if (EnvironmentConfig.devMode)
                                 IconButton(
                                   icon: const Icon(
@@ -524,7 +524,7 @@ class MovesListPageState extends State<MovesListPage> {
                                   ),
                                   tooltip: 'Fish Game (Dev)',
                                   onPressed: () {
-                                    // Show dialog with cat fishing game for testing
+
                                     showDialog(
                                       context: context,
                                       barrierDismissible: false,
@@ -583,7 +583,7 @@ class MovesListPageState extends State<MovesListPage> {
                                                     child: CatFishingGame(
                                                       onScoreUpdate:
                                                           (int score) {
-                                                        // Optional: do something with score
+
                                                       },
                                                     ),
                                                   ),
@@ -601,12 +601,12 @@ class MovesListPageState extends State<MovesListPage> {
 
                         const SizedBox(height: 16),
 
-                        // Bottom action buttons
+
                         if (!showLlmResponse)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              // Ask LLM button - left side
+
                               ElevatedButton(
                                 onPressed: isLlmConfigured
                                     ? () => generateLlmResponse()
@@ -619,14 +619,14 @@ class MovesListPageState extends State<MovesListPage> {
                                 ),
                                 child: Text(S.of(context).askLlm),
                               ),
-                              // Copy button - right side
+
                               ElevatedButton(
                                 onPressed: () {
                                   final String promptWithLanguage =
                                       _getPromptWithLanguage(controller.text,
                                           localUseCurrentLanguage);
                                   _copyLLMPrompt(promptWithLanguage);
-                                  // Set flag and cancel timer
+
                                   isDialogActive = false;
                                   loadingTimer?.cancel();
                                   Navigator.of(context).pop();
@@ -644,7 +644,7 @@ class MovesListPageState extends State<MovesListPage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
-                              // Import button - left side (disabled during loading)
+
                               ElevatedButton(
                                 onPressed: isLoading
                                     ? null
@@ -657,13 +657,13 @@ class MovesListPageState extends State<MovesListPage> {
                                 ),
                                 child: Text(S.of(context).import),
                               ),
-                              // Copy button - right side
+
                               ElevatedButton(
                                 onPressed: isLoading
                                     ? null
                                     : () {
                                         _copyLLMPrompt(llmResponse);
-                                        // Set flag and cancel timer
+
                                         isDialogActive = false;
                                         loadingTimer?.cancel();
                                         Navigator.of(context).pop();
@@ -688,15 +688,15 @@ class MovesListPageState extends State<MovesListPage> {
         );
       },
     ).then((_) {
-      // Ensure timer is cancelled when dialog is closed
+
       loadingTimer?.cancel();
     });
 
-    // Make sure to dispose of the controller
+
     controller.dispose();
   }
 
-  /// Widget for displaying the LLM prompt input text field
+
   Widget _buildPromptInputWidget(
     TextEditingController controller,
     Color textColor,
@@ -732,7 +732,7 @@ class MovesListPageState extends State<MovesListPage> {
     );
   }
 
-  /// Widget for displaying the LLM response with progress indicator if loading
+
   Widget _buildLlmResponseWidget(
     String responseText,
     bool isLoading,
@@ -740,7 +740,7 @@ class MovesListPageState extends State<MovesListPage> {
     Color textColor,
     Color borderColor,
   ) {
-    // Determine message according to elapsed time
+
     String waitingMessage;
     if (elapsedSeconds < 20) {
       waitingMessage = S.of(context).llmCommandReceivedProcessing;
@@ -750,12 +750,12 @@ class MovesListPageState extends State<MovesListPage> {
       waitingMessage = S.of(context).llmPresentingSoon;
     }
 
-    // Build a simple but fun loading animation consisting of 4 dots that move
+
     Widget funLoadingDots(Color highlightColor) {
-      // Active dot cycles every second
+
       final int activeDot = elapsedSeconds % 4;
       return SizedBox(
-        // Fixed height container to prevent layout jumps
+
         height: 12.0,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -790,9 +790,9 @@ class MovesListPageState extends State<MovesListPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  // Add padding at the top to move dots away from edge
+
                   const SizedBox(height: 24.0),
-                  // Game title and waiting message
+
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -811,7 +811,7 @@ class MovesListPageState extends State<MovesListPage> {
                       ),
                     ],
                   ),
-                  // Digital clock-style display with LED-like effect
+
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Container(
@@ -856,7 +856,7 @@ class MovesListPageState extends State<MovesListPage> {
                       ),
                     ),
                   ),
-                  // Cat fishing mini-game
+
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -866,7 +866,7 @@ class MovesListPageState extends State<MovesListPage> {
                           Expanded(
                             child: CatFishingGame(
                               onScoreUpdate: (int score) {
-                                // Optional: do something with score
+
                               },
                             ),
                           ),
@@ -891,20 +891,20 @@ class MovesListPageState extends State<MovesListPage> {
     );
   }
 
-  /// Get the current app language name in English
+
   String _getCurrentLanguageName() {
-    // Get current locale from settings or system
+
     Locale currentLocale;
 
-    // Try to get locale from app settings
+
     final Locale? configuredLocale = DB().displaySettings.locale;
 
     if (configuredLocale == null) {
-      // If null, it means "system default" - try to get platform locale
+
       try {
         final String platformLocale = Platform.localeName;
         final List<String> parts = platformLocale.split('_');
-        // e.g. "en_US" -> language: "en", country: "US"
+
         final String languageCode = parts[0];
         final String? countryCode = parts.length > 1 ? parts[1] : null;
 
@@ -914,55 +914,55 @@ class MovesListPageState extends State<MovesListPage> {
           currentLocale = Locale(languageCode);
         }
       } catch (e) {
-        // Fallback to English if we can't get platform locale
+
         currentLocale = const Locale('en');
       }
     } else {
-      // Use app's configured locale
+
       currentLocale = configuredLocale;
     }
 
-    // Use the localeToLanguageName map to get the language name in its native form
-    // This map is defined in language_locale_mapping.dart
+
+
     String? languageName;
 
-    // Try exact match first (language + country code if available)
+
     if (localeToLanguageName.containsKey(currentLocale)) {
       languageName = localeToLanguageName[currentLocale];
     } else {
-      // Try matching just the language code
+
       final Locale languageOnlyLocale = Locale(currentLocale.languageCode);
       if (localeToLanguageName.containsKey(languageOnlyLocale)) {
         languageName = localeToLanguageName[languageOnlyLocale];
       }
     }
 
-    // If language name is found, use it, otherwise fall back to language code
+
     return languageName ?? currentLocale.languageCode;
   }
 
-  /// Adds a language instruction to the prompt if needed
+
   String _getPromptWithLanguage(
       String originalPrompt, bool useCurrentLanguage) {
     if (!useCurrentLanguage) {
       return originalPrompt;
     }
 
-    // Get language name or code
+
     final String languageNameOrCode = _getCurrentLanguageName();
 
-    // Get the language code for LLM instruction
+
     final String languageCode = DB().displaySettings.locale?.languageCode ??
         Platform.localeName.split('_')[0];
 
-    // Create a language instruction for the LLM
-    // We include both the language name (possibly in native form) and the language code
-    // This helps the LLM better understand which language to use
+
+
+
     final String languageInstruction =
         '\n\nPlease provide your analysis in $languageNameOrCode language (code: $languageCode).\n';
 
-    // Find the prompt footer section if it exists, and insert before it
-    // Otherwise, just append to the end
+
+
     if (originalPrompt.contains(PromptDefaults.llmPromptFooter)) {
       return originalPrompt.replaceFirst(PromptDefaults.llmPromptFooter,
           '$languageInstruction${PromptDefaults.llmPromptFooter}');
@@ -971,7 +971,7 @@ class MovesListPageState extends State<MovesListPage> {
     }
   }
 
-  /// Scrolls the list/grid to the top with an animation.
+
   void _scrollToTop() {
     if (_scrollController.hasClients) {
       _scrollController.animateTo(
@@ -982,7 +982,7 @@ class MovesListPageState extends State<MovesListPage> {
     }
   }
 
-  /// Scrolls the list/grid to the bottom with an animation.
+
   void _scrollToBottom() {
     if (_scrollController.hasClients) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -997,7 +997,7 @@ class MovesListPageState extends State<MovesListPage> {
     }
   }
 
-  /// Builds a single large icon with a label, used in the empty state.
+
   Widget _emptyStateIcon({
     required IconData icon,
     required String label,
@@ -1023,7 +1023,7 @@ class MovesListPageState extends State<MovesListPage> {
     );
   }
 
-  /// Builds a simple empty-state page with two large icons: Load game and Import game.
+
   Widget _buildEmptyState() {
     return Center(
       child: Row(
@@ -1045,9 +1045,9 @@ class MovesListPageState extends State<MovesListPage> {
     );
   }
 
-  /// Builds the "3-column list layout": Round, White, Black.
+
   Widget _buildThreeColumnListLayout() {
-    // 1. Group all moves by round.
+
     final Map<int, List<PgnNode<ExtMove>>> roundMap =
         <int, List<PgnNode<ExtMove>>>{};
     for (final PgnNode<ExtMove> node in _allNodes) {
@@ -1059,9 +1059,9 @@ class MovesListPageState extends State<MovesListPage> {
       roundMap.putIfAbsent(roundIndex, () => <PgnNode<ExtMove>>[]).add(node);
     }
 
-    // Get sorted round indexes in ascending order.
+
     final List<int> sortedRoundsAsc = roundMap.keys.toList()..sort();
-    // Use reversed order if _isReversedOrder is true.
+
     final List<int> sortedRounds =
         _isReversedOrder ? sortedRoundsAsc.reversed.toList() : sortedRoundsAsc;
 
@@ -1071,7 +1071,7 @@ class MovesListPageState extends State<MovesListPage> {
         children: sortedRounds.map((int roundIndex) {
           final List<PgnNode<ExtMove>> nodesOfRound = roundMap[roundIndex]!;
 
-          // 2. Separate moves into white vs black.
+
           final List<String> whites = <String>[];
           final List<String> blacks = <String>[];
 
@@ -1079,12 +1079,12 @@ class MovesListPageState extends State<MovesListPage> {
             final PieceColor? side = n.data?.side;
             final String notation = n.data?.notation ?? '';
             if (side == PieceColor.white) {
-              // Remove the "X." prefix, e.g. "5. e4" -> "e4"
+
               final String cleaned =
                   notation.replaceAll(RegExp(r'^\d+\.\s*'), '');
               whites.add(cleaned);
             } else if (side == PieceColor.black) {
-              // Remove the "X..." prefix, e.g. "5... c5" -> "c5"
+
               final String cleaned =
                   notation.replaceAll(RegExp(r'^\d+\.\.\.\s*'), '');
               blacks.add(cleaned);
@@ -1141,7 +1141,7 @@ class MovesListPageState extends State<MovesListPage> {
     );
   }
 
-  /// Builds the main body widget according to the chosen view layout.
+
   Widget _buildBody() {
     if (_allNodes.isEmpty) {
       return _buildEmptyState();
@@ -1151,7 +1151,7 @@ class MovesListPageState extends State<MovesListPage> {
       case MovesViewLayout.large:
       case MovesViewLayout.medium:
       case MovesViewLayout.details:
-        // Single-column ListView of MoveListItem with reversed index if needed.
+
         return ListView.builder(
           controller: _scrollController,
           itemCount: _allNodes.length,
@@ -1167,7 +1167,7 @@ class MovesListPageState extends State<MovesListPage> {
         );
 
       case MovesViewLayout.small:
-        // For small boards, display a grid with 3 or 5 columns.
+
         final bool isPortrait =
             MediaQuery.of(context).orientation == Orientation.portrait;
         final int crossAxisCount = isPortrait ? 3 : 5;
@@ -1190,12 +1190,12 @@ class MovesListPageState extends State<MovesListPage> {
         );
 
       case MovesViewLayout.list:
-        // Now replaced with 3-column layout: Round / White / Black.
+
         return _buildThreeColumnListLayout();
     }
   }
 
-  /// Maps each layout to its corresponding Fluent icon.
+
   IconData _iconForLayout(MovesViewLayout layout) {
     switch (layout) {
       case MovesViewLayout.large:
@@ -1211,7 +1211,7 @@ class MovesListPageState extends State<MovesListPage> {
     }
   }
 
-  /// Updates the current layout and saves it to settings
+
   void _updateLayout(MovesViewLayout newLayout) {
     if (newLayout == _currentLayout) {
       return;
@@ -1221,7 +1221,7 @@ class MovesListPageState extends State<MovesListPage> {
       _currentLayout = newLayout;
     });
 
-    // Save the setting to DB
+
     DB().displaySettings =
         DB().displaySettings.copyWith(movesViewLayout: newLayout);
   }
@@ -1236,7 +1236,7 @@ class MovesListPageState extends State<MovesListPage> {
           style: AppTheme.appBarTheme.titleTextStyle,
         ),
         actions: <Widget>[
-          // Reverse order icon.
+
           IconButton(
             icon: AnimatedSwitcher(
               duration: const Duration(milliseconds: 250),
@@ -1254,13 +1254,13 @@ class MovesListPageState extends State<MovesListPage> {
             ),
             onPressed: () {
               setState(() {
-                // Only toggle the flag; do not physically reverse _allNodes.
+
                 _isReversedOrder = !_isReversedOrder;
               });
             },
           ),
-          // Layout selection: one active icon in the AppBar.
-          // Tapping it opens a popup with a horizontal row of icons.
+
+
           PopupMenuButton<void>(
             icon: Icon(_iconForLayout(_currentLayout)),
             onSelected: (_) {},
@@ -1289,7 +1289,7 @@ class MovesListPageState extends State<MovesListPage> {
               ];
             },
           ),
-          // The "three vertical dots" menu with multiple PopupMenuItem.
+
           PopupMenuButton<String>(
             onSelected: (String value) async {
               switch (value) {
@@ -1405,7 +1405,7 @@ class MovesListPageState extends State<MovesListPage> {
       body: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          // Hide any active mini board and dismiss keyboard.
+
           MiniBoardState.hideActiveBoard();
           FocusScope.of(context).unfocus();
         },
@@ -1415,8 +1415,8 @@ class MovesListPageState extends State<MovesListPage> {
   }
 }
 
-/// A single item in the move list.
-/// It adapts its layout depending on [layout].
+
+
 class MoveListItem extends StatefulWidget {
   const MoveListItem({
     required this.node,
@@ -1432,16 +1432,16 @@ class MoveListItem extends StatefulWidget {
 }
 
 class MoveListItemState extends State<MoveListItem> {
-  /// Whether the comment is in editing mode.
+
   bool _isEditing = false;
 
-  /// FocusNode to handle tap outside the TextField.
+
   late final FocusNode _focusNode;
 
-  /// Controller for editing the comment text.
+
   late final TextEditingController _editingController;
 
-  /// Cached comment text displayed in read-only mode.
+
   String _comment = "";
 
   @override
@@ -1453,7 +1453,7 @@ class MoveListItemState extends State<MoveListItem> {
     _editingController = TextEditingController(text: _comment);
   }
 
-  /// Retrieves comment from node.data, joined if multiple.
+
   String _retrieveComment(PgnNode<ExtMove> node) {
     final ExtMove? data = node.data;
     if (data?.comments != null && data!.comments!.isNotEmpty) {
@@ -1465,14 +1465,14 @@ class MoveListItemState extends State<MoveListItem> {
     return "";
   }
 
-  /// Handle losing focus. If editing, finalize the edit.
+
   void _handleFocusChange() {
     if (!_focusNode.hasFocus && _isEditing) {
       _finalizeEditing();
     }
   }
 
-  /// Saves the edited comment back into the PGN node.
+
   void _finalizeEditing() {
     setState(() {
       _isEditing = false;
@@ -1487,7 +1487,7 @@ class MoveListItemState extends State<MoveListItem> {
     });
   }
 
-  /// Builds a reusable widget that either shows a comment or a TextField to edit it.
+
   Widget _buildEditableComment(TextStyle style) {
     final bool hasComment = _comment.isNotEmpty;
     if (_isEditing) {
@@ -1529,20 +1529,20 @@ class MoveListItemState extends State<MoveListItem> {
     }
   }
 
-  /// Builds the appropriate widget based on [widget.layout].
+
   @override
   Widget build(BuildContext context) {
     final ExtMove? moveData = widget.node.data;
     final String notation = moveData?.notation ?? "";
     final String boardLayout = moveData?.boardLayout ?? "";
-    // Determine side: used to decide how to show "roundIndex..."
+
     final bool isWhite = (moveData?.side == PieceColor.white);
     final int? roundIndex = moveData?.roundIndex;
     final String roundNotation = (roundIndex != null)
         ? (isWhite ? "$roundIndex. " : "$roundIndex... ")
         : "";
 
-    // Common text style with monospace font for notation
+
     final TextStyle combinedStyle = TextStyle(
       fontSize: 14,
       fontWeight: FontWeight.bold,
@@ -1561,15 +1561,15 @@ class MoveListItemState extends State<MoveListItem> {
         return _buildSmallLayout(
             notation, boardLayout, roundNotation, combinedStyle);
       case MovesViewLayout.list:
-        // The "list" layout is now handled in MovesListPageState._buildThreeColumnListLayout()
-        // so we can return an empty container here.
+
+
         return const SizedBox.shrink();
       case MovesViewLayout.details:
         return _buildDetailsLayout(notation, roundNotation, combinedStyle);
     }
   }
 
-  /// Large boards: single column, board on top, then "roundNotation + notation", then comment.
+
   Widget _buildLargeLayout(
     String notation,
     String boardLayout,
@@ -1606,7 +1606,7 @@ class MoveListItemState extends State<MoveListItem> {
     );
   }
 
-  /// Medium boards: board on the left, "roundNotation + notation" and comment on the right.
+
   Widget _buildMediumLayout(
     String notation,
     String boardLayout,
@@ -1630,7 +1630,7 @@ class MoveListItemState extends State<MoveListItem> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            // Left: mini board.
+
             Expanded(
               flex: 382,
               child: Padding(
@@ -1643,7 +1643,7 @@ class MoveListItemState extends State<MoveListItem> {
                     : const SizedBox.shrink(),
               ),
             ),
-            // Right: text.
+
             Expanded(
               flex: 618,
               child: Padding(
@@ -1675,7 +1675,7 @@ class MoveListItemState extends State<MoveListItem> {
     );
   }
 
-  /// Small boards: grid cells with board on top, then "roundNotation + notation".
+
   Widget _buildSmallLayout(
     String notation,
     String boardLayout,
@@ -1713,7 +1713,7 @@ class MoveListItemState extends State<MoveListItem> {
     );
   }
 
-  /// Details layout: single row: "roundNotation + notation" on the left, comment on the right.
+
   Widget _buildDetailsLayout(
     String notation,
     String roundNotation,
@@ -1728,12 +1728,12 @@ class MoveListItemState extends State<MoveListItem> {
         ),
         child: Row(
           children: <Widget>[
-            // Left side.
+
             Expanded(
               child: Text(roundNotation + notation, style: combinedStyle),
             ),
             const SizedBox(width: 8),
-            // Right side: editable comment.
+
             Expanded(
               child: _buildEditableComment(
                 TextStyle(
@@ -1751,7 +1751,7 @@ class MoveListItemState extends State<MoveListItem> {
   @override
   void didUpdateWidget(covariant MoveListItem oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // If not editing, sync comment if the node changed.
+
     if (!_isEditing) {
       final String newComment = _retrieveComment(widget.node);
       if (newComment != _comment) {

@@ -1,17 +1,17 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
-// Enhanced by Gemini for realism and visual appeal
-//
-// Updated for smoother and more natural confetti effects
+
+
+
+
+
 
 import 'dart:async';
 import 'dart:math' as math;
 
-// Using ui prefix to avoid conflicts
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart'; // Import for TickerProvider
 
-// Define different confetti shape types
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+
+
 enum ConfettiShape {
   rectangle,
   circle,
@@ -20,7 +20,7 @@ enum ConfettiShape {
   streamer,
 }
 
-/// A widget that displays a highly customizable and visually enhanced confetti animation.
+
 class ChallengeConfetti extends StatefulWidget {
   const ChallengeConfetti({
     super.key,
@@ -50,63 +50,63 @@ class ChallengeConfetti extends StatefulWidget {
     this.minLifetimeMs = 3000, // Same min lifetime
   });
 
-  // --- Configurable Parameters ---
 
-  /// Number of confetti particles to launch per wave.
+
+
   final int particlesPerWave;
 
-  /// Number of launch waves.
+
   final int numberOfWaves;
 
-  /// Delay between launch waves in milliseconds (base value, with added randomness).
+
   final int waveDelayMs;
 
-  /// Optional area from which confetti originates. Defaults to top center edge.
+
   final Rect? emissionSource;
 
-  /// Intensity of the initial upward/outward burst. Higher values mean stronger burst.
+
   final double initialBurstIntensity;
 
-  /// Base gravity acceleration affecting particles.
+
   final double gravity;
 
-  /// Range of initial downward velocity added after the burst.
+
   final double initialFallSpeedRange;
 
-  /// Base strength of the simulated wind force.
+
   final double windStrength;
 
-  /// How quickly particles lose velocity due to air resistance (0.0 to 1.0).
+
   final double airResistance;
 
-  /// How quickly particles lose rotational speed (0.0 to 1.0, closer to 1 means slower damping).
+
   final double spinDamping;
 
-  /// Intensity of the fluttering/tumbling effect.
+
   final double flutterIntensity;
 
-  /// Minimum size of confetti particles.
+
   final double minParticleSize;
 
-  /// Maximum size of confetti particles.
+
   final double maxParticleSize;
 
-  /// List of allowed confetti shapes.
+
   final List<ConfettiShape> allowedShapes;
 
-  /// List of colors for the confetti particles.
+
   final List<Color> confettiColors;
 
-  /// Probability (0.0 to 1.0) of a particle being metallic.
+
   final double metallicProbability;
 
-  /// Maximum lifetime of a particle in milliseconds.
+
   final int maxLifetimeMs;
 
-  /// Minimum lifetime of a particle in milliseconds.
+
   final int minLifetimeMs;
 
-  // Default vibrant color palette
+
   static const List<Color> _defaultColors = <Color>[
     Color(0xFFFF4C40),
     Color(0xFF6347A6),
@@ -125,7 +125,7 @@ class ChallengeConfetti extends StatefulWidget {
     Color(0xFF3F51B5),
   ];
 
-  // Default metallic color palette
+
   static const List<Color> _metallicColors = <Color>[
     Color(0xFFD4AF37), // Gold
     Color(0xFFA8A9AD), // Silver
@@ -139,19 +139,19 @@ class ChallengeConfetti extends StatefulWidget {
 
 class _ChallengeConfettiState extends State<ChallengeConfetti>
     with TickerProviderStateMixin {
-  // Holds the confetti data and their state
+
   final List<ConfettiParticle> _particles = <ConfettiParticle>[];
 
-  // A random generator for producing random values
+
   final math.Random _random = math.Random();
 
-  // Ticker for driving the physics simulation
+
   late final Ticker _ticker;
 
-  // Tracks the last timestamp for calculating delta time (dt)
+
   double _lastTimestamp = 0.0;
 
-  // Tracks elapsed time for wind variation
+
   double _elapsedTime = 0.0;
 
   @override
@@ -159,7 +159,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     super.initState();
     _ticker = createTicker(_tick)..start();
 
-    // Start confetti throw after the first frame is rendered
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) {
         _startConfettiWaves();
@@ -170,7 +170,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
   @override
   void dispose() {
     _ticker.dispose();
-    // Dispose controllers held by particles
+
     for (final ConfettiParticle particle in _particles) {
       particle.controller.dispose();
     }
@@ -178,7 +178,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     super.dispose();
   }
 
-  /// Callback for the ticker, drives the physics simulation
+
   void _tick(Duration elapsed) {
     if (!mounted) {
       return;
@@ -187,11 +187,11 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     final double now = elapsed.inMicroseconds / Duration.microsecondsPerSecond;
     final double dt = (_lastTimestamp == 0.0)
         ? 0.016
-        : now - _lastTimestamp; // Use an estimate for the first frame
+        : now - _lastTimestamp;
     _lastTimestamp = now;
     _elapsedTime += dt;
 
-    // Avoid large jumps or negative time steps
+
     if (dt <= 0 || dt > 0.1) {
       return;
     }
@@ -199,7 +199,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     final List<ConfettiParticle> particlesToRemove = <ConfettiParticle>[];
     final Size screenSize = MediaQuery.of(context).size;
 
-    // Calculate current wind force (varies subtly over time)
+
     final double currentWind =
         widget.windStrength * (1 + 0.1 * math.sin(_elapsedTime * 1.5));
 
@@ -213,7 +213,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     }
 
     if (particlesToRemove.isNotEmpty || _particles.isNotEmpty) {
-      // Use addPostFrameCallback to avoid calling setState during build/layout/paint phase
+
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (!mounted) {
           return;
@@ -221,17 +221,17 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
         setState(() {
           for (final ConfettiParticle particle in particlesToRemove) {
             _particles.remove(particle);
-            particle.controller.dispose(); // Dispose controller when removing
+            particle.controller.dispose();
           }
         });
       });
     }
   }
 
-  /// Starts launching multiple waves of confetti with a slight random delay per wave.
+
   void _startConfettiWaves() {
     for (int wave = 0; wave < widget.numberOfWaves; wave++) {
-      // Add a small random factor to the wave delay to make the burst less uniform
+
       final int randomWaveDelay = widget.waveDelayMs +
           _random.nextInt((widget.waveDelayMs / 2).floor());
       Future<void>.delayed(Duration(milliseconds: randomWaveDelay * wave), () {
@@ -244,7 +244,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
       });
     }
 
-    // Schedule a potential cleanup check far in the future, just in case
+
     final int totalDuration =
         widget.waveDelayMs * widget.numberOfWaves + widget.maxLifetimeMs + 1000;
     Future<void>.delayed(Duration(milliseconds: totalDuration), () {
@@ -252,7 +252,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     });
   }
 
-  /// Creates one confetti piece and adds it to the simulation.
+
   void _launchConfetti() {
     if (!mounted) {
       return;
@@ -260,23 +260,23 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
 
     final Size screenSize = MediaQuery.of(context).size;
 
-    // Determine emission source properties
+
     final Rect source = widget.emissionSource ??
         Rect.fromCenter(
             center: Offset(screenSize.width / 2, -20),
-            // Default: top center edge
-            width: screenSize.width * 0.5,
-            // Default width
-            height: 40); // Default height (allows some vertical spread)
 
-    // Start position within the source rectangle
+            width: screenSize.width * 0.5,
+
+            height: 40);
+
+
     final double startX = source.left + _random.nextDouble() * source.width;
     final double startY = source.top + _random.nextDouble() * source.height;
     final Offset startPosition = Offset(startX, startY);
 
-    // Initial velocity: Burst effect + random downward drift
+
     final double burstAngle =
-        (_random.nextDouble() - 0.5) * math.pi * 0.8; // Spread angle
+        (_random.nextDouble() - 0.5) * math.pi * 0.8;
     final double burstSpeed =
         widget.initialBurstIntensity * (0.5 + _random.nextDouble() * 0.5);
     final double initialSpeedX = math.sin(burstAngle) * burstSpeed;
@@ -287,18 +287,18 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
 
     final Offset initialVelocity = Offset(initialSpeedX, initialSpeedY);
 
-    // --- Particle Properties ---
 
-    // Determine if metallic and pick color palette
+
+
     final bool isMetallic = _random.nextDouble() < widget.metallicProbability;
     final List<Color> colorPalette =
         isMetallic ? ChallengeConfetti._metallicColors : widget.confettiColors;
     Color color = colorPalette[_random.nextInt(colorPalette.length)];
 
-    // Add slight random HSL variation to the base color for non-metallics
+
     if (!isMetallic) {
       final HSLColor hslColor = HSLColor.fromColor(color);
-      // Vary Hue slightly (+/- 5 degrees), Saturation (+/- 0.05), Lightness (+/- 0.05)
+
       final double hueVariation = (_random.nextDouble() - 0.5) * 10.0;
       final double saturationVariation = (_random.nextDouble() - 0.5) * 0.1;
       final double lightnessVariation = (_random.nextDouble() - 0.5) * 0.1;
@@ -311,33 +311,33 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
           .toColor();
     }
 
-    // Pick a random shape from the allowed list
+
     final ConfettiShape shape =
         widget.allowedShapes[_random.nextInt(widget.allowedShapes.length)];
 
-    // Random size for the confetti
+
     final double size = _random.nextDouble() *
             (widget.maxParticleSize - widget.minParticleSize) +
         widget.minParticleSize;
     final double massFactor = (size / widget.maxParticleSize) * 0.5 +
-        0.75; // Larger particles are slightly heavier (range 0.75 to 1.25)
+        0.75;
 
-    // Random initial rotation angle (3D orientation) and spin speed
+
     final double initialAngle = _random.nextDouble() * 2 * math.pi;
     final double initialSpin = (_random.nextDouble() * 4 - 2) * math.pi;
 
-    // Random lifetime for the particle
+
     final int lifetimeMs =
         _random.nextInt(widget.maxLifetimeMs - widget.minLifetimeMs) +
             widget.minLifetimeMs;
 
-    // Create animation controller for lifetime and fade effects
+
     final AnimationController controller = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: lifetimeMs),
     );
 
-    // Create the particle
+
     final ConfettiParticle particle = ConfettiParticle(
       controller: controller,
       initialPosition: startPosition,
@@ -352,7 +352,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
       random: _random,
     );
 
-    // Use addPostFrameCallback to ensure setState is not called during build
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) {
         return;
@@ -362,11 +362,11 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
       });
     });
 
-    // Start the controller (manages lifetime and fade)
+
     controller.forward();
   }
 
-  /// Periodically clean up particles that might have stalled off-screen (fallback).
+
   void _cleanupLingeringParticles() {
     if (!mounted) {
       return;
@@ -375,7 +375,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
     final List<ConfettiParticle> particlesToRemove = <ConfettiParticle>[];
 
     for (final ConfettiParticle particle in _particles) {
-      // Check if particle is old, slow, and off-screen
+
       if (particle.timeAlive > 2.0 && // Existed for > 2 seconds
           particle.velocity.distanceSquared < 10.0 && // Moving very slowly
           particle.isOffScreen(screenSize)) {
@@ -400,7 +400,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
 
   @override
   Widget build(BuildContext context) {
-    // IgnorePointer allows user interactions to pass through the confetti layer
+
     return IgnorePointer(
       child: CustomPaint(
         painter: ConfettiPainter(
@@ -412,7 +412,7 @@ class _ChallengeConfettiState extends State<ChallengeConfetti>
   }
 }
 
-/// Represents a single confetti particle with physics state and visual properties.
+
 class ConfettiParticle {
   ConfettiParticle({
     required this.controller,
@@ -432,54 +432,54 @@ class ConfettiParticle {
         angularVelocity = initialSpin,
         _anglePhase = random.nextDouble() * 2 * math.pi;
 
-  final AnimationController controller; // Controls lifetime and fade
+  final AnimationController controller;
   final Offset initialPosition;
   final Offset initialVelocity;
   final Color color;
   final bool isMetallic;
   final double size;
 
-  /// Factor affecting gravity and resistance (simulates mass/density). Range ~0.75 to 1.25.
+
   final double massFactor;
   final double initialAngle;
   final double initialSpin;
   final ConfettiShape shape;
   final math.Random random;
 
-  // Mutable state updated by physics simulation
+
   Offset currentPosition;
   Offset velocity;
 
-  /// Represents the rotation around the particle's axis (for drawing).
+
   double currentAngle;
 
-  /// Speed of rotation.
+
   double angularVelocity;
 
-  /// Time elapsed since the particle was created.
+
   double timeAlive = 0.0;
 
-  /// Used to offset the 3D rotation simulation for variety.
+
   final double _anglePhase;
 
-  /// Represents the simulated tilt/rotation in 3D space (0=edge-on, 1=face-on).
+
   double scaleY = 1.0;
 
-  /// Updates the particle's state based on physics simulation for a time step 'dt'.
+
   void update(double dt, Size screenSize, double windStrength, double gravity,
       double airResistance, double flutterIntensity, double spinDamping) {
     timeAlive += dt;
 
-    // 1. Apply Gravity (affected by massFactor)
+
     velocity = velocity + Offset(0, gravity * massFactor * dt);
 
-    // Simulated 3D rotation/tilt based on angular velocity and phase
+
     final double rotation3D = math.cos(currentAngle + _anglePhase + timeAlive);
     scaleY = math.cos(rotation3D * math.pi * 0.5).abs();
-    // Smoothstep to make transitions less abrupt
+
     scaleY = scaleY * scaleY * (3.0 - 2.0 * scaleY);
 
-    // 2. Apply Air Resistance (higher when face-on, lower when edge-on)
+
     final double resistanceFactor = 0.2 + 0.8 * scaleY;
     final double dragMagnitude = velocity.distanceSquared *
         airResistance *
@@ -495,11 +495,11 @@ class ConfettiParticle {
               dragMagnitude / velocity.distance);
     }
 
-    // 3. Apply Wind (less effect on heavier particles)
+
     final double windForce = windStrength / (massFactor * 1.5) * dt;
     velocity = velocity + Offset(windForce, 0);
 
-    // 4. Apply Flutter (random sideways/vertical force)
+
     final double flutterFactor = (1.0 - scaleY) * flutterIntensity / massFactor;
     final double flutterX =
         (random.nextDouble() - 0.5) * 2 * flutterFactor * dt;
@@ -507,22 +507,22 @@ class ConfettiParticle {
         (random.nextDouble() - 0.5) * flutterFactor * 0.4 * dt;
     velocity = velocity + Offset(flutterX, flutterY);
 
-    // 5. Update Position
+
     currentPosition = currentPosition + velocity * dt;
 
-    // 6. Update Angular Velocity (damping)
+
     angularVelocity *= math.pow(spinDamping, dt).toDouble();
 
-    // 7. Update Angle (visual rotation)
+
     currentAngle += angularVelocity * dt;
     currentAngle %= 2 * math.pi;
   }
 
-  /// Calculates the current opacity based on the lifetime controller's value.
+
   double get currentOpacity {
     const double fadeInEnd = 0.15;
     const double fadeOutStart = 0.75;
-    const double minEndOpacity = 0.15; // Minimum opacity at the end
+    const double minEndOpacity = 0.15;
 
     final double progress = controller.value;
 
@@ -534,13 +534,13 @@ class ConfettiParticle {
           (progress - fadeOutStart) / (1.0 - fadeOutStart);
       final double eased = Curves.easeInCubic.transform(normalized);
       return (1.0 - eased)
-          .clamp(minEndOpacity, 1.0); // Clamp to minimum opacity
+          .clamp(minEndOpacity, 1.0);
     } else {
       return 1.0;
     }
   }
 
-  /// Checks if the particle is significantly off-screen.
+
   bool isOffScreen(Size screenSize) {
     final double buffer = size * 8;
     return currentPosition.dy > screenSize.height + buffer ||
@@ -550,7 +550,7 @@ class ConfettiParticle {
   }
 }
 
-/// A custom painter that draws all confetti particles with enhanced visuals.
+
 class ConfettiPainter extends CustomPainter {
   ConfettiPainter({required this.particles})
       : super(
@@ -561,7 +561,7 @@ class ConfettiPainter extends CustomPainter {
 
   final List<ConfettiParticle> particles;
 
-  // Pre-computed metallic gradients (optional)
+
   final Map<Color, LinearGradient> _metallicGradients =
       <Color, LinearGradient>{};
 
@@ -601,7 +601,7 @@ class ConfettiPainter extends CustomPainter {
       final Color baseColor = particle.color;
       fillPaint.color = baseColor.withValues(alpha: opacity);
 
-      // Metallic shader
+
       if (particle.isMetallic) {
         final LinearGradient gradient = _metallicGradients.putIfAbsent(
           baseColor,
@@ -618,7 +618,7 @@ class ConfettiPainter extends CustomPainter {
         fillPaint.shader = null;
       }
 
-      // Subtle highlight
+
       final double highlightVisibility = particle.scaleY * 0.8;
       final double highlightOpacity = (opacity *
               highlightVisibility *
@@ -649,7 +649,7 @@ class ConfettiPainter extends CustomPainter {
     }
   }
 
-  // --- Shape Drawing Methods ---
+
 
   void _drawRectangle(
       Canvas canvas, double size, Paint paint, Paint highlightPaint) {

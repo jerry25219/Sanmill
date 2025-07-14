@@ -1,14 +1,14 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_painter.dart
+
+
+
 
 part of '../../../game_page/services/painters/painters.dart';
 
-/// Custom Board Painter
-///
-/// Painter to draw the Board. The pieces are drawn by [PiecePainter].
-/// It asserts the Canvas to be a square.
+
+
+
+
 class BoardPainter extends CustomPainter {
   BoardPainter(this.context, this.backgroundImage);
 
@@ -34,10 +34,10 @@ class BoardPainter extends CustomPainter {
     _drawPoints(offset, canvas, paint);
     _drawMillLines(offset, canvas, paint, size);
 
-    // Add analysis renderer to draw analysis results
+
     if (AnalysisMode.isEnabled) {
       AnalysisRenderer.render(
-          canvas, size, size.width / 7); // Divide by number of points per row
+          canvas, size, size.width / 7);
     }
   }
 
@@ -117,8 +117,8 @@ class BoardPainter extends CustomPainter {
 
   static Path _createLinePath(List<Offset> offset) {
     final Path path = Path();
-    path.addRect(Rect.fromPoints(offset[3], offset[20])); // File B
-    path.addRect(Rect.fromPoints(offset[6], offset[17])); // File A
+    path.addRect(Rect.fromPoints(offset[3], offset[20]));
+    path.addRect(Rect.fromPoints(offset[6], offset[17]));
     _addMiddleHorizontalLines(path, offset);
     _addDiagonalLinesIfNeeded(path, offset);
     return path;
@@ -159,7 +159,7 @@ class BoardPainter extends CustomPainter {
       0.5,
     )!;
 
-    // Draw Mills with unique or mixed colors
+
     void drawMills(
         PieceColor color, List<List<int>> mills, Color defaultColor) {
       for (final List<int> mill in mills) {
@@ -171,7 +171,7 @@ class BoardPainter extends CustomPainter {
         path.addLine(
             pointFromSquare(mill[2], size), pointFromSquare(mill[0], size));
 
-        // Check if this mill exists in the opposite color mills
+
         final bool isShared = formedMills[color == PieceColor.white
                 ? PieceColor.black
                 : PieceColor.white]!
@@ -192,7 +192,7 @@ class BoardPainter extends CustomPainter {
       }
     }
 
-    // Draw White and Black Mills, possibly with mixed color
+
     drawMills(PieceColor.white, formedMills[PieceColor.white]!,
         DB().colorSettings.whitePieceColor);
     drawMills(PieceColor.black, formedMills[PieceColor.black]!,
@@ -439,7 +439,7 @@ class BoardPainter extends CustomPainter {
       paint.color = colors[colorIndex];
       colorIndex = (colorIndex + 1) % colors.length;
 
-      // Calculate the start and end points of each dashed segment on the circle
+
       final double startAngle = distance / radius;
       final double endAngle =
           ((distance + dashLength) / radius).clamp(0, 2 * pi);

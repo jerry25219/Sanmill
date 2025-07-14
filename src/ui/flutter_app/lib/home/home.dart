@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// home.dart
+
+
+
 
 import 'dart:async';
 import 'dart:io';
@@ -43,12 +43,12 @@ import '../shared/widgets/snackbars/scaffold_messenger.dart';
 import '../statistics/widgets/stats_page.dart';
 import '../tutorial/widgets/tutorial_dialog.dart';
 
-// Define the possible states of the drawer
+
 enum _DrawerIndex {
   humanVsAi,
   humanVsHuman,
   aiVsAi,
-  // humanVsLAN,
+
   setupPosition,
   statistics,
   settingsGroup,
@@ -62,7 +62,7 @@ enum _DrawerIndex {
   exit,
 }
 
-// Extension to handle widget selection based on drawer state
+
 extension _DrawerScreen on _DrawerIndex {
   Widget? get screen {
     switch (this) {
@@ -83,11 +83,11 @@ extension _DrawerScreen on _DrawerIndex {
           GameMode.aiVsAi,
           key: const Key("ai_ai"),
         );
-      // case _DrawerIndex.humanVsLAN:
-      //   return GamePage(
-      //     GameMode.humanVsLAN,
-      //     key: const Key("human_lan"),
-      //   );
+
+
+
+
+
       case _DrawerIndex.setupPosition:
         return GamePage(
           GameMode.setupPosition,
@@ -104,7 +104,7 @@ extension _DrawerScreen on _DrawerIndex {
       case _DrawerIndex.howToPlay:
         return const HowToPlayScreen();
       case _DrawerIndex.feedback:
-        // ignore: only_throw_errors
+
         throw ErrorDescription(
           "Feedback screen is not a widget and should be called separately",
         );
@@ -115,7 +115,7 @@ extension _DrawerScreen on _DrawerIndex {
           SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
         }
         return null;
-      // Parent groups do not have screens
+
       case _DrawerIndex.settingsGroup:
       case _DrawerIndex.helpGroup:
         return null;
@@ -123,9 +123,9 @@ extension _DrawerScreen on _DrawerIndex {
   }
 }
 
-/// Home View
-///
-/// This widget implements the home view of our app.
+
+
+
 class Home extends StatefulWidget {
   const Home({super.key});
 
@@ -145,12 +145,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       kIsWeb ? _DrawerIndex.humanVsHuman : _DrawerIndex.humanVsAi;
   final StackList<_DrawerIndex> _routes = StackList<_DrawerIndex>();
 
-  /// Callback from drawer for replace screen
-  /// as user need with passing DrawerIndex (Enum index)
+
+
   Future<void> _changeIndex(_DrawerIndex index) async {
     _controller.hideDrawer();
 
-    // Print the name of the screen being switched to (in English)
+
     switch (index) {
       case _DrawerIndex.humanVsAi:
         logger.i('Switching to Human vs AI');
@@ -161,18 +161,18 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       case _DrawerIndex.aiVsAi:
         logger.i('Switching to AI vs AI');
         break;
-      // case _DrawerIndex.humanVsLAN:
-      //   logger.i('Switching to Human vs LAN');
-      //   break;
+
+
+
       case _DrawerIndex.setupPosition:
         logger.i('Switching to Setup Position');
         break;
       case _DrawerIndex.statistics:
         logger.i('Switching to Statistics');
         break;
-      // Logging for group items is not strictly necessary as they don't switch screens
+
       case _DrawerIndex.settingsGroup:
-        logger.i('Toggling Settings group'); // Or simply remove logging
+        logger.i('Toggling Settings group');
         break;
       case _DrawerIndex.generalSettings:
         logger.i('Switching to General Settings');
@@ -184,7 +184,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         logger.i('Switching to Appearance');
         break;
       case _DrawerIndex.helpGroup:
-        logger.i('Toggling Help group'); // Or simply remove logging
+        logger.i('Toggling Help group');
         break;
       case _DrawerIndex.howToPlay:
         logger.i('Switching to How To Play');
@@ -200,22 +200,22 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         break;
     }
 
-    // ---------------------------------------------------------------------
-    // If leaving LAN mode, disconnect and reset the game.
-    // ---------------------------------------------------------------------
-    // if (_drawerIndex == _DrawerIndex.humanVsLAN &&
-    //     index != _DrawerIndex.humanVsLAN) {
-    //   logger.i("Leaving LAN mode: disposing network and resetting the board.");
-    //   // Dispose any existing LAN connection
-    //   GameController().networkService?.dispose();
-    //   GameController().networkService = null; // optional
-    //
-    //   // Force a fresh game state so the board is cleared
-    //   GameController().reset(force: true);
-    // }
 
-    // If no real change in index (and it's not the special "feedback" case,
-    // or a group item that doesn't change screen), just return.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     if (_drawerIndex == index &&
         _drawerIndex != _DrawerIndex.feedback &&
         index != _DrawerIndex.settingsGroup && // Add group checks
@@ -223,30 +223,30 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       return;
     }
 
-    // Handle the LAN-setup dialog, feedback, etc. as before...
-    // if (index == _DrawerIndex.humanVsLAN) {
-    //   // Show experimental feature notification
-    //   rootScaffoldMessengerKey.currentState!
-    //       .showSnackBarClear(S.of(context).experimental);
-    //
-    //   // Show LAN config dialog and await result
-    //   final bool? result = await showDialog<bool>(
-    //     context: context,
-    //     builder: (BuildContext context) => const LanConfigDialog(),
-    //   );
-    //
-    //   if (result ?? false) {
-    //     setState(() {
-    //       _pushRoute(_DrawerIndex.humanVsLAN);
-    //       _drawerIndex = _DrawerIndex.humanVsLAN;
-    //       _screenView = GamePage(
-    //         GameMode.humanVsLAN,
-    //         key: const Key("human_lan"),
-    //       );
-    //     });
-    //   }
-    //   return;
-    // }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     if ((index == _DrawerIndex.howToPlay ||
             index == _DrawerIndex.about ||
@@ -263,17 +263,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       }
     }
 
-    // Do not attempt to set screen for group items
+
     if (index == _DrawerIndex.settingsGroup ||
         index == _DrawerIndex.helpGroup) {
-      // Parent items are handled by CustomDrawer's expansion logic,
-      // no screen change or route push needed here for the parent itself.
-      // SelectionChanged for these is `(_) {}` anyway.
+
+
+
       return;
     }
 
     setState(() {
-      // assert(index != _DrawerIndex.feedback);
+
       assert(index != _DrawerIndex.settingsGroup);
       assert(index != _DrawerIndex.helpGroup);
       _pushRoute(index);
@@ -284,16 +284,16 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  // Function to check if the current drawer state corresponds to a game
+
   bool _isGame(_DrawerIndex index) {
-    // TODO: Magic Number. The first 4 indices correspond to game modes
-    // Adjusted magic number due to addition of statistics and group items.
-    // humanVsAi, humanVsHuman, aiVsAi, humanVsLAN, setupPosition are games.
-    // Their indices are 0, 1, 2, 3, 4. So index < 5 is correct.
+
+
+
+
     return index.index < 5;
   }
 
-  // Function to handle route changes
+
   void _pushRoute(_DrawerIndex index) {
     final bool curIsGame = _isGame(_drawerIndex);
     final bool nextIsGame = _isGame(index);
@@ -325,7 +325,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
-  // Function to handle first time run
+
   void firstRun(BuildContext context) {
     if (DB().generalSettings.firstRun == true) {
       DB().generalSettings = DB().generalSettings.copyWith(firstRun: false);
@@ -421,15 +421,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           currentSelectedValue: _drawerIndex,
           onSelectionChanged: _changeIndex,
         ),
-      // CustomDrawerItem<_DrawerIndex>(
-      //   key: const Key('drawer_item_human_vs_lan'),
-      //   itemValue: _DrawerIndex.humanVsLAN,
-      //   itemTitle: S.of(context).humanVsLAN,
-      //   itemIcon: const Icon(FluentIcons.wifi_1_24_regular),
-      //   currentSelectedValue: _drawerIndex,
-      //   onSelectionChanged: _changeIndex,
-      // ),
-      // TODO: Support removeOpponentsPieceFromHand
+
+
+
+
+
+
+
+
+
       if (DB().ruleSettings.millFormationActionInPlacingPhase !=
               MillFormationActionInPlacingPhase
                   .removeOpponentsPieceFromHandThenYourTurn &&
@@ -444,7 +444,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
           currentSelectedValue: _drawerIndex,
           onSelectionChanged: _changeIndex,
         ),
-      // Statistics item
+
       CustomDrawerItem<_DrawerIndex>(
         key: const Key('drawer_item_statistics'),
         itemValue: _DrawerIndex.statistics,
@@ -453,64 +453,64 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         currentSelectedValue: _drawerIndex,
         onSelectionChanged: _changeIndex,
       ),
-      // Settings group item
+
       CustomDrawerItem<_DrawerIndex>(
         key: const Key('drawer_item_settings_group'),
-        // Changed key
+
         itemValue: _DrawerIndex.settingsGroup,
-        // New itemValue for the group
+
         itemTitle: S.of(context).settings,
         itemIcon: const Icon(FluentIcons.settings_24_regular),
         currentSelectedValue: _drawerIndex,
         onSelectionChanged: (_) {},
-        // Parent item tap is handled for expansion
-        // Children are now part of the CustomDrawerItem's children list
+
+
         children: <CustomDrawerItem<_DrawerIndex>>[
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_general_settings_child'),
-            // Key for child
+
             itemValue: _DrawerIndex.generalSettings,
             itemTitle: S.of(context).generalSettings,
             itemIcon: const Icon(FluentIcons.options_24_regular),
-            // Original icon
+
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
-            // No manual indentation needed
+
           ),
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_rule_settings_child'),
-            // Key for child
+
             itemValue: _DrawerIndex.ruleSettings,
             itemTitle: S.of(context).ruleSettings,
             itemIcon: const Icon(FluentIcons.task_list_ltr_24_regular),
-            // Original icon
+
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
-            // No manual indentation needed
+
           ),
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_appearance_child'),
-            // Key for child
+
             itemValue: _DrawerIndex.appearance,
             itemTitle: S.of(context).appearance,
             itemIcon: const Icon(FluentIcons.design_ideas_24_regular),
-            // Original icon
+
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
-            // No manual indentation needed
+
           ),
         ],
       ),
-      // New "Help" group
+
       CustomDrawerItem<_DrawerIndex>(
         key: const Key('drawer_item_help_group'),
         itemValue: _DrawerIndex.helpGroup,
-        // Use specific group itemValue
+
         itemTitle: S.of(context).help,
         itemIcon: const Icon(FluentIcons.question_circle_24_regular),
         currentSelectedValue: _drawerIndex,
         onSelectionChanged: (_) {},
-        // Parent item tap is handled for expansion
+
         children: <CustomDrawerItem<_DrawerIndex>>[
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_how_to_play_child'),
@@ -520,15 +520,15 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             currentSelectedValue: _drawerIndex,
             onSelectionChanged: _changeIndex,
           ),
-          // if (!kIsWeb && Platform.isAndroid)
-          //   CustomDrawerItem<_DrawerIndex>(
-          //     key: const Key('drawer_item_feedback_child'),
-          //     itemValue: _DrawerIndex.feedback,
-          //     itemTitle: S.of(context).feedback,
-          //     itemIcon: const Icon(FluentIcons.comment_24_regular),
-          //     currentSelectedValue: _drawerIndex,
-          //     onSelectionChanged: _changeIndex,
-          //   ),
+
+
+
+
+
+
+
+
+
           CustomDrawerItem<_DrawerIndex>(
             key: const Key('drawer_item_about_child'),
             itemValue: _DrawerIndex.about,
@@ -595,13 +595,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
             PrivacyPolicyDialog(onConfirm: _showTutorialDialog),
       );
     }
-    // else {
-    //   _showTutorialDialog();
-    // }
+
+
+
   }
 
   Future<void> _showTutorialDialog() async {
-    // Skip tutorial dialog in debug mode
+
     if (!kDebugMode && DB().generalSettings.showTutorial) {
       await Navigator.of(context).push(
         MaterialPageRoute<dynamic>(
@@ -612,7 +612,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     }
   }
 
-  /// Drafts an email and sends it to the developer
+
   static Future<void> _launchFeedback(UserFeedback feedback) async {
     final String screenshotFilePath =
         await _saveFeedbackImage(feedback.screenshot);
@@ -641,12 +641,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final Directory output = await getTemporaryDirectory();
     final File file = File('${output.path}/sanmill-options.txt');
 
-    // Delete the file synchronously if it exists to avoid slow async IO operations
+
     if (file.existsSync()) {
       file.deleteSync();
     }
 
-    // Write content to the file asynchronously
+
     await file.writeAsString(content);
     return file.path;
   }
@@ -656,12 +656,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     final String screenshotFilePath = "${output.path}/sanmill-feedback.png";
     final File screenshotFile = File(screenshotFilePath);
 
-    // Delete the screenshot file synchronously if it exists
+
     if (screenshotFile.existsSync()) {
       screenshotFile.deleteSync();
     }
 
-    // Write bytes to the screenshot file asynchronously
+
     await screenshotFile.writeAsBytes(screenshot);
     return screenshotFilePath;
   }

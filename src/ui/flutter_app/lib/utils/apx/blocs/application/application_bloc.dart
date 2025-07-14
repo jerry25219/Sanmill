@@ -9,11 +9,11 @@ import 'state.dart';
 class ApplicationBloc extends Bloc<ApplicationEvent, ApplicationState> {
   late final ApplicationService _applicationService;
   ApplicationBloc() : super(const ApplicationInitialState()) {
-    // if (Constants.isInDebugMode) {
-    //   _applicationService = MockApplicationService();
-    // } else {
+
+
+
     _applicationService = OnlineApplicationService();
-    // }
+
 
     on<ApplicationBeginRegisterEvent>(
       (event, emit) =>

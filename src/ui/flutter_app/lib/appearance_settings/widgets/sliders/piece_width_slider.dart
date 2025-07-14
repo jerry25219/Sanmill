@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// piece_width_slider.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 
@@ -22,7 +22,7 @@ class _PieceWidthSlider extends StatelessWidget {
             defaultValue: const DisplaySettings(),
           )!;
 
-          // Divided by [MigrationValues.pieceWidth] To represent the old behavior
+
           return Center(
             key: const Key('piece_width_slider_center'),
             child: SizedBox(

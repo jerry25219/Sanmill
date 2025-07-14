@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// board_top_slider.dart
+
+
+
 
 part of 'package:sanmill/appearance_settings/widgets/appearance_settings_page.dart';
 
@@ -31,7 +31,7 @@ class _BoardTopSlider extends StatelessWidget {
                 key: const Key('board_top_slider'),
                 value: displaySettings.boardTop,
                 max: 288.0,
-                // TODO: Overflow, convert to v2 config
+
                 divisions: 288,
                 label: displaySettings.boardTop.toStringAsFixed(1),
                 onChanged: (double value) {

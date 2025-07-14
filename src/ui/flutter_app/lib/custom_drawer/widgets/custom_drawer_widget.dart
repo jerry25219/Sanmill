@@ -1,20 +1,20 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// custom_drawer_widget.dart
+
+
+
 
 part of '../../custom_drawer/custom_drawer.dart';
 
-/// Internal helper to track item and its nesting level for rendering purposes.
+
 class _DrawerEntry {
   const _DrawerEntry(this.item, this.level);
   final CustomDrawerItem<dynamic> item;
-  final int level; // 0 = parent, 1 = first level child
+  final int level;
 }
 
-/// CustomDrawer Widget
-///
-/// The widget laying out the custom drawer
+
+
+
 class CustomDrawer extends StatefulWidget {
   const CustomDrawer({
     super.key,
@@ -28,19 +28,19 @@ class CustomDrawer extends StatefulWidget {
 
   static const Key drawerMainKey = Key('custom_drawer_main');
 
-  /// Child widget. (Usually a widget that represents the main screen)
+
   final Widget mainScreenWidget;
 
-  /// Controller that controls the widget state. By default a new controller will be generated.
+
   final CustomDrawerController? controller;
 
-  /// Disables the gestures.
+
   final bool disabledGestures;
 
-  /// Items the drawer holds
+
   final List<CustomDrawerItem<dynamic>> drawerItems;
 
-  /// Header widget of the drawer
+
   final Widget drawerHeader;
 
   final Orientation orientation;
@@ -66,10 +66,10 @@ class CustomDrawerState extends State<CustomDrawer>
   late double _drawerOpenRatio;
   static const double _overlayRadius = 28.0;
 
-  // Expansion state for parent drawer items (keyed by their itemValue)
+
   final Map<dynamic, bool> _expansionState = <dynamic, bool>{};
 
-  // Flattened list of visible drawer entries after applying expansion state
+
   late List<_DrawerEntry> _visibleEntries;
 
   @override
@@ -103,8 +103,8 @@ class CustomDrawerState extends State<CustomDrawer>
   }
 
   Widget buildListMenus() {
-    // Build visible entries each time the list is rebuilt so that expansion
-    // state is respected.
+
+
     _visibleEntries = _getVisibleEntries();
 
     return SliverToBoxAdapter(
@@ -121,15 +121,15 @@ class CustomDrawerState extends State<CustomDrawer>
     );
   }
 
-  /// Builds a flattened list of drawer entries based on the current expansion
-  /// state.
+
+
   List<_DrawerEntry> _getVisibleEntries() {
     final List<_DrawerEntry> entries = <_DrawerEntry>[];
 
     for (final CustomDrawerItem<dynamic> topItem in widget.drawerItems) {
       entries.add(_DrawerEntry(topItem, 0));
 
-      // If the item is a parent and currently expanded, add its children
+
       final bool isExpanded = _expansionState[topItem.itemValue] ?? false;
       if (topItem.isParent && isExpanded) {
         for (final CustomDrawerItem<dynamic> child in topItem.children!) {
@@ -187,7 +187,7 @@ class CustomDrawerState extends State<CustomDrawer>
       ),
     );
 
-    /// Menu and arrow icon animation overlay
+
     final IconButton drawerOverlayButton = IconButton(
       key: const Key('custom_drawer_drawer_overlay_button'),
       icon: AnimatedIcon(
@@ -258,13 +258,13 @@ class CustomDrawerState extends State<CustomDrawer>
     final _DrawerEntry entry = _visibleEntries[index];
     final CustomDrawerItem<dynamic> item = entry.item;
 
-    // Constant vertical padding per Material 8.0 guideline
+
     const double itemPadding = 8.0;
 
-    // Indentation for child items
-    final double indent = entry.level * 24.0; // 24dp indent per level
 
-    // If the item is a parent, configure expand/collapse behavior and trailing icon
+    final double indent = entry.level * 24.0;
+
+
     CustomDrawerItem<dynamic> configuredItem = item;
     if (item.isParent && entry.level == 0) {
       final bool isExpanded = _expansionState[item.itemValue] ?? false;
@@ -282,8 +282,8 @@ class CustomDrawerState extends State<CustomDrawer>
             _visibleEntries = _getVisibleEntries();
           });
         },
-        // Only show the trailing arrow if it's not Settings or Help
-        // This assumes that parent items with these titles are used for Settings and Help
+
+
         trailingContent: (item.itemTitle == S.of(context).settings ||
                 item.itemTitle == S.of(context).help)
             ? null
@@ -338,11 +338,11 @@ class CustomDrawerState extends State<CustomDrawer>
       padding:
           EdgeInsets.only(left: indent, top: itemPadding, bottom: itemPadding),
       child: entry.level == 1
-          // Animate child category appearance/disappearance for better UX
+
           ? TweenAnimationBuilder<double>(
               key: Key('custom_drawer_child_animation_$index'),
               tween: Tween<double>(begin: 0, end: 1),
-              // Quick slide-in / fade-in
+
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeOut,
               child: drawerItemWidget,

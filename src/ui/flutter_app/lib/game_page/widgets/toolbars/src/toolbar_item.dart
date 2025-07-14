@@ -1,96 +1,96 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// toolbar_item.dart
+
+
+
 
 part of '../game_toolbar.dart';
 
-/// A Material Design "Game Toolbar Button".
-///
-/// A toolbar button is a label [child] displayed on a (zero elevation)
-/// [Material] widget. The label's [Text] and [Icon] widgets are
-/// displayed in the [style]'s [ButtonStyle.foregroundColor]. The
-/// button reacts to touches by filling with the [style]'s
-/// [ButtonStyle.backgroundColor].
-///
-/// The toolbar button's default style is defined by [defaultStyleOf].
-/// The style of this toolbar button can be overridden with its [style]
-/// parameter. The style of all toolbar buttons in a subtree can be
-/// overridden with the [ToolbarItemTheme].
-///
-/// The static [styleFrom] method is a convenient way to create a
-/// toolbar button [ButtonStyle] from simple values.
-///
-/// If the [onPressed] and [onLongPress] callbacks are null, then this
-/// button will be disabled, it will not react to touch.
-///
-/// {@tool dartpad --template=stateless_widget_scaffold}
-///
-/// This sample shows how to render a disabled ToolbarItem, an enabled ToolbarItem
-/// and lastly a ToolbarItem with gradient background.
-///
-/// ```dart
-/// Widget build(BuildContext context) {
-///   return Center(
-///     child: Column(
-///       mainAxisSize: MainAxisSize.min,
-///       children: <Widget>[
-///         ToolbarItem(
-///            style: ToolbarItem.styleFrom(
-///              textStyle: const TextStyle(fontSize: 20),
-///            ),
-///            onPressed: null,
-///            child: const Text('Disabled'),
-///         ),
-///         const SizedBox(height: 30),
-///         ToolbarItem(
-///           style: ToolbarItem.styleFrom(
-///             textStyle: const TextStyle(fontSize: 20),
-///           ),
-///           onPressed: () {},
-///           child: const Text('Enabled'),
-///         ),
-///         const SizedBox(height: 30),
-///         ClipRRect(
-///           borderRadius: BorderRadius.circular(4),
-///           child: Stack(
-///             children: <Widget>[
-///               Positioned.fill(
-///                 child: Container(
-///                   decoration: const BoxDecoration(
-///                     gradient: LinearGradient(
-///                       colors: <Color>[
-///                         Color(0xFF0D47A1),
-///                         Color(0xFF1976D2),
-///                         Color(0xFF42A5F5),
-///                       ],
-///                     ),
-///                   ),
-///                 ),
-///               ),
-///               ToolbarItem(
-///                 style: ToolbarItem.styleFrom(
-///                   padding: const EdgeInsets.all(16.0),
-///                   primary: Colors.white,
-///                   textStyle: const TextStyle(fontSize: 20),
-///                 ),
-///                 onPressed: () {},
-///                  child: const Text('Gradient'),
-///               ),
-///             ],
-///           ),
-///         ),
-///       ],
-///     ),
-///   );
-/// }
-///
-/// ```
-/// {@end-tool}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class ToolbarItem extends ButtonStyleButton {
-  /// Create a ToolbarItem.
-  ///
-  /// The [autofocus] and [clipBehavior] arguments must not be null.
+
+
+
   const ToolbarItem({
     super.key,
     required super.onPressed,
@@ -104,12 +104,12 @@ class ToolbarItem extends ButtonStyleButton {
     super.onFocusChange,
   });
 
-  /// Create a toolbar button from a pair of widgets that serve as the button's
-  /// [icon] and [label].
-  ///
-  /// The icon and label are arranged in a column.
-  ///
-  /// The [icon] and [label] arguments must not be null.
+
+
+
+
+
+
   factory ToolbarItem.icon({
     Key? key,
     required VoidCallback? onPressed,
@@ -122,37 +122,37 @@ class ToolbarItem extends ButtonStyleButton {
     required Widget label,
   }) = _ToolbarItemWithIcon;
 
-  /// A static convenience method that constructs a text button
-  /// [ButtonStyle] given simple values.
-  ///
-  /// The [primary], and [onSurface] colors are used to create a
-  /// [MaterialStateProperty] [ButtonStyle.foregroundColor] value in the same
-  /// way that [defaultStyleOf] uses the [ColorScheme] colors with the same
-  /// names. Specify a value for [primary] to specify the color of the button's
-  /// text and icons as well as the overlay colors used to indicate the hover,
-  /// focus, and pressed states. Use [onSurface] to specify the button's
-  /// disabled text and icon color.
-  ///
-  /// Similarly, the [enabledMouseCursor] and [disabledMouseCursor]
-  /// parameters are used to construct [ButtonStyle.mouseCursor].
-  ///
-  /// All of the other parameters are either used directly or used to
-  /// create a [WidgetStateProperty] with a single value for all
-  /// states.
-  ///
-  /// All parameters default to null. By default this method returns
-  /// a [ButtonStyle] that doesn't override anything.
-  ///
-  /// For example, to override the default text and icon colors for a
-  /// [ToolbarItem], as well as its overlay color, with all of the
-  /// standard opacity adjustments for the pressed, focused, and
-  /// hovered states, one could write:
-  ///
-  /// ```dart
-  /// ToolbarItem(
-  ///   style: ToolbarItem.styleFrom(primary: Colors.green),
-  /// )
-  /// ```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   static ButtonStyle styleFrom({
     Color? primary,
     Color? onSurface,
@@ -212,73 +212,73 @@ class ToolbarItem extends ButtonStyleButton {
     );
   }
 
-  /// Defines the button's default appearance.
-  ///
-  /// The button [child]'s [Text] and [Icon] widgets are rendered with
-  /// the [ButtonStyle]'s foreground color. The button's [InkWell] adds
-  /// the style's overlay color when the button is focused, hovered
-  /// or pressed. The button's background color becomes its [Material]
-  /// color and is transparent by default.
-  ///
-  /// All of the ButtonStyle's defaults appear below.
-  ///
-  /// In this list "Theme.foo" is shorthand for
-  /// `Theme.of(context).foo`. Color scheme values like
-  /// "onSurface(0.38)" are shorthand for
-  /// `onSurface.withValues(alpha: 0.38)`. [WidgetStateProperty] valued
-  /// properties that are not followed by a subList have the same
-  /// value for all states, otherwise the values are as specified for
-  /// each state and "others" means all other states.
-  ///
-  /// The `textScaleFactor` is the value of
-  /// `MediaQuery.of(context).textScaleFactor` and the names of the
-  /// EdgeInsets constructors and `EdgeInsetsGeometry.lerp` have been
-  /// abbreviated for readability.
-  ///
-  /// The color of the [ButtonStyle.textStyle] is not used, the
-  /// [ButtonStyle.foregroundColor] color is used instead.
-  ///
-  /// * `textStyle` - Theme.textTheme.button
-  /// * `backgroundColor` - transparent
-  /// * `foregroundColor`
-  ///   * disabled - Theme.colorScheme.onSurface(0.38)
-  ///   * others - Theme.colorScheme.primary
-  /// * `overlayColor`
-  ///   * hovered - Theme.colorScheme.primary(0.04)
-  ///   * focused or pressed - Theme.colorScheme.primary(0.12)
-  /// * `shadowColor` - Theme.shadowColor
-  /// * `elevation` - 0
-  /// * `padding`
-  ///   * `textScaleFactor <= 1` - all(8)
-  ///   * `1 < textScaleFactor <= 2` - lerp(all(8), horizontal(8))
-  ///   * `2 < textScaleFactor <= 3` - lerp(horizontal(8), horizontal(4))
-  ///   * `3 < textScaleFactor` - horizontal(4)
-  /// * `minimumSize` - Size(64, 36)
-  /// * `fixedSize` - null
-  /// * `maximumSize` - Size.infinite
-  /// * `side` - null
-  /// * `shape` - RoundedRectangleBorder(borderRadius: BorderRadius.circular(4))
-  /// * `mouseCursor`
-  ///   * disabled - SystemMouseCursors.forbidden
-  ///   * others - SystemMouseCursors.click
-  /// * `visualDensity` - theme.visualDensity
-  /// * `tapTargetSize` - theme.materialTapTargetSize
-  /// * `animationDuration` - kThemeChangeDuration
-  /// * `enableFeedback` - true
-  /// * `alignment` - Alignment.center
-  /// * `splashFactory` - InkRipple.splashFactory
-  ///
-  /// The default padding values for the [ToolbarItem.icon] factory are slightly different:
-  ///
-  /// * `padding`
-  ///   * `textScaleFactor <= 1` - all(8)
-  ///   * `1 < textScaleFactor <= 2 `- lerp(all(8), horizontal(4))
-  ///   * `2 < textScaleFactor` - horizontal(4)
-  ///
-  /// The default value for `side`, which defines the appearance of the button's
-  /// outline, is null. That means that the outline is defined by the button
-  /// shape's [OutlinedBorder.side]. Typically the default value of an
-  /// [OutlinedBorder]'s side is [BorderSide.none], so an outline is not drawn.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   ButtonStyle defaultStyleOf(BuildContext context) {
     final ThemeData theme = Theme.of(context);
@@ -321,8 +321,8 @@ class ToolbarItem extends ButtonStyleButton {
     );
   }
 
-  /// Returns the [ToolbarItemThemeData.style] of the closest
-  /// [ToolbarItemTheme] ancestor.
+
+
   @override
   ButtonStyle? themeStyleOf(BuildContext context) {
     return ToolbarItemTheme.of(context).style;
@@ -445,7 +445,7 @@ class _ToolbarItemChild extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       key: const Key('toolbar_item_child_column'),
-      // TODO: [Calcitem] Replace with a Row for horizontal icon + text
+
       children: <Widget>[icon, label],
     );
   }

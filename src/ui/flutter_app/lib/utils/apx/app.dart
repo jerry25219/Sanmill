@@ -1,8 +1,8 @@
-// import 'package:dealer/src/blocs/user/user_bloc.dart';
-// import 'package:dealer/src/features/match/presentation/bloc/match_bloc.dart';
-// import 'package:dealer/src/features/match/presentation/pages/match_page.dart';
-// import 'package:dealer/src/screens/register/reigster_screen.dart';
-// import 'package:dealer/src/screens/welcome/welcome_screen.dart';
+
+
+
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,11 +22,11 @@ final logger = Logger(
         methodCount: 0, dateTimeFormat: DateTimeFormat.dateAndTime),
     output: DebugPrintOutput(),
     level: Level.all);
-/// The Widget that configures your application.
-class Application extends StatefulWidget {
-  Application({super.key /*required this.settingsController*/});
 
-  // final SettingsController settingsController;
+class Application extends StatefulWidget {
+  Application({super.key });
+
+
 
   @override
   State<Application> createState() => _ApplicationState();
@@ -35,13 +35,13 @@ class Application extends StatefulWidget {
 class _ApplicationState extends State<Application> with WidgetsBindingObserver {
 
   Map<String, Widget Function(BuildContext)> get _routes => {
-        // MainScreen.routeName: (context) => const MainScreen(),
+
         LoadingPage.routeName: (context) => LoadingPage(),
         fake_app.HomeScreen.routeName: (context) => const fake_app.HomeScreen(),
         real_app.HomeScreen.routeName: (context) => const real_app.HomeScreen(),
-        // WelcomeScreen.routeName: (context) => const WelcomeScreen(),
-        // RegisterScreen.routeName: (context) => const RegisterScreen(),
-        // MatchPage.routeName: (context) => const MatchPage(),
+
+
+
       };
 
   @override
@@ -65,7 +65,7 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
           navigatorKey: NavigationService.navigatorKey,
           restorationScopeId: 'app',
           localizationsDelegates: const [
-            // AppLocalizations.delegate,
+
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
             GlobalCupertinoLocalizations.delegate,
@@ -88,25 +88,25 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
               try {
                 String path;
                 Map<String, String> queryParams = {};
-                /// URI-:dragonfly://home?code=6580677a-4cb8-4f0f-91db-ee8933892d97[0m
+
                 if (routeName.startsWith('dragonfly://')) {
-                  // Handle full deep link URI
+
                   final uri = Uri.parse(routeName);
                   path = uri.host;
                   queryParams = uri.queryParameters;
                 } else {
-                  // Handle stripped path format (e.g. "/?code=1234abcd")
+
                   final uri = Uri.parse(routeName);
                   path = uri.path.replaceAll(RegExp(r'^/+|/+$'), '');
                   queryParams = uri.queryParameters;
 
-                  // If path is empty and we have query params, assume it's the home route
+
                   if (path.isEmpty && queryParams.containsKey('code')) {
                     path = 'home';
                   }
                 }
 
-                // Process routes
+
                 logger.i('Parsed path: $path, queryParams: $queryParams');
                 if (path == 'home') {
                   final code = queryParams['code'];
@@ -122,14 +122,14 @@ class _ApplicationState extends State<Application> with WidgetsBindingObserver {
               }
             }
 
-            // Handle regular routes
+
             if (_routes.containsKey(routeName)) {
               return MaterialPageRoute<void>(
                   settings: settings,
                   builder: (context) => _routes[routeName]!(context));
             }
 
-            // Return empty container for undefined routes
+
             return MaterialPageRoute<void>(
                 settings: settings, builder: (context) => Container());
           },

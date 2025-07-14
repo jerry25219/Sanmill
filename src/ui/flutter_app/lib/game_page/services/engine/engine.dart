@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// engine.dart
+
+
+
 
 part of '../mill.dart';
 
@@ -65,13 +65,13 @@ class Engine {
     await _platform.invokeMethod("shutdown");
   }
 
-  /*
-  Future<String?> _isReady() async {
-    if (!_isPlatformChannelAvailable) return "";
 
-    return _platform.invokeMethod("isReady");
-  }
-  */
+
+
+
+
+
+
 
   FutureOr<bool> isThinking() async {
     if (!_isPlatformChannelAvailable) {
@@ -83,35 +83,35 @@ class Engine {
     if (isThinking is bool) {
       return isThinking;
     } else {
-      // ignore: only_throw_errors
+
       throw "Invalid platform response. Expected a value of type bool";
     }
   }
 
-  /// Saves the given FEN string to a local file named 'fen.txt'.
-  /// If the file already exists, the FEN is appended with a newline.
+
+
   Future<void> _saveFenToFile(String fen) async {
     try {
-      // Get the application documents directory.
+
       final Directory directory = await getApplicationDocumentsDirectory();
 
-      // Define the path to 'fen.txt'.
+
       final String path = '${directory.path}/fen.txt';
 
       final File file = File(path);
 
-      // Append the FEN string with a newline. If the file doesn't exist, it will be created.
+
       await file.writeAsString('$fen\n', mode: FileMode.append);
 
       logger.i("Successfully saved FEN to $path");
     } catch (e) {
       logger.e("Failed to save FEN to file: $e");
-      // Handle the error as needed, possibly rethrow or notify the user.
+
     }
   }
 
   Future<EngineRet> search({bool moveNow = false}) async {
-    // Clear any existing analysis markers when AI makes a move
+
     AnalysisMode.disable();
 
     String? fen;
@@ -120,11 +120,11 @@ class Engine {
     if (await isThinking()) {
       await stopSearching();
     } else if (moveNow) {
-      // TODO: Check why go here.
+
       await stopSearching();
       final String? fen = _getPositionFen();
       if (fen == null) {
-        // ignore: only_throw_errors
+
         throw const EngineNoBestMove();
       }
       await _send(fen);
@@ -135,7 +135,7 @@ class Engine {
     if (!moveNow) {
       fen = GameController().position.fen;
       if (fen == null) {
-        // ignore: only_throw_errors
+
         throw const EngineNoBestMove();
       }
 
@@ -143,16 +143,16 @@ class Engine {
       if (fenFields.length < 2) {
         normalizedFen = fen;
       } else {
-        // Replace the second last field with '0'
+
         fenFields[fenFields.length - 2] = '0';
-        // Replace the third last field with '0'
+
         fenFields[fenFields.length - 3] = '0';
         normalizedFen = fenFields.join(' ');
       }
 
       logger.i("FEN = $normalizedFen");
 
-      // Check if the normalized FEN exists in the fenToBestMoves map
+
       if (isRuleSupportingOpeningBook() &&
           DB().generalSettings.useOpeningBook &&
           (nineMensMorrisFenToBestMoves.containsKey(normalizedFen) ||
@@ -167,25 +167,25 @@ class Engine {
           bestMoves = nineMensMorrisFenToBestMoves[normalizedFen]!;
         }
 
-        // Retrieve the shufflingEnabled setting
+
         final bool shufflingEnabled = DB().generalSettings.shufflingEnabled;
 
         String selectedMove;
 
         if (shufflingEnabled) {
-          // Shuffle is enabled: select a random move from the list
+
           final int seed = DateTime.now().millisecondsSinceEpoch;
           final Random random = Random(seed);
           selectedMove = bestMoves[random.nextInt(bestMoves.length)];
         } else {
-          // Shuffle is disabled: select the first move
+
           selectedMove = bestMoves.first;
         }
 
-        // Check if the first character of selectedMove is 'x'
+
         if (selectedMove.startsWith('x')) {
           await Future<void>.delayed(const Duration(milliseconds: 100));
-          // Use standard notation directly
+
           return EngineRet(
             "0", // Default score
             AiMoveType.openingBook,
@@ -196,7 +196,7 @@ class Engine {
           );
         } else {
           await Future<void>.delayed(const Duration(milliseconds: 100));
-          // Use standard notation directly
+
           return EngineRet(
             "0", // Default score
             AiMoveType.openingBook,
@@ -207,10 +207,10 @@ class Engine {
           );
         }
       } else {
-        // FEN not found in predefined map: proceed with engine search
+
         fen = _getPositionFen();
         if (fen == null) {
-          // ignore: only_throw_errors
+
           throw const EngineNoBestMove();
         }
         await _send(fen);
@@ -224,7 +224,7 @@ class Engine {
         await _waitResponse(<String>["bestmove", "nobestmove"]);
 
     if (response == null) {
-      // ignore: only_throw_errors
+
       throw const EngineTimeOut();
     }
 
@@ -252,7 +252,7 @@ class Engine {
         if (EnvironmentConfig.devMode == true) {
           final String? saveFen = GameController().position.fen;
 
-          // Save saveFen to local file if it does not contain " m ".
+
           if (saveFen != null) {
             if (!saveFen.contains(" m ")) {
               await _saveFenToFile(saveFen);
@@ -277,11 +277,11 @@ class Engine {
     }
 
     if (response.contains("nobestmove")) {
-      // ignore: only_throw_errors
+
       throw const EngineNoBestMove();
     }
 
-    // ignore: only_throw_errors
+
     throw const EngineTimeOut();
   }
 
@@ -295,18 +295,18 @@ class Engine {
     int timeLimit = EnvironmentConfig.devMode ? 100 : 6000;
 
     if (settings.moveTime > 0) {
-      // TODO: Accurate timeLimit
+
       timeLimit = settings.moveTime * 10 * 64 + 10;
     }
 
     if (times > timeLimit) {
       logger.t("$_logTag Timeout. sleep = $sleep, times = $times");
 
-      // Note:
-      // Do not throw exception in the production environment here.
-      // Because if the user sets the search depth to be very deep, but his phone performance is low, it may timeout.
-      // But we have to test timeout in devMode to identify anomalies under shallow search.
-      // What method is user-friendly is to be discussed.
+
+
+
+
+
       if (EnvironmentConfig.devMode) {
         throw TimeoutException("$_logTag waitResponse timeout.");
       }
@@ -349,18 +349,18 @@ class Engine {
 
     final GeneralSettings generalSettings = DB().generalSettings;
 
-    // First Move
-    // No need to tell engine.
 
-    // Difficulty
+
+
+
     await _sendOptions("SkillLevel", generalSettings.skillLevel);
     await _sendOptions("MoveTime", generalSettings.moveTime);
 
-    // AI's play style
+
     await _sendOptions(
         "Algorithm",
         generalSettings.searchAlgorithm?.index ??
-            SearchAlgorithm.mtdf.index); // TODO: enum
+            SearchAlgorithm.mtdf.index);
 
     bool usePerfectDatabase = false;
 
@@ -397,14 +397,14 @@ class Engine {
     await _sendOptions("AiIsLazy", generalSettings.aiIsLazy);
     await _sendOptions("Shuffling", generalSettings.shufflingEnabled);
 
-    // Control via environment configuration
+
     await _sendOptions("DeveloperMode", EnvironmentConfig.devMode);
   }
 
   Future<void> setRuleOptions() async {
     final RuleSettings ruleSettings = DB().ruleSettings;
 
-    // General
+
     await _sendOptions("PiecesCount", ruleSettings.piecesCount);
     await _sendOptions("HasDiagonalLines", ruleSettings.hasDiagonalLines);
     await _sendOptions("NMoveRule", ruleSettings.nMoveRule);
@@ -413,25 +413,25 @@ class Engine {
       "ThreefoldRepetitionRule",
       ruleSettings.threefoldRepetitionRule,
     );
-    // Not available to user settings
+
     await _sendOptions("PiecesAtLeastCount", ruleSettings.piecesAtLeastCount);
 
-    // Placing
+
     await _sendOptions(
         "BoardFullAction",
         ruleSettings.boardFullAction?.index ??
-            BoardFullAction.firstPlayerLose.index); // TODO: enum
+            BoardFullAction.firstPlayerLose.index);
     await _sendOptions(
         "MillFormationActionInPlacingPhase",
         ruleSettings.millFormationActionInPlacingPhase?.index ??
             MillFormationActionInPlacingPhase
-                .removeOpponentsPieceFromBoard.index); // TODO: enum
+                .removeOpponentsPieceFromBoard.index);
     await _sendOptions(
       "MayMoveInPlacingPhase",
       ruleSettings.mayMoveInPlacingPhase,
-    ); // Not yet implemented
+    );
 
-    // Moving
+
     await _sendOptions(
       "IsDefenderMoveFirst",
       ruleSettings.isDefenderMoveFirst,
@@ -443,13 +443,13 @@ class Engine {
     await _sendOptions(
         "StalemateAction",
         ruleSettings.stalemateAction?.index ??
-            StalemateAction.endWithStalemateLoss.index); // TODO: enum
+            StalemateAction.endWithStalemateLoss.index);
 
-    // Flying
+
     await _sendOptions("MayFly", ruleSettings.mayFly);
     await _sendOptions("FlyPieceCount", ruleSettings.flyPieceCount);
 
-    // Removing
+
     await _sendOptions(
       "MayRemoveFromMillsAlways",
       ruleSettings.mayRemoveFromMillsAlways,
@@ -496,13 +496,13 @@ class Engine {
 
     final String ret = posFenStr.toString();
 
-    // WAR
+
     if (GameController().gameRecorder.lastPositionWithRemove ==
         GameController().gameRecorder.setupPosition) {
       if (GameController().position.action == Act.remove) {
-        // Remove this to Fix #818
-        // TODO: Why commit 8d2f084 did this?
-        //ret = ret.replaceFirst(" s ", " r ");
+
+
+
       }
     }
 
@@ -514,32 +514,32 @@ class Engine {
     return ret;
   }
 
-  /// Analyze the current position using the perfect database
+
   Future<PositionAnalysisResult> analyzePosition() async {
     final String? fen = GameController().position.fen;
     if (fen == null) {
       return PositionAnalysisResult.error("Invalid board position");
     }
 
-    // Prepare the command to send to the engine
+
     final String command = "analyze fen $fen";
 
     try {
-      // Send command to engine
+
       await _send(command);
 
-      // Wait for and parse response
+
       final String? response = await _waitResponse(<String>["info analysis"]);
       if (response == null) {
         return PositionAnalysisResult.error("Engine did not respond");
       }
 
-      // Parse the analysis result
-      // Expected format: "info analysis move1=win move2=draw move3=loss ..."
-      // Standard notation formats: "d5=outcome", "a1-a4=outcome", "xa1=outcome"
+
+
+
       final List<MoveAnalysisResult> results = <MoveAnalysisResult>[];
 
-      // Debug: Log the raw response in dev mode
+
       if (EnvironmentConfig.devMode) {
         logger.i("$_logTag Raw analysis response: $response");
       }
@@ -547,7 +547,7 @@ class Engine {
       final List<String> rawParts =
           response.replaceFirst("info analysis ", "").split(" ");
 
-      // Reconstruct move=outcome(...) segments that may contain spaces
+
       final List<String> parts = <String>[];
       String buffer = "";
       for (final String token in rawParts) {
@@ -557,14 +557,14 @@ class Engine {
           buffer += " $token";
         }
 
-        // Check if we have a complete segment ending with ')'
+
         if (buffer.contains('=') && buffer.trim().endsWith(')')) {
           parts.add(buffer.trim());
           buffer = "";
         }
       }
 
-      // Handle any remaining buffer without trailing ')'
+
       if (buffer.isNotEmpty && buffer.contains('=')) {
         parts.add(buffer.trim());
       }
@@ -576,18 +576,18 @@ class Engine {
             final String moveStr = moveAndOutcome[0];
             final GameOutcome outcome = _parseOutcome(moveAndOutcome[1]);
 
-            // Debug: Log parsed outcome in dev mode
+
             if (EnvironmentConfig.devMode) {
               logger.i(
                   "$_logTag Parsed move: $moveStr, outcome: ${outcome.name}, "
                   "value: ${outcome.valueStr}, steps: ${outcome.stepCount}");
             }
 
-            // Handle standard notation formats
+
             if (moveStr.startsWith('x') && moveStr.length == 3) {
-              // Remove format: "xa1", "xd5"
+
               final String squareName =
-                  moveStr.substring(1); // Remove 'x' prefix
+                  moveStr.substring(1);
 
               results.add(MoveAnalysisResult(
                 move: moveStr,
@@ -595,7 +595,7 @@ class Engine {
                 toSquare: pgn.Square(squareName),
               ));
             } else if (moveStr.contains('-') && moveStr.length == 5) {
-              // Move format: "a1-a4", "d5-e5"
+
               final List<String> squares = moveStr.split('-');
               if (squares.length == 2) {
                 final String fromSquare = squares[0];
@@ -610,7 +610,7 @@ class Engine {
               }
             } else if (moveStr.length == 2 &&
                 RegExp(r'^[a-g][1-8]$').hasMatch(moveStr)) {
-              // Place format: "d5", "a1"
+
               results.add(MoveAnalysisResult(
                 move: moveStr,
                 outcome: outcome,
@@ -634,15 +634,15 @@ class Engine {
     }
   }
 
-  /// Parse the outcome string from the engine
+
   static GameOutcome _parseOutcome(String outcomeStr) {
-    // Debug: Log the raw outcome string in dev mode
+
     if (EnvironmentConfig.devMode) {
       logger.i("Parsing outcome string: '$outcomeStr'");
     }
 
-    // Extract numerical value and step count if present
-    // Format can be: "outcome(value)" or "outcome(value in N steps)"
+
+
     String value = "";
     int? stepCount;
 
@@ -650,48 +650,48 @@ class Engine {
     final Match? valueMatch = valuePattern.firstMatch(outcomeStr);
 
     if (valueMatch != null && valueMatch.groupCount >= 2) {
-      outcomeStr = valueMatch.group(1)!; // Extract just the outcome part
-      final String valueStr = valueMatch.group(2)!; // Extract the value part
+      outcomeStr = valueMatch.group(1)!;
+      final String valueStr = valueMatch.group(2)!;
 
-      // Debug: Log extracted parts in dev mode
+
       if (EnvironmentConfig.devMode) {
         logger.i("Extracted outcome: '$outcomeStr', value part: '$valueStr'");
       }
 
-      // Check if step count is included - Updated regex to be more flexible
+
       final RegExp stepPattern = RegExp(r'(-?\d+)\s+in\s+(\d+)\s+steps?');
       final Match? stepMatch = stepPattern.firstMatch(valueStr);
 
       if (stepMatch != null && stepMatch.groupCount >= 2) {
-        value = stepMatch.group(1)!; // Extract numerical value
-        stepCount = int.tryParse(stepMatch.group(2)!); // Extract step count
+        value = stepMatch.group(1)!;
+        stepCount = int.tryParse(stepMatch.group(2)!);
 
-        // Debug: Log extracted step count in dev mode
+
         if (EnvironmentConfig.devMode) {
           logger.i("Extracted step count: $stepCount from value: $value");
         }
       } else {
-        // No step information, just extract the numerical value
+
         final RegExp numPattern = RegExp(r'(-?\d+)');
         final Match? numMatch = numPattern.firstMatch(valueStr);
         if (numMatch != null) {
           value = numMatch.group(1)!;
         }
 
-        // Debug: Log no step count found in dev mode
+
         if (EnvironmentConfig.devMode) {
           logger.i("No step count found, extracted value: '$value'");
         }
       }
     } else {
-      // Debug: Log parsing failure in dev mode
+
       if (EnvironmentConfig.devMode) {
         logger.i(
             "Failed to match value pattern in outcome string: '$outcomeStr'");
       }
     }
 
-    // Determine the outcome type
+
     GameOutcome baseOutcome;
     switch (outcomeStr.toLowerCase()) {
       case "win":
@@ -715,7 +715,7 @@ class Engine {
         break;
     }
 
-    // Create outcome with value and step count if available
+
     GameOutcome result;
     if (value.isNotEmpty && stepCount != null) {
       result = GameOutcome.withValueAndSteps(baseOutcome, value, stepCount);
@@ -844,7 +844,7 @@ extension GameModeExtension on GameMode {
   }
 }
 
-/// Result of the analysis for a single move
+
 class MoveAnalysisResult {
   MoveAnalysisResult({
     required this.move,
@@ -859,7 +859,7 @@ class MoveAnalysisResult {
   final pgn.Square toSquare;
 }
 
-/// Result of the position analysis
+
 class PositionAnalysisResult {
   PositionAnalysisResult({
     required this.possibleMoves,
@@ -880,20 +880,20 @@ class PositionAnalysisResult {
   final String? errorMessage;
 }
 
-/// Game outcome from analysis
+
 @immutable
 class GameOutcome {
   const GameOutcome(this.name, {this.valueStr, this.stepCount});
 
   final String name;
 
-  // Store the value string from engine evaluation
+
   final String? valueStr;
 
-  // Store step count information from perfect database
+
   final int? stepCount;
 
-  // Predefined outcome constants
+
   static const GameOutcome win = GameOutcome('win');
   static const GameOutcome draw = GameOutcome('draw');
   static const GameOutcome loss = GameOutcome('loss');
@@ -901,12 +901,12 @@ class GameOutcome {
   static const GameOutcome disadvantage = GameOutcome('disadvantage');
   static const GameOutcome unknown = GameOutcome('unknown');
 
-  // Factory method to create outcome with value
+
   static GameOutcome withValue(GameOutcome baseOutcome, String value) {
     return GameOutcome(baseOutcome.name, valueStr: value);
   }
 
-  // Factory method to create outcome with value and step count
+
   static GameOutcome withValueAndSteps(
       GameOutcome baseOutcome, String value, int? steps) {
     return GameOutcome(baseOutcome.name, valueStr: value, stepCount: steps);
@@ -923,7 +923,7 @@ class GameOutcome {
   @override
   int get hashCode => name.hashCode;
 
-  // Get display string with step information
+
   String get displayString {
     final StringBuffer buffer = StringBuffer(name);
 

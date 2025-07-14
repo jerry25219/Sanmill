@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer' as developer;
 import 'dart:io';
 
-// import 'package:android_id/android_id.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,8 +47,8 @@ List<T> replaceListData<T>({
         final index = indexFinder(item, data);
         if (index != -1) {
           data[index] = item;
-          // } else {
-          // data.add(item);
+
+
         }
       }
     }
@@ -76,15 +76,15 @@ Future<Map<String, dynamic>?> getPostData({
   required final String url,
   final Map<String, dynamic>? parameters,
 }) async {
-  // var http = HttpClient();
-  // HttpClientResponse response;
+
+
   final prefs = await SharedPreferences.getInstance();
   try {
     final response = await http.post(Uri.http(url), body: parameters, headers: {'token': prefs.getString('token') ?? ''});
 
     if (response.statusCode != 200) {
       developer.log('Error response calling to $url, return data is: $response');
-      return null; //'network';
+      return null;
     }
 
     final jsonData = json.decode(
@@ -92,7 +92,7 @@ Future<Map<String, dynamic>?> getPostData({
     ) as Map<String, dynamic>;
     if (!(jsonData['isSuccessful'] as bool)) {
       developer.log('Error response calling to $url, return data is: $response');
-      return null; //jsonData['result'] as String;
+      return null;
     }
 
     return jsonData;
@@ -119,7 +119,7 @@ Future<Map<String, dynamic>?> getHttpResult({
       ) as Map<String, dynamic>;
       if (!(jsonData['isSuccessful'] as bool)) {
         developer.log('Error response calling to $uri, return data is: $response');
-        return null; //jsonData['result'] as String;
+        return null;
       }
 
       return jsonData;
@@ -164,7 +164,7 @@ T enumFromString<T>({required final List<T> enumValues, required final String va
   return enumValues[0];
 }
 
-//判定是否为数字
+
 bool isNumeric(final String? s) {
   if (s == null) {
     return false;

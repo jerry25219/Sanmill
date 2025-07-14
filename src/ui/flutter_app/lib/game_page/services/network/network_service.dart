@@ -1,15 +1,15 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// network_service.dart
 
-// ignore_for_file: always_specify_types
+
+
+
+
 
 part of '../mill.dart';
 
-/// NetworkService handles LAN hosting, client connections, discovery, and heartbeat checks.
-/// This version only listens on and broadcasts from the specifically selected IP.
-/// No usage of 255.255.255.255 anymore.
+
+
+
 class NetworkService with WidgetsBindingObserver {
   NetworkService() {
     WidgetsBinding.instance.addObserver(this);
@@ -24,7 +24,7 @@ class NetworkService with WidgetsBindingObserver {
   static const Duration _heartbeatTimeout = Duration(seconds: 5);
   static const Duration _messageProcessingTimeout = Duration(milliseconds: 500);
 
-  /// Store the user-chosen IP when starting a host or if provided at creation.
+
   String? _boundIpAddress;
 
   ServerSocket? _serverSocket;
@@ -198,7 +198,7 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  /// Starts hosting on the selected IP address.
+
   Future<void> startHost(
     int port, {
     String? localIpAddress,
@@ -211,21 +211,21 @@ class NetworkService with WidgetsBindingObserver {
     this.onClientConnected = onClientConnected;
 
     try {
-      // Get context and message *before* any async gaps
+
       final BuildContext? context = rootScaffoldMessengerKey.currentContext;
       final String infoMsg = context != null
           ? S.of(context).startedHostingGameWaitingForPlayersToJoin
-          : "Started hosting, waiting for players..."; // Fallback message
+          : "Started hosting, waiting for players...";
 
       await _serverSocket?.close();
       _serverSocket = null;
 
-      // Always use the passed IP if not null
+
       final String? bindIp = localIpAddress ?? await getLocalIpAddress();
       if (bindIp == null) {
         throw Exception("No valid IP to bind to");
       }
-      _boundIpAddress = bindIp; // Store it for later usage
+      _boundIpAddress = bindIp;
 
       _serverSocket = await ServerSocket.bind(InternetAddress(bindIp), port);
       isHost = true;
@@ -267,10 +267,10 @@ class NetworkService with WidgetsBindingObserver {
         },
       );
 
-      // Listen for discovery requests on the *same* selected IP
+
       await _startDiscoveryListener(port, localIpAddress: bindIp);
 
-      // Now that hosting is confirmed, notify with the pre-fetched message
+
       _notifyConnectionStatusChanged(true, info: infoMsg);
     } catch (e, st) {
       logger.e("$_logTag Failed to start host: $e");
@@ -302,7 +302,7 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  /// Connect as a client.
+
   Future<void> connectToHost(String host, int port,
       {int retryCount = _maxReconnectAttempts}) async {
     if (_disposed) {
@@ -437,31 +437,31 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  /// Listens for discovery requests on the selected IP or anyIPv4,
-  /// depending on platform capabilities.
+
+
   Future<void> _startDiscoveryListener(int serverPort,
       {String? localIpAddress}) async {
     if (_disposed) {
       return;
     }
     try {
-      // If the OS is Android/Windows/Linux, we bind to 0.0.0.0:33334 for maximum discovery.
-      // If it's iOS (or other restricted platforms), we still bind to the chosen IP address.
+
+
       InternetAddress bindAddress;
       if (!kIsWeb) {
         if (Platform.isIOS == false) {
-          // Bind to 0.0.0.0 for maximum LAN discovery
+
           bindAddress = InternetAddress.anyIPv4;
         } else if (Platform.isIOS) {
-          // iOS is restricted, so fallback to the specifically chosen IP
+
           if (localIpAddress == null && _boundIpAddress == null) {
             logger.e("$_logTag No local IP for iOS discovery listener");
             return;
           }
           bindAddress = InternetAddress(localIpAddress ?? _boundIpAddress!);
         } else {
-          // If other platform, do what you think is safe or desired
-          // Here we just do the old approach by default:
+
+
           if (localIpAddress == null && _boundIpAddress == null) {
             logger.e("$_logTag No local IP for discovery listener");
             return;
@@ -469,12 +469,12 @@ class NetworkService with WidgetsBindingObserver {
           bindAddress = InternetAddress(localIpAddress ?? _boundIpAddress!);
         }
       } else {
-        // Web platform not supported, or do nothing
+
         logger.e("$_logTag Web platform does not support RawDatagramSocket.");
         return;
       }
 
-      // Actually bind the discovery socket
+
       _discoverySocket = await RawDatagramSocket.bind(bindAddress, 33334);
       _discoverySocket!.broadcastEnabled = true;
 
@@ -503,14 +503,14 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  /// Sends "Sanmill:\<chosenIP>:serverPort" back to the discoverer,
-  /// using _boundIpAddress instead of getLocalIpAddress().
+
+
   Future<void> _respondToDiscovery(Datagram datagram, int serverPort) async {
     if (_disposed) {
       return;
     }
 
-    final localIp = _boundIpAddress; // Use the bound IP
+    final localIp = _boundIpAddress;
     if (localIp != null) {
       final reply = 'Sanmill:$localIp:$serverPort';
       final replyData = utf8.encode(reply);
@@ -986,7 +986,7 @@ class NetworkService with WidgetsBindingObserver {
     logger.i("$_logTag Network disposed");
   }
 
-  /// Returns the first non-loopback IPv4 address, or null if not found.
+
   static Future<String?> getLocalIpAddress() async {
     try {
       if (kIsWeb) {
@@ -1006,7 +1006,7 @@ class NetworkService with WidgetsBindingObserver {
       final interfaces =
           await NetworkInterface.list(type: InternetAddressType.IPv4);
 
-      // Attempt wifi-like names first
+
       for (final iface in interfaces) {
         final name = iface.name.toLowerCase();
         if ((name.contains('wlan') ||
@@ -1023,7 +1023,7 @@ class NetworkService with WidgetsBindingObserver {
         }
       }
 
-      // Fallback: any non-loopback interface
+
       for (final iface in interfaces) {
         for (final addr in iface.addresses) {
           if (!addr.isLoopback) {
@@ -1040,7 +1040,7 @@ class NetworkService with WidgetsBindingObserver {
     return null;
   }
 
-  /// Returns all non-loopback IPv4 addresses, giving the user a chance to pick one.
+
   static Future<List<String>> getLocalIpAddresses() async {
     final List<String> result = <String>[];
     try {
@@ -1062,7 +1062,7 @@ class NetworkService with WidgetsBindingObserver {
       final interfaces =
           await NetworkInterface.list(type: InternetAddressType.IPv4);
 
-      // Gather WiFi-like interfaces first
+
       for (final iface in interfaces) {
         final name = iface.name.toLowerCase();
         if (name.contains('wlan') ||
@@ -1079,7 +1079,7 @@ class NetworkService with WidgetsBindingObserver {
         }
       }
 
-      // Then add other non-loopbacks
+
       for (final iface in interfaces) {
         final name = iface.name.toLowerCase();
         if (!name.contains('lo') &&
@@ -1103,8 +1103,8 @@ class NetworkService with WidgetsBindingObserver {
     return result;
   }
 
-  /// Use the user-chosen IP to bind the local socket (for broadcast).
-  /// If localIpAddress is passed, do not call getLocalIpAddress().
+
+
   static Future<String?> discoverHost({
     Duration timeout = const Duration(seconds: 10),
     String? localIpAddress,
@@ -1115,7 +1115,7 @@ class NetworkService with WidgetsBindingObserver {
     Timer? timeoutTimer;
 
     try {
-      // Prefer user-specified IP
+
       final String? localIp = localIpAddress ?? await getLocalIpAddress();
       if (localIp == null) {
         logger.e("[Network] No local IP to discover host");
@@ -1165,13 +1165,13 @@ class NetworkService with WidgetsBindingObserver {
         }
       });
 
-      // Compute broadcast address from the chosen IP
+
       final broadcastAddrString = _computeBroadcastAddress(localIp);
       final broadcastAddr = InternetAddress(broadcastAddrString);
       logger.i(
           "[Network] Using broadcast address for discovery: $broadcastAddrString");
 
-      // Send the "Discovery?" message a few times
+
       for (int i = 0; i < 3; i++) {
         if (completer.isCompleted) {
           break;
@@ -1205,15 +1205,15 @@ class NetworkService with WidgetsBindingObserver {
     }
   }
 
-  /// Simple method to compute broadcast by replacing the last octet with '255'.
-  /// This removes any fallback to 255.255.255.255.
+
+
   static String _computeBroadcastAddress(String localIp) {
     final parts = localIp.split('.');
     if (parts.length == 4) {
       parts[3] = '255';
       return parts.join('.');
     }
-    // If not IPv4, just return the original IP (no fallback to 255.255.255.255).
+
     return localIp;
   }
 

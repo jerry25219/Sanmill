@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// feedback_localization.dart
+
+
+
 
 import 'package:feedback/feedback.dart';
 import 'package:flutter/foundation.dart';
@@ -9,16 +9,16 @@ import 'package:flutter/material.dart';
 
 import '../../services/logger.dart';
 
-// TODO: [Leptopoda] This implementation is shitty and I don't like it. Just a reminder that I wanted to rewrite it.
 
-/// This is a localization delegate, which includes all of the localizations
-/// already present in this library.
+
+
+
 class CustomFeedbackLocalizationsDelegate
     extends LocalizationsDelegate<FeedbackLocalizations> {
-  /// Creates a [CustomFeedbackLocalizationsDelegate].
+
   const CustomFeedbackLocalizationsDelegate();
 
-  /// Returns the default instance of a [CustomFeedbackLocalizationsDelegate].
+
   static const LocalizationsDelegate<FeedbackLocalizations> delegate =
       CustomFeedbackLocalizationsDelegate();
 
@@ -89,7 +89,7 @@ class CustomFeedbackLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) {
-    // We only support language codes for now
+
     if (_supportedLocales.containsKey(Locale(locale.languageCode))) {
       return true;
     }
@@ -103,11 +103,11 @@ class CustomFeedbackLocalizationsDelegate
   @override
   Future<FeedbackLocalizations> load(Locale locale) async {
     final Locale languageLocale = Locale(locale.languageCode);
-    // We only support language codes for now
+
     if (_supportedLocales.containsKey(languageLocale)) {
       return _supportedLocales[languageLocale]!;
     }
-    // The default is english
+
     return const EnFeedbackLocalizations();
   }
 
@@ -1180,7 +1180,7 @@ class SwFeedbackLocalizations extends FeedbackLocalizations {
   }
 }
 
-// Tamil
+
 class TaFeedbackLocalizations extends FeedbackLocalizations {
   const TaFeedbackLocalizations();
 
@@ -1383,17 +1383,17 @@ class ZuFeedbackLocalizations extends FeedbackLocalizations {
   const ZuFeedbackLocalizations();
 
   @override
-  String get submitButtonText => 'Thumela'; // 'Submit' in Zulu
+  String get submitButtonText => 'Thumela';
 
   @override
   String get feedbackDescriptionText =>
-      'Kuyini okungalungile?'; // 'What's wrong?' in Zulu
+      'Kuyini okungalungile?';
 
   @override
-  String get draw => 'Thinta'; // 'Draw' in Zulu
+  String get draw => 'Thinta';
 
   @override
-  String get navigate => 'Hamba'; // 'Navigate' in Zulu
+  String get navigate => 'Hamba';
 
   static Future<FeedbackLocalizations> load(Locale locale) {
     return SynchronousFuture<FeedbackLocalizations>(

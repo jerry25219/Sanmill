@@ -1,13 +1,13 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// settings_list_tile.dart
+
+
+
 
 part of 'settings.dart';
 
 enum _SettingsTileType { standard, color, switchTile }
 
-// TODO: [Leptopoda] Maybe add link list tile as it needs a separate icon
+
 class SettingsListTile extends StatelessWidget {
   const SettingsListTile({
     super.key,
@@ -83,7 +83,7 @@ class SettingsListTile extends StatelessWidget {
       case _SettingsTileType.standard:
         Widget trailing;
         if (trailingString != null) {
-          // Use IntrinsicWidth to make the text auto size
+
           trailing = IntrinsicWidth(
             child: Container(
               alignment: Alignment.centerRight,

@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// game_page_action_sheet.dart
+
+
+
 
 part of 'game_page.dart';
 
@@ -64,8 +64,8 @@ class GamePageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The paddingScaleFactor is used to adjust the padding of Dialog
-    // children.
+
+
     final double paddingScaleFactor =
         _paddingScaleFactor(TextScaler.noScaling.scale(1.0));
 
@@ -123,7 +123,7 @@ class GamePageDialog extends StatelessWidget {
 
 double _paddingScaleFactor(double textScaleFactor) {
   final double clampedTextScaleFactor = textScaleFactor.clamp(1.0, 2.0);
-  // The final padding scale factor is clamped between 1/3 and 1. For example,
-  // a non-scaled padding of 24 will produce a padding between 24 and 8.
+
+
   return lerpDouble(1.0, 1.0 / 3.0, clampedTextScaleFactor - 1.0)!;
 }

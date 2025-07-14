@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// transform.dart
+
+
+
 
 import '../mill.dart';
 
@@ -13,7 +13,7 @@ enum TransformationType {
   innerOuterFlip
 }
 
-// Transformation mapping configuration
+
 final Map<TransformationType, List<int>> transformationMap =
     <TransformationType, List<int>>{
   TransformationType.identity: List<int>.generate(24, (int i) => i),
@@ -123,14 +123,14 @@ final Map<TransformationType, List<int>> transformationMap =
   ],
 };
 
-// Validator to ensure correct string length
+
 void _validateInput(String s) {
   if (s.length != 24) {
     throw ArgumentError('Input string must be exactly 24 characters long.');
   }
 }
 
-// Core transformation function using mapping
+
 String _transformString(String s, List<int> newPosition) {
   _validateInput(s);
   final List<String> result = List<String>.filled(24, '');
@@ -140,7 +140,7 @@ String _transformString(String s, List<int> newPosition) {
   return result.join();
 }
 
-// Public function to perform transformation based on the type
+
 String transformString(String s, TransformationType transformationType) {
   final List<int> newPosition = transformationMap[transformationType] ??
       List<int>.generate(24, (int i) => i);
@@ -148,12 +148,12 @@ String transformString(String s, TransformationType transformationType) {
 }
 
 String transformFEN(String fen, TransformationType transformationType) {
-  // Extract the first 26 characters, which include the board description part of the FEN string
+
   final String boardPart = fen.substring(0, 26);
-  // Extract the remainder of the FEN string
+
   final String otherPart = fen.substring(26);
 
-  // Record the positions of each '/' character
+
   final List<int> slashPositions = <int>[];
   for (int i = 0; i < boardPart.length; i++) {
     if (boardPart[i] == '/') {
@@ -161,18 +161,18 @@ String transformFEN(String fen, TransformationType transformationType) {
     }
   }
 
-  // Remove all '/' characters
+
   final String transformedInput = boardPart.replaceAll('/', '');
 
-  // Transform the string using the given transformation type
+
   final String transformedOutput =
       transformString(transformedInput, transformationType);
 
-  // Insert '/' back into their original positions
+
   final StringBuffer newBoardPart = StringBuffer();
   int slashIndex = 0;
   for (int i = 0; i < transformedOutput.length; i++) {
-    // When the current index reaches a position where '/' should be reinserted, insert it
+
     if (slashIndex < slashPositions.length &&
         i == slashPositions[slashIndex] - slashIndex) {
       newBoardPart.write('/');
@@ -181,7 +181,7 @@ String transformFEN(String fen, TransformationType transformationType) {
     newBoardPart.write(transformedOutput[i]);
   }
 
-  // Combine the transformed board string with the rest of the original FEN string
+
   return '$newBoardPart$otherPart';
 }
 

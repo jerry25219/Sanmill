@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// llm_prompt_dialog.dart
+
+
+
 
 import 'package:flutter/material.dart';
 
@@ -10,7 +10,7 @@ import '../../../shared/config/prompt_defaults.dart';
 import '../../../shared/database/database.dart';
 import '../../models/general_settings.dart';
 
-/// A dialog for editing LLM prompt header and footer
+
 class LlmPromptDialog extends StatefulWidget {
   const LlmPromptDialog({super.key});
 
@@ -25,11 +25,11 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
   @override
   void initState() {
     super.initState();
-    // Get current prompt settings from DB
+
     final String currentHeader = DB().generalSettings.llmPromptHeader;
     final String currentFooter = DB().generalSettings.llmPromptFooter;
 
-    // Initialize controllers with current values, or default values if empty
+
     _headerController = TextEditingController(
         text: currentHeader.isEmpty
             ? PromptDefaults.llmPromptHeader
@@ -47,19 +47,19 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
     super.dispose();
   }
 
-  // Save the prompt settings to database
+
   void _savePrompts() {
-    // Get text from controllers
+
     final String headerText = _headerController.text;
     final String footerText = _footerController.text;
 
-    // Use default values if fields are empty
+
     final String finalHeader =
         headerText.isEmpty ? PromptDefaults.llmPromptHeader : headerText;
     final String finalFooter =
         footerText.isEmpty ? PromptDefaults.llmPromptFooter : footerText;
 
-    // Update settings using copyWith method to modify only the necessary fields
+
     DB().generalSettings = DB().generalSettings.copyWith(
           llmPromptHeader: finalHeader,
           llmPromptFooter: finalFooter,
@@ -67,7 +67,7 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
     Navigator.of(context).pop();
   }
 
-  // Reset to default values
+
   void _resetToDefaults() {
     setState(() {
       _headerController.text = PromptDefaults.llmPromptHeader;
@@ -75,7 +75,7 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
     });
   }
 
-  // Show confirmation dialog before restoring defaults
+
   void _confirmResetToDefaults() {
     showDialog(
       context: context,
@@ -111,7 +111,7 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
       ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.9,
-        // Make dialog scrollable to fit on all screen sizes
+
         constraints: BoxConstraints(
           maxHeight: MediaQuery.of(context).size.height * 0.8,
         ),
@@ -129,16 +129,16 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
             ),
             const SizedBox(height: 16.0),
 
-            // Make dialog content scrollable
+
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Header section
+
                     Text(
                       S.of(context).llmPromptTemplateHeader,
-                      // Using literal while waiting for translation
+
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8.0),
@@ -165,10 +165,10 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
                     ),
                     const SizedBox(height: 16.0),
 
-                    // Footer section
+
                     Text(
                       S.of(context).llmPromptTemplateFooter,
-                      // Using literal while waiting for translation
+
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8.0),
@@ -199,7 +199,7 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
             ),
             const SizedBox(height: 16.0),
 
-            // Reset button
+
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
@@ -211,11 +211,11 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
 
             const SizedBox(height: 8.0),
 
-            // Cancel and OK buttons (following Android convention)
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                // Cancel button on the left
+
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
@@ -226,7 +226,7 @@ class _LlmPromptDialogState extends State<LlmPromptDialog> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                // OK button on the right
+
                 ElevatedButton(
                   onPressed: _savePrompts,
                   style: ElevatedButton.styleFrom(

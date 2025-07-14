@@ -1,7 +1,7 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// llm_config_dialog.dart
+
+
+
 
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -10,7 +10,7 @@ import '../../../generated/intl/l10n.dart';
 import '../../../shared/database/database.dart';
 import '../../models/general_settings.dart';
 
-/// A dialog for configuring LLM provider settings
+
 class LlmConfigDialog extends StatefulWidget {
   const LlmConfigDialog({super.key});
 
@@ -25,7 +25,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
   late final TextEditingController _baseUrlController;
   late double _temperature;
 
-  // Common model suggestions for each provider
+
   final Map<LlmProvider, List<String>> _modelSuggestions =
       <LlmProvider, List<String>>{
     LlmProvider.openai: <String>['o4-mini', 'gpt-4.1', 'gpt-3.5-turbo'],
@@ -33,7 +33,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     LlmProvider.ollama: <String>['gemma3', 'qwq', 'llama3.3', 'phi4'],
   };
 
-  // Suggested base URLs for each provider, ordered by popularity
+
   final Map<LlmProvider, List<String>> _baseUrlSuggestions =
       <LlmProvider, List<String>>{
     LlmProvider.openai: <String>[
@@ -49,7 +49,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       'https://api.deepseek.com/v1',
     ],
     LlmProvider.google: <String>[
-      // Google models use API key directly – no custom base URL needed
+
     ],
     LlmProvider.ollama: <String>[
       'http://localhost:11434',
@@ -60,7 +60,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
   @override
   void initState() {
     super.initState();
-    // Get current LLM settings from DB
+
     _selectedProvider = DB().generalSettings.llmProvider;
     _modelController =
         TextEditingController(text: DB().generalSettings.llmModel);
@@ -79,21 +79,21 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     super.dispose();
   }
 
-  // Save the LLM configuration to database
+
   void _saveConfig() {
-    // Update settings using copyWith method to modify only the necessary fields
+
     DB().generalSettings = DB().generalSettings.copyWith(
           llmProvider: _selectedProvider,
           llmModel: _modelController.text.trim(),
           llmApiKey: _apiKeyController.text.trim(),
           llmBaseUrl: _baseUrlController.text.trim(),
-          // ignore: undefined_named_parameter
+
           llmTemperature: _temperature,
         );
     Navigator.of(context).pop();
   }
 
-  // Get provider-specific model hint text
+
   String _getModelHint() {
     switch (_selectedProvider) {
       case LlmProvider.openai:
@@ -105,7 +105,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     }
   }
 
-  // Get provider-specific API key label
+
   String _getApiKeyLabel() {
     switch (_selectedProvider) {
       case LlmProvider.openai:
@@ -117,7 +117,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     }
   }
 
-  // Get provider-specific base URL hint
+
   String _getBaseUrlHint() {
     switch (_selectedProvider) {
       case LlmProvider.openai:
@@ -129,22 +129,22 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     }
   }
 
-  // Check if base URL field should be shown
+
   bool _shouldShowBaseUrl() {
     return _selectedProvider == LlmProvider.openai ||
         _selectedProvider == LlmProvider.ollama;
   }
 
-  // Get model suggestions considering both provider and base URL
+
   List<String> _getContextualModelSuggestions() {
-    // For providers other than OpenAI, return the default list
+
     if (_selectedProvider != LlmProvider.openai) {
       return _modelSuggestions[_selectedProvider] ?? <String>[];
     }
 
     final String base = _baseUrlController.text.trim();
 
-    // Suggestions for OpenAI
+
     if (base.startsWith('https://api.openai.com')) {
       return <String>[
         'o4-mini',
@@ -167,7 +167,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for OpenRouter
+
     if (base.startsWith('https://openrouter.ai')) {
       return <String>[
         'openai/gpt-4o',
@@ -188,7 +188,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for Mistral AI
+
     if (base.startsWith('https://api.mistral.ai')) {
       return <String>[
         'codestral-latest',
@@ -200,7 +200,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for Together AI
+
     if (base.startsWith('https://api.together.ai')) {
       return <String>[
         'meta-llama/Llama-4-Maverick-17B-128E-Instruct-FP8',
@@ -213,7 +213,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for Fireworks AI
+
     if (base.startsWith('https://api.siliconflow.cn')) {
       return <String>[
         'Pro/deepseek-ai/DeepSeek-R1',
@@ -223,7 +223,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for SiliconFlow
+
     if (base.startsWith('https://api.fireworks.ai')) {
       return <String>[
         'accounts/fireworks/models/deepseek-r1',
@@ -232,7 +232,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Suggestions for DeepSeek
+
     if (base.startsWith('https://api.deepseek.com')) {
       return <String>[
         'deepseek-chat',
@@ -240,11 +240,11 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
       ];
     }
 
-    // Default OpenAI hosted suggestions
+
     return _modelSuggestions[LlmProvider.openai] ?? <String>[];
   }
 
-  // Show dialog with base URL suggestions
+
   void _showBaseUrlSuggestions() {
     final List<String> suggestions =
         _baseUrlSuggestions[_selectedProvider] ?? <String>[];
@@ -285,7 +285,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     );
   }
 
-  // Display model suggestions dialog
+
   void _showModelSuggestions() {
     final List<String> suggestions = _getContextualModelSuggestions();
 
@@ -325,7 +325,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     );
   }
 
-  // Build a temperature slider widget
+
   Widget _buildTemperatureSlider() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -348,16 +348,16 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
     );
   }
 
-  // Launch URL for API key generation depending on provider/base URL
+
   Future<void> _launchApiKeyUrl() async {
     String url = '';
 
-    // Trimmed base URL for matching
+
     final String base = _baseUrlController.text.trim();
 
     switch (_selectedProvider) {
       case LlmProvider.openai:
-        // When provider is OpenAI, the user may actually be using third‑party compatible endpoints.
+
         if (base.startsWith('https://openrouter.ai')) {
           url = 'https://openrouter.ai/keys';
         } else if (base.startsWith('https://api.mistral.ai')) {
@@ -379,7 +379,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
         } else if (base.startsWith('https://api.deepseek.com')) {
           url = 'https://platform.deepseek.com';
         } else {
-          // Default to OpenAI
+
           url = 'https://platform.openai.com/api-keys';
         }
         break;
@@ -424,13 +424,13 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
             ),
             const SizedBox(height: 16.0),
 
-            // Make dialog content scrollable
+
             Flexible(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    // Provider selection
+
                     Text(
                       S.of(context).llmProvider,
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -462,9 +462,9 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                     ),
                     const SizedBox(height: 16.0),
 
-                    // Base URL (conditionally shown)
+
                     if (_shouldShowBaseUrl()) ...<Widget>[
-                      // Base URL label with suggestions button
+
                       Row(
                         children: <Widget>[
                           Text(
@@ -491,7 +491,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                       const SizedBox(height: 16.0),
                     ],
 
-                    // Model name with suggestions button
+
                     Row(
                       children: <Widget>[
                         Text(
@@ -499,7 +499,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         const Spacer(),
-                        // Add a suggestion button to help users
+
                         TextButton(
                           onPressed: _showModelSuggestions,
                           child: Text(S.of(context).viewCommonModels),
@@ -507,21 +507,21 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                       ],
                     ),
                     const SizedBox(height: 8.0),
-                    // Free-form text field for model name
+
                     TextField(
                       controller: _modelController,
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
                         hintText: _getModelHint(),
                         helperText: S.of(context).youCanEnterAnyModelName,
-                        // "You can enter any model name"
+
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 12.0, vertical: 8.0),
                       ),
                     ),
                     const SizedBox(height: 16.0),
 
-                    // API Key
+
                     Text(
                       _getApiKeyLabel(),
                       style: const TextStyle(fontWeight: FontWeight.bold),
@@ -531,7 +531,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                       controller: _apiKeyController,
                       decoration: InputDecoration(
                         border: const OutlineInputBorder(),
-                        // Show Get API Key button only for non-Ollama providers
+
                         suffixIcon: _selectedProvider != LlmProvider.ollama
                             ? IconButton(
                                 icon: const Icon(Icons.open_in_new),
@@ -546,21 +546,21 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                     ),
                     const SizedBox(height: 16.0),
 
-                    // Temperature slider
+
                     _buildTemperatureSlider(),
 
-                    // Add extra spacing before buttons
+
                     const SizedBox(height: 24.0),
                   ],
                 ),
               ),
             ),
 
-            // Buttons
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                // Cancel button on the left
+
                 ElevatedButton(
                   onPressed: () => Navigator.of(context).pop(),
                   style: ElevatedButton.styleFrom(
@@ -571,7 +571,7 @@ class _LlmConfigDialogState extends State<LlmConfigDialog> {
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
-                // OK button on the right
+
                 ElevatedButton(
                   onPressed: _saveConfig,
                   style: ElevatedButton.styleFrom(

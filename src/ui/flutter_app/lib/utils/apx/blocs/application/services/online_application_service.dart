@@ -73,11 +73,11 @@ class OnlineApplicationService implements ApplicationService {
     final parameters = RegisterData(
       invitationCode: code,
       deviceId: deviceId,
-      // deviceId: await PlatformUtilities().getDeviceId(),
-      // deviceType: await PlatformUtilities().getDeviceType(),
-      // deviceOs: await PlatformUtilities().getDeviceOsVersion(),
-      // appVersion: await PlatformUtilities().getAppVersion(),
-      // appBuildNumber: await PlatformUtilities().getAppBuildNumber(),
+
+
+
+
+
     );
 
     debugPrint('''
@@ -88,7 +88,7 @@ class OnlineApplicationService implements ApplicationService {
         'deviceId': $deviceId,
       }''');
 
-    // post data to server
+
     try {
       final data = await HttpRequest().get(apiUrl, headers: {...parameters.toJson().cast()});
       if (data == null) {

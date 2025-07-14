@@ -1,14 +1,14 @@
-// SPDX-License-Identifier: GPL-3.0-or-later
-// Copyright (C) 2019-2025 The Sanmill developers (see AUTHORS file)
 
-// piece_painter.dart
+
+
+
 
 part of '../../../game_page/services/painters/painters.dart';
 
-/// Custom Piece Painter
-///
-/// Painter to draw each piece on the board.
-/// It asserts the Canvas to be a square.
+
+
+
+
 class PiecePainter extends CustomPainter {
   PiecePainter({
     required this.placeAnimationValue,
@@ -25,7 +25,7 @@ class PiecePainter extends CustomPainter {
 
   final Map<PieceColor, ui.Image?>? pieceImages;
 
-  // Animation instances for place and remove effects.
+
   final PieceEffectAnimation placeEffectAnimation;
   final PieceEffectAnimation removeEffectAnimation;
 
@@ -39,7 +39,7 @@ class PiecePainter extends CustomPainter {
     final Paint paint = Paint();
     final Path shadowPath = Path();
 
-    // Separate lists for normal and moving pieces.
+
     final List<Piece> normalPiecesToDraw = <Piece>[];
     final List<Piece> movingPiecesToDraw = <Piece>[];
 
@@ -48,10 +48,10 @@ class PiecePainter extends CustomPainter {
             6 -
         1;
 
-    // Variable to hold the current position of the moving piece.
+
     Offset? movingPos;
 
-    // Draw pieces on board.
+
     for (int row = 0; row < 7; row++) {
       for (int col = 0; col < 7; col++) {
         final int index = row * 7 + col;
@@ -61,20 +61,20 @@ class PiecePainter extends CustomPainter {
 
         Offset pos;
 
-        // Check if this piece is currently placing.
+
         final bool isPlacingPiece = (placeAnimationValue < 1.0) &&
             (focusIndex != null) &&
             (blurIndex == null) &&
             (index == focusIndex);
 
-        // Check if this piece is currently moving.
+
         final bool isMovingPiece = (moveAnimationValue < 1.0) &&
             (focusIndex != null) &&
             (blurIndex != null) &&
             (index == focusIndex) &&
             !GameController().animationManager.isRemoveAnimationAnimating();
 
-        // Check if this piece is currently being removed.
+
         final bool isRemovingPiece = (removeAnimationValue < 1.0) &&
             (removeIndex != null) &&
             (index == removeIndex);
@@ -88,20 +88,20 @@ class PiecePainter extends CustomPainter {
             pieceWidth,
             placeAnimationValue,
           );
-          // Continue to draw the placing piece normally after the effect.
+
         }
 
         if (isMovingPiece) {
-          // Calculate interpolated position between blurIndex and focusIndex.
+
           final Offset fromPos = pointFromIndex(blurIndex, size);
           final Offset toPos = pointFromIndex(focusIndex, size);
 
           pos = Offset.lerp(fromPos, toPos, moveAnimationValue)!;
 
-          // Store the moving piece's current position for highlight.
+
           movingPos = pos;
         } else {
-          // Use the normal position.
+
           pos = pointFromIndex(index, size);
         }
 
@@ -112,7 +112,7 @@ class PiecePainter extends CustomPainter {
             pieceWidth,
             removeAnimationValue,
           );
-          continue; // Skip normal drawing.
+          continue;
         }
 
         if (pieceColor == PieceColor.none) {
@@ -137,7 +137,7 @@ class PiecePainter extends CustomPainter {
           image: image,
         );
 
-        // Add to the appropriate list based on whether it's moving.
+
         if (isMovingPiece) {
           movingPiecesToDraw.add(piece);
         } else {
@@ -153,7 +153,7 @@ class PiecePainter extends CustomPainter {
       }
     }
 
-    // Draw shadows for normal pieces.
+
     for (final Piece piece in normalPiecesToDraw) {
       if (piece.image == null) {
         canvas.drawShadow(
@@ -171,7 +171,7 @@ class PiecePainter extends CustomPainter {
       }
     }
 
-    // Draw shadows for moving pieces.
+
     for (final Piece piece in movingPiecesToDraw) {
       if (piece.image == null) {
         canvas.drawShadow(
@@ -193,7 +193,7 @@ class PiecePainter extends CustomPainter {
 
     Color blurPositionColor = Colors.transparent;
 
-    // Draw normal pieces first.
+
     for (final Piece piece in normalPiecesToDraw) {
       blurPositionColor = piece.pieceColor.blurPositionColor;
 
@@ -213,7 +213,7 @@ class PiecePainter extends CustomPainter {
           fit: BoxFit.cover,
         );
       } else {
-        // Draw border of the piece.
+
         paint.color = piece.pieceColor.borderColor.withValues(alpha: opacity);
 
         if (DB().colorSettings.boardBackgroundColor == Colors.white) {
@@ -229,7 +229,7 @@ class PiecePainter extends CustomPainter {
           paint,
         );
 
-        // Fill the piece with main color.
+
         paint.style = PaintingStyle.fill;
         paint.color = piece.pieceColor.mainColor.withValues(alpha: opacity);
         canvas.drawCircle(
@@ -239,11 +239,11 @@ class PiecePainter extends CustomPainter {
         );
       }
 
-      // Draw numbers on pieces if enabled.
+
       if (DB().displaySettings.isNumbersOnPiecesShown &&
           piece.squareAttribute?.placedPieceNumber != null &&
           piece.squareAttribute!.placedPieceNumber > 0) {
-        // Text Drawing:
+
         final TextPainter textPainter = TextPainter(
           text: TextSpan(
             text: piece.squareAttribute?.placedPieceNumber.toString(),
@@ -259,7 +259,7 @@ class PiecePainter extends CustomPainter {
         );
         textPainter.layout();
 
-        // Calculate offset for centering the text.
+
         final Offset textOffset = Offset(
           piece.pos.dx - textPainter.width / 2,
           piece.pos.dy - textPainter.height / 2,
@@ -269,7 +269,7 @@ class PiecePainter extends CustomPainter {
       }
     }
 
-    // Draw moving pieces on top of normal pieces.
+
     for (final Piece piece in movingPiecesToDraw) {
       blurPositionColor = piece.pieceColor.blurPositionColor;
 
@@ -289,7 +289,7 @@ class PiecePainter extends CustomPainter {
           fit: BoxFit.cover,
         );
       } else {
-        // Draw border of the piece.
+
         paint.color = piece.pieceColor.borderColor.withValues(alpha: opacity);
 
         if (DB().colorSettings.boardBackgroundColor == Colors.white) {
@@ -305,7 +305,7 @@ class PiecePainter extends CustomPainter {
           paint,
         );
 
-        // Fill the piece with main color.
+
         paint.style = PaintingStyle.fill;
         paint.color = piece.pieceColor.mainColor.withValues(alpha: opacity);
         canvas.drawCircle(
@@ -315,11 +315,11 @@ class PiecePainter extends CustomPainter {
         );
       }
 
-      // Draw numbers on pieces if enabled.
+
       if (DB().displaySettings.isNumbersOnPiecesShown &&
           piece.squareAttribute?.placedPieceNumber != null &&
           piece.squareAttribute!.placedPieceNumber > 0) {
-        // Text Drawing:
+
         final TextPainter textPainter = TextPainter(
           text: TextSpan(
             text: piece.squareAttribute?.placedPieceNumber.toString(),
@@ -335,7 +335,7 @@ class PiecePainter extends CustomPainter {
         );
         textPainter.layout();
 
-        // Calculate offset for centering the text.
+
         final Offset textOffset = Offset(
           piece.pos.dx - textPainter.width / 2,
           piece.pos.dy - textPainter.height / 2,
@@ -345,14 +345,14 @@ class PiecePainter extends CustomPainter {
       }
     }
 
-    // Draw focus and blur positions.
+
     if (focusIndex != null &&
         GameController().gameInstance.gameMode != GameMode.setupPosition) {
       paint.color = DB().colorSettings.pieceHighlightColor;
       paint.style = PaintingStyle.stroke;
       paint.strokeWidth = 2;
 
-      // If the piece is moving, use the interpolated position for highlight.
+
       final Offset focusPos = movingPos ?? pointFromIndex(focusIndex, size);
 
       canvas.drawCircle(
@@ -372,7 +372,7 @@ class PiecePainter extends CustomPainter {
       paint.color = blurPositionColor;
       paint.style = PaintingStyle.fill;
 
-      // Blur remains at the original position.
+
       canvas.drawCircle(
         pointFromIndex(blurIndex, size),
         pieceWidth / 2 * 0.8,
